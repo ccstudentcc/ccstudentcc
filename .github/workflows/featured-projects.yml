@@ -1,0 +1,30 @@
+name: Update Featured Projects
+
+on:
+  schedule:
+    - cron: "15 */12 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-featured-projects:
+    name: Refresh Featured Projects
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure script is executable
+        run: chmod +x .github/scripts/update_featured_projects.sh
+
+      - name: Update featured projects section
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: .github/scripts/update_featured_projects.sh
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(readme): refresh featured projects"
+          file_pattern: README.md
