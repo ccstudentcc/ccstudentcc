@@ -1,18 +1,18 @@
-name: Waka Readme
+name: Daily Quote
 
 on:
   workflow_call:
   workflow_dispatch:
 
 concurrency:
-  group: readme-worker-wakatime
+  group: readme-worker-daily-quote
   cancel-in-progress: false
 
 jobs:
-  update-readme:
-    name: Update WakaTime Stats
+  update-daily-quote:
+    name: Refresh Daily Quote
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     permissions:
       contents: write
     steps:
@@ -24,13 +24,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Update README with WakaTime stats
-        env:
-          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-        run: python .github/scripts/update_wakatime.py
+      - name: Update quote section
+        run: python .github/scripts/update_daily_quote.py
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore(readme): update wakatime stats"
+          commit_message: "chore(readme): refresh daily quote"
           file_pattern: README.md

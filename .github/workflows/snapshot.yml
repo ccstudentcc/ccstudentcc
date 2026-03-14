@@ -1,18 +1,18 @@
-name: Waka Readme
+name: Snapshot
 
 on:
   workflow_call:
   workflow_dispatch:
 
 concurrency:
-  group: readme-worker-wakatime
+  group: readme-worker-snapshot
   cancel-in-progress: false
 
 jobs:
-  update-readme:
-    name: Update WakaTime Stats
+  update-snapshot:
+    name: Refresh Snapshot
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     permissions:
       contents: write
     steps:
@@ -24,13 +24,13 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Update README with WakaTime stats
+      - name: Update recent repositories snapshot
         env:
-          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-        run: python .github/scripts/update_wakatime.py
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/update_snapshot.py
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore(readme): update wakatime stats"
+          commit_message: "chore(readme): refresh snapshot"
           file_pattern: README.md

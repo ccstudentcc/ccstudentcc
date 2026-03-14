@@ -1,0 +1,41 @@
+name: Workflow Manager
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '5 */6 * * *'
+
+concurrency:
+  group: workflow-manager
+  cancel-in-progress: false
+
+jobs:
+  orchestrate:
+    name: Orchestrate README Automation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Ensure featured projects script is executable
+        run: chmod +x .github/scripts/update_featured_projects.sh
+
+      - name: Run workflow controller
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+        run: python .github/scripts/workflow_controller.py
+
+      - name: Commit manager state
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(readme): update workflow manager state"
+          file_pattern: README.md .github/manager/state/*.json

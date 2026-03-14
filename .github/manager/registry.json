@@ -1,0 +1,52 @@
+{
+  "workers": [
+    {
+      "name": "featured-projects",
+      "display_name": "Featured Projects",
+      "enabled": true,
+      "timeout_seconds": 180,
+      "max_retries": 1,
+      "heartbeat_grace_seconds": 240,
+      "command": [
+        "bash",
+        ".github/scripts/update_featured_projects.sh"
+      ]
+    },
+    {
+      "name": "wakatime",
+      "display_name": "WakaTime",
+      "enabled": true,
+      "timeout_seconds": 180,
+      "max_retries": 1,
+      "heartbeat_grace_seconds": 240,
+      "command": [
+        "python",
+        ".github/scripts/update_wakatime.py"
+      ]
+    },
+    {
+      "name": "daily-quote",
+      "display_name": "Daily Quote",
+      "enabled": true,
+      "timeout_seconds": 60,
+      "max_retries": 1,
+      "heartbeat_grace_seconds": 120,
+      "command": [
+        "python",
+        ".github/scripts/update_daily_quote.py"
+      ]
+    },
+    {
+      "name": "snapshot",
+      "display_name": "Snapshot",
+      "enabled": true,
+      "timeout_seconds": 180,
+      "max_retries": 1,
+      "heartbeat_grace_seconds": 240,
+      "command": [
+        "python",
+        ".github/scripts/update_snapshot.py"
+      ]
+    }
+  ]
+}
