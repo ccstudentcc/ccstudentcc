@@ -106,22 +106,22 @@ All visual components below support both dark mode and light mode automatically.
 <!--START_SECTION:featured-->
 <div align="center">
 
+<a href="https://github.com/ccstudentcc/symkan-experiments">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=symkan-experiments&theme=tokyonight&hide_border=true" />
+    <img src="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=symkan-experiments&theme=default&hide_border=true" alt="symkan-experiments" />
+  </picture>
+</a>
+<a href="https://github.com/ccstudentcc/kan-sr">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=kan-sr&theme=tokyonight&hide_border=true" />
+    <img src="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=kan-sr&theme=default&hide_border=true" alt="kan-sr" />
+  </picture>
+</a>
 <a href="https://github.com/ccstudentcc/colab">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=colab&theme=tokyonight&hide_border=true" />
     <img src="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=colab&theme=default&hide_border=true" alt="colab" />
-  </picture>
-</a>
-<a href="https://github.com/ccstudentcc/R-repo">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=R-repo&theme=tokyonight&hide_border=true" />
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=R-repo&theme=default&hide_border=true" alt="R-repo" />
-  </picture>
-</a>
-<a href="https://github.com/ccstudentcc/oop">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=oop&theme=tokyonight&hide_border=true" />
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=ccstudentcc&repo=oop&theme=default&hide_border=true" alt="oop" />
   </picture>
 </a>
 
@@ -146,29 +146,39 @@ All visual components below support both dark mode and light mode automatically.
 ## Automation Heartbeat | 自动化心跳
 
 <!--START_SECTION:automation_status-->
-- Last automation update: 2026-03-14 21:35 CST
+- Last automation update: 2026-03-14 23:16 CST
 - Timezone: Asia/Shanghai (UTC+8)
-- Orchestrator: workflow-manager
-- Managed jobs: featured projects, wakatime, daily quote, snapshot
-- Failure policy: continue-on-error + manager summary alert
+- Orchestrator: workflow-manager/controller
+- Managed jobs: featured-projects, wakatime, daily-quote, snapshot
+- Failure policy: continue-on-error + retry + timeout cancel + dead-letter on exhaust
+- Run URL: https://github.com/ccstudentcc/ccstudentcc/actions/runs/23090623968
 <!--END_SECTION:automation_status-->
 
 ### Worker Registry
 
 <!--START_SECTION:worker_registry-->
-- Loading worker registry...
+- featured-projects: Featured Projects | enabled | timeout 180s | retries 1
+- wakatime: WakaTime | enabled | timeout 180s | retries 1
+- daily-quote: Daily Quote | enabled | timeout 60s | retries 1
+- snapshot: Snapshot | enabled | timeout 180s | retries 1
 <!--END_SECTION:worker_registry-->
 
 ### Worker Health Check
 
 <!--START_SECTION:worker_health-->
-- Waiting for health check...
+- featured-projects: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
+- wakatime: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
+- daily-quote: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
+- snapshot: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
 <!--END_SECTION:worker_health-->
 
 ### Task State
 
 <!--START_SECTION:task_state-->
-- Waiting for manager state...
+- featured-projects: Success | attempt 1/2 | updated 2026-03-14 23:16 CST | Updated featured projects: symkan-experiments kan-sr colab
+- wakatime: Success | attempt 1/2 | updated 2026-03-14 23:16 CST | Updated WakaTime section
+- daily-quote: Success | attempt 1/2 | updated 2026-03-14 23:16 CST | Updated daily quote: Anonymous
+- snapshot: Success | attempt 1/2 | updated 2026-03-14 23:16 CST | Updated recent repository snapshot with 5 entries
 <!--END_SECTION:task_state-->
 
 ### Dead Letter Queue
@@ -182,6 +192,9 @@ All visual components below support both dark mode and light mode automatically.
 
 <!--START_SECTION:waka-->
 ```text
+Total Time: 0 secs
+Daily Average: 0 secs
+
 No activity tracked yet
 ```
 <!--END_SECTION:waka-->
@@ -292,9 +305,9 @@ No activity tracked yet
 <div align="center">
 
 <!--START_SECTION:daily_quote-->
-> The future depends on what you do today.
+> Consistency compounds faster than intensity.
 >
-> — Mahatma Gandhi
+> — Anonymous
 <!--END_SECTION:daily_quote-->
 
 </div>
