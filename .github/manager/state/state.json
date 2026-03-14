@@ -1,13 +1,75 @@
 {
   "workflow": {
-    "name": "workflow-manager",
+    "name": "profile-readme-automation",
+    "description": "DAG orchestrated README automation for profile content",
     "status": "Completed",
-    "started_at": "2026-03-14T15:15:51Z",
-    "completed_at": "2026-03-14T15:16:31Z",
-    "run_id": "23090623968",
-    "run_url": "https://github.com/ccstudentcc/ccstudentcc/actions/runs/23090623968"
+    "started_at": "2026-03-14T15:48:02Z",
+    "completed_at": "2026-03-14T15:48:06Z",
+    "run_id": "23091145505",
+    "run_url": "https://github.com/ccstudentcc/ccstudentcc/actions/runs/23091145505",
+    "dag_nodes": 4,
+    "dag_edges": 2
   },
   "failure_policy": "continue-on-error + retry + timeout cancel + dead-letter on exhaust",
+  "scheduler": {
+    "trigger": "workflow_dispatch",
+    "cron": "5 */6 * * *",
+    "priority_policy": "higher-first",
+    "delay_strategy": "defer-until-ready",
+    "parallel_execution": true,
+    "ready_queue": [],
+    "deferred_tasks": 0,
+    "running_tasks": 0,
+    "completed_tasks": 4
+  },
+  "worker_pools": {
+    "content-pool": {
+      "worker_type": "content-sync",
+      "min_workers": 1,
+      "max_workers": 2,
+      "queue_target_per_worker": 1,
+      "scale_metric": "queue_depth",
+      "capabilities": [
+        "featured-projects",
+        "snapshot"
+      ],
+      "desired_workers": 1,
+      "active_workers": 0,
+      "queued_tasks": 0,
+      "completed_tasks": 2,
+      "last_scale_reason": "queue 0, active 0, target 1 per worker"
+    },
+    "metrics-pool": {
+      "worker_type": "metrics-sync",
+      "min_workers": 1,
+      "max_workers": 1,
+      "queue_target_per_worker": 1,
+      "scale_metric": "queue_depth",
+      "capabilities": [
+        "wakatime"
+      ],
+      "desired_workers": 1,
+      "active_workers": 0,
+      "queued_tasks": 0,
+      "completed_tasks": 1,
+      "last_scale_reason": "queue 0, active 0, target 1 per worker"
+    },
+    "engagement-pool": {
+      "worker_type": "engagement-sync",
+      "min_workers": 1,
+      "max_workers": 1,
+      "queue_target_per_worker": 2,
+      "scale_metric": "queue_depth",
+      "capabilities": [
+        "daily-quote"
+      ],
+      "desired_workers": 1,
+      "active_workers": 0,
+      "queued_tasks": 0,
+      "completed_tasks": 1,
+      "last_scale_reason": "queue 0, active 0, target 2 per worker"
+    }
+  },
   "managed_jobs": [
     "featured-projects",
     "wakatime",
@@ -20,93 +82,156 @@
       "enabled": true,
       "timeout_seconds": 180,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-14T15:16:01Z",
-      "last_started_at": "2026-03-14T15:15:51Z",
-      "last_completed_at": "2026-03-14T15:16:01Z",
-      "last_success_at": "2026-03-14T15:16:01Z",
+      "last_heartbeat_at": "2026-03-14T15:48:04Z",
+      "last_started_at": "2026-03-14T15:48:02Z",
+      "last_completed_at": "2026-03-14T15:48:04Z",
+      "last_success_at": "2026-03-14T15:48:04Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
-      "health": "Healthy"
+      "health": "Healthy",
+      "worker_type": "content-sync",
+      "pool": "content-pool",
+      "capabilities": [
+        "readme-write",
+        "repo-discovery"
+      ],
+      "retry_backoff_seconds": 5
     },
     "wakatime": {
       "display_name": "WakaTime",
       "enabled": true,
       "timeout_seconds": 180,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-14T15:16:11Z",
-      "last_started_at": "2026-03-14T15:16:01Z",
-      "last_completed_at": "2026-03-14T15:16:11Z",
-      "last_success_at": "2026-03-14T15:16:11Z",
+      "last_heartbeat_at": "2026-03-14T15:48:04Z",
+      "last_started_at": "2026-03-14T15:48:02Z",
+      "last_completed_at": "2026-03-14T15:48:04Z",
+      "last_success_at": "2026-03-14T15:48:04Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
-      "health": "Healthy"
+      "health": "Healthy",
+      "worker_type": "metrics-sync",
+      "pool": "metrics-pool",
+      "capabilities": [
+        "readme-write",
+        "external-api"
+      ],
+      "retry_backoff_seconds": 10
     },
     "daily-quote": {
       "display_name": "Daily Quote",
       "enabled": true,
       "timeout_seconds": 60,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-14T15:16:21Z",
-      "last_started_at": "2026-03-14T15:16:11Z",
-      "last_completed_at": "2026-03-14T15:16:21Z",
-      "last_success_at": "2026-03-14T15:16:21Z",
+      "last_heartbeat_at": "2026-03-14T15:48:04Z",
+      "last_started_at": "2026-03-14T15:48:02Z",
+      "last_completed_at": "2026-03-14T15:48:04Z",
+      "last_success_at": "2026-03-14T15:48:04Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
-      "health": "Healthy"
+      "health": "Healthy",
+      "worker_type": "engagement-sync",
+      "pool": "engagement-pool",
+      "capabilities": [
+        "readme-write",
+        "content-generation"
+      ],
+      "retry_backoff_seconds": 5
     },
     "snapshot": {
       "display_name": "Snapshot",
       "enabled": true,
       "timeout_seconds": 180,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-14T15:16:31Z",
-      "last_started_at": "2026-03-14T15:16:21Z",
-      "last_completed_at": "2026-03-14T15:16:31Z",
-      "last_success_at": "2026-03-14T15:16:31Z",
+      "last_heartbeat_at": "2026-03-14T15:48:06Z",
+      "last_started_at": "2026-03-14T15:48:04Z",
+      "last_completed_at": "2026-03-14T15:48:06Z",
+      "last_success_at": "2026-03-14T15:48:06Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
-      "health": "Healthy"
+      "health": "Healthy",
+      "worker_type": "content-sync",
+      "pool": "content-pool",
+      "capabilities": [
+        "readme-write",
+        "repo-discovery"
+      ],
+      "retry_backoff_seconds": 5
     }
   },
   "tasks": {
     "featured-projects": {
+      "display_name": "Featured Projects",
+      "worker": "featured-projects",
+      "pool": "content-pool",
+      "worker_type": "content-sync",
+      "priority": 90,
+      "depends_on": [],
+      "condition": "always",
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "started_at": "2026-03-14T15:15:51Z",
-      "completed_at": "2026-03-14T15:16:01Z",
-      "updated_at": "2026-03-14T15:16:01Z",
+      "scheduled_at": "2026-03-14T15:48:02Z",
+      "started_at": "2026-03-14T15:48:02Z",
+      "completed_at": "2026-03-14T15:48:04Z",
+      "updated_at": "2026-03-14T15:48:04Z",
       "message": "Updated featured projects: symkan-experiments kan-sr colab"
     },
     "wakatime": {
+      "display_name": "WakaTime",
+      "worker": "wakatime",
+      "pool": "metrics-pool",
+      "worker_type": "metrics-sync",
+      "priority": 100,
+      "depends_on": [],
+      "condition": "env_exists(WAKATIME_API_KEY)",
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "started_at": "2026-03-14T15:16:01Z",
-      "completed_at": "2026-03-14T15:16:11Z",
-      "updated_at": "2026-03-14T15:16:11Z",
+      "scheduled_at": "2026-03-14T15:48:02Z",
+      "started_at": "2026-03-14T15:48:02Z",
+      "completed_at": "2026-03-14T15:48:04Z",
+      "updated_at": "2026-03-14T15:48:04Z",
       "message": "Updated WakaTime section"
     },
     "daily-quote": {
+      "display_name": "Daily Quote",
+      "worker": "daily-quote",
+      "pool": "engagement-pool",
+      "worker_type": "engagement-sync",
+      "priority": 30,
+      "depends_on": [],
+      "condition": "always",
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "started_at": "2026-03-14T15:16:11Z",
-      "completed_at": "2026-03-14T15:16:21Z",
-      "updated_at": "2026-03-14T15:16:21Z",
+      "scheduled_at": "2026-03-14T15:48:02Z",
+      "started_at": "2026-03-14T15:48:02Z",
+      "completed_at": "2026-03-14T15:48:04Z",
+      "updated_at": "2026-03-14T15:48:04Z",
       "message": "Updated daily quote: Anonymous"
     },
     "snapshot": {
+      "display_name": "Snapshot",
+      "worker": "snapshot",
+      "pool": "content-pool",
+      "worker_type": "content-sync",
+      "priority": 60,
+      "depends_on": [
+        "featured-projects",
+        "daily-quote"
+      ],
+      "condition": "all_success",
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "started_at": "2026-03-14T15:16:21Z",
-      "completed_at": "2026-03-14T15:16:31Z",
-      "updated_at": "2026-03-14T15:16:31Z",
+      "scheduled_at": "2026-03-14T15:48:02Z",
+      "started_at": "2026-03-14T15:48:04Z",
+      "completed_at": "2026-03-14T15:48:06Z",
+      "updated_at": "2026-03-14T15:48:06Z",
       "message": "Updated recent repository snapshot with 5 entries"
     }
   }
