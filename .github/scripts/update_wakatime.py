@@ -6,7 +6,7 @@ import os
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from readme_utils import update_readme_section
@@ -16,6 +16,7 @@ README_PATH = Path("README.md")
 START_MARKER = "<!--START_SECTION:waka-->"
 END_MARKER = "<!--END_SECTION:waka-->"
 WAKATIME_URL = "https://api.wakatime.com/api/v1/users/current/stats/last_7_days"
+ASIA_SHANGHAI = timezone(timedelta(hours=8))
 
 
 def _request_json(url: str, headers: dict[str, str]) -> dict:
@@ -69,33 +70,75 @@ def _get_average_text(data: dict) -> str:
     )
 
 
+def _progress_bar(percent: float, width: int = 26) -> str:
+    clamped = max(0.0, min(100.0, float(percent)))
+    filled = int(round(clamped / 100.0 * width))
+    return "#" * filled + "-" * (width - filled)
+
+
+def _render_ranked_lines(items: list[dict], label: str, limit: int = 5) -> list[str]:
+    rows = items[:limit]
+    lines = [f"{label}:"]
+    if not rows:
+        lines.append("  No tracked data")
+        lines.append("")
+        return lines
+
+    width = max(len((row.get("name") or "Unknown")) for row in rows)
+    for row in rows:
+        name = row.get("name") or "Unknown"
+        text = row.get("text") or row.get("digital") or "0 mins"
+        percent = float(row.get("percent", 0) or 0)
+        bar = _progress_bar(percent)
+        lines.append(f"  {name.ljust(width)}  {text.ljust(12)}  [{bar}] {percent:5.1f}%")
+    lines.append("")
+    return lines
+
+
 def build_stats_block(payload: dict) -> str:
     data = payload.get("data", {})
     languages = data.get("languages", [])[:5]
+    editors = data.get("editors", [])[:5]
+    projects = data.get("projects", [])[:5]
+    operating_systems = data.get("operating_systems", [])[:5]
     total = _get_total_text(data)
     average = _get_average_text(data)
-    synced_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    synced_at = datetime.now(ASIA_SHANGHAI).replace(microsecond=0).strftime("%Y-%m-%d %H:%M CST")
 
-    lines = [
+    header_lines = [
+        '<div align="center">',
+        "",
+        "<picture>",
+        f'  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Code%20Time-{total.replace(" ", "%20")}-334155?style=for-the-badge&logo=wakatime" />',
+        f'  <img src="https://img.shields.io/badge/Code%20Time-{total.replace(" ", "%20")}-2563eb?style=for-the-badge&logo=wakatime" alt="code time" />',
+        "</picture>",
+        "<picture>",
+        f'  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Daily%20Average-{average.replace(" ", "%20")}-475569?style=for-the-badge" />',
+        f'  <img src="https://img.shields.io/badge/Daily%20Average-{average.replace(" ", "%20")}-0f172a?style=for-the-badge" alt="daily average" />',
+        "</picture>",
+        "<picture>",
+        f'  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Last%20Sync-{synced_at.replace(" ", "%20")}-1e293b?style=for-the-badge" />',
+        f'  <img src="https://img.shields.io/badge/Last%20Sync-{synced_at.replace(" ", "%20")}-1d4ed8?style=for-the-badge" alt="last sync" />',
+        "</picture>",
+        "",
+        "</div>",
+        "",
         "```text",
-        f"Total Time: {total}",
-        f"Daily Average: {average}",
-        f"Last Sync (UTC): {synced_at}",
+        "Timezone: Asia/Shanghai (UTC+8)",
         ""
     ]
 
-    if not languages:
-        lines.append("No activity tracked yet")
-    else:
-        width = max(len(language.get("name", "")) for language in languages)
-        for language in languages:
-            name = language.get("name", "Unknown")
-            text = language.get("text") or language.get("digital") or "0 mins"
-            percent = language.get("percent", 0)
-            lines.append(f"{name.ljust(width)}  {text.ljust(12)}  {percent:>5.1f}%")
+    body_lines: list[str] = []
+    body_lines.extend(_render_ranked_lines(languages, "Languages"))
+    body_lines.extend(_render_ranked_lines(editors, "Editors"))
+    body_lines.extend(_render_ranked_lines(projects, "Projects"))
+    body_lines.extend(_render_ranked_lines(operating_systems, "Operating Systems"))
 
-    lines.append("```")
-    return "\n".join(lines)
+    if not languages and not editors and not projects and not operating_systems:
+        body_lines.append("No activity tracked yet")
+
+    body_lines.append("```")
+    return "\n".join(header_lines + body_lines)
 
 
 def main() -> None:
