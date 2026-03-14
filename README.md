@@ -17,6 +17,8 @@
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#github-analytics">Analytics</a> •
   <a href="#featured-projects">Featured</a> •
+  <a href="#recently-updated-repos">Recent Repos</a> •
+  <a href="#automation-heartbeat">Automation</a> •
   <a href="#wakatime">WakaTime</a>
 </p>
 
@@ -129,6 +131,52 @@ All visual components below support both dark mode and light mode automatically.
 - Auto-selected from your 3 most recently updated public repositories.
 - 自动选取你最近更新的 3 个公开仓库。
 
+<a id="recently-updated-repos"></a>
+## Recently Updated Repos | 最近更新仓库
+
+<!--START_SECTION:recent_repos-->
+- [symkan-experiments](https://github.com/ccstudentcc/symkan-experiments) - Updated: 2026-03-14 11:00:16 UTC
+- [kan-sr](https://github.com/ccstudentcc/kan-sr) - Updated: 2026-03-14 02:15:18 UTC
+- [colab](https://github.com/ccstudentcc/colab) - Updated: 2025-10-29 06:36:15 UTC
+- [R-repo](https://github.com/ccstudentcc/R-repo) - Updated: 2025-10-29 06:31:12 UTC
+- [oop](https://github.com/ccstudentcc/oop) - Updated: 2025-01-12 09:52:22 UTC
+<!--END_SECTION:recent_repos-->
+
+<a id="automation-heartbeat"></a>
+## Automation Heartbeat | 自动化心跳
+
+<!--START_SECTION:automation_status-->
+- Last automation update: 2026-03-14 21:35 CST
+- Timezone: Asia/Shanghai (UTC+8)
+- Orchestrator: workflow-manager
+- Managed jobs: featured projects, wakatime, daily quote, snapshot
+- Failure policy: continue-on-error + manager summary alert
+<!--END_SECTION:automation_status-->
+
+### Worker Registry
+
+<!--START_SECTION:worker_registry-->
+- Loading worker registry...
+<!--END_SECTION:worker_registry-->
+
+### Worker Health Check
+
+<!--START_SECTION:worker_health-->
+- Waiting for health check...
+<!--END_SECTION:worker_health-->
+
+### Task State
+
+<!--START_SECTION:task_state-->
+- Waiting for manager state...
+<!--END_SECTION:task_state-->
+
+### Dead Letter Queue
+
+<!--START_SECTION:dead_letters-->
+- No dead letters.
+<!--END_SECTION:dead_letters-->
+
 <a id="wakatime"></a>
 ## WakaTime This Week | 本周编码时长
 
@@ -157,9 +205,11 @@ No activity tracked yet
 | Component | Purpose | Status |
 | --- | --- | --- |
 | README profile page | Showcase identity and development progress | Active |
+| Workflow manager | Orchestrate all README automation workflows | Active |
 | GitHub stats cards | Visualize contribution and language trends | Active |
 | WakaTime workflow | Auto-sync weekly coding activity | Active |
 | Featured projects workflow | Auto-refresh top 3 recently updated repos | Active |
+| Snapshot workflow | Auto-refresh recent repos and heartbeat | Active |
 
 ### 2026 Roadmap
 - [x] Build a complete profile README
@@ -205,9 +255,11 @@ No activity tracked yet
 | 组件 | 作用 | 状态 |
 | --- | --- | --- |
 | README 主页 | 展示个人定位与成长进度 | 运行中 |
+| 工作流管理器 | 统一编排 README 自动化工作流 | 运行中 |
 | GitHub 数据卡片 | 可视化贡献与语言趋势 | 运行中 |
 | WakaTime 工作流 | 自动同步每周编码活动 | 运行中 |
 | 精选项目工作流 | 自动刷新最近更新的 3 个仓库 | 运行中 |
+| 快照工作流 | 自动刷新最近更新仓库与心跳状态 | 运行中 |
 
 ### 2026 路线图
 
@@ -239,8 +291,10 @@ No activity tracked yet
 
 <div align="center">
 
-"Consistency beats intensity."
-
-持续胜过爆发。
+<!--START_SECTION:daily_quote-->
+> The future depends on what you do today.
+>
+> — Mahatma Gandhi
+<!--END_SECTION:daily_quote-->
 
 </div>
