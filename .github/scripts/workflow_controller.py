@@ -5,6 +5,7 @@ import math
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from collections import deque
 from copy import deepcopy
@@ -540,6 +541,15 @@ def collect_ready_tasks(task_specs: dict[str, dict], state: dict) -> list[str]:
         if task_state["status"] not in WAITING_STATUSES:
             continue
 
+        worker_name = task_state["worker"]
+        worker_state = state["workers"].get(worker_name, {})
+        if not worker_state.get("enabled", True):
+            task_state["status"] = "Skipped"
+            task_state["completed_at"] = iso_now()
+            task_state["updated_at"] = iso_now()
+            task_state["message"] = f"Worker {worker_name} is disabled"
+            continue
+
         scheduled_at = datetime.fromisoformat(task_state["scheduled_at"].replace("Z", "+00:00"))
         if scheduled_at > now:
             task_state["status"] = "Deferred"
@@ -573,6 +583,12 @@ def launch_task(task_name: str, task_specs: dict[str, dict], state: dict, regist
     worker = registry_by_name[task_spec["worker"]]
     task_state = state["tasks"][task_name]
     worker_state = state["workers"][task_spec["worker"]]
+    if not worker_state.get("enabled", True):
+        task_state["status"] = "Skipped"
+        task_state["completed_at"] = iso_now()
+        task_state["updated_at"] = iso_now()
+        task_state["message"] = f"Worker {task_spec['worker']} is disabled"
+        return
     attempt = task_state["attempt"] + 1
 
     task_state["attempt"] = attempt
@@ -585,17 +601,21 @@ def launch_task(task_name: str, task_specs: dict[str, dict], state: dict, regist
     worker_state["last_error"] = None
     worker_state["last_heartbeat_at"] = iso_now()
 
+    stdout_file = tempfile.TemporaryFile(mode="w+t", encoding="utf-8")
+    stderr_file = tempfile.TemporaryFile(mode="w+t", encoding="utf-8")
+
     process = subprocess.Popen(
         worker["command"],
         cwd=ROOT,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
+        stdout=stdout_file,
+        stderr=stderr_file,
         env=os.environ.copy()
     )
 
     running[task_name] = {
         "process": process,
+        "stdout_file": stdout_file,
+        "stderr_file": stderr_file,
         "worker": task_spec["worker"],
         "pool": task_state["pool"],
         "deadline": time.time() + worker["timeout_seconds"],
@@ -606,7 +626,15 @@ def launch_task(task_name: str, task_specs: dict[str, dict], state: dict, regist
 def finalize_task_result(task_name: str, state: dict, registry_by_name: dict[str, dict], running: dict[str, dict], dead_letters: list[dict]) -> None:
     info = running.pop(task_name)
     process = info["process"]
-    stdout, stderr = process.communicate()
+    stdout_file = info["stdout_file"]
+    stderr_file = info["stderr_file"]
+    process.wait()
+    stdout_file.seek(0)
+    stderr_file.seek(0)
+    stdout = stdout_file.read()
+    stderr = stderr_file.read()
+    stdout_file.close()
+    stderr_file.close()
     worker_name = info["worker"]
     worker = registry_by_name[worker_name]
     task_state = state["tasks"][task_name]
