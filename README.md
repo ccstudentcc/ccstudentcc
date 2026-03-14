@@ -16,10 +16,10 @@
 <p>
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#github-analytics">Analytics</a> •
+  <a href="#wakatime">WakaTime</a> •
   <a href="#featured-projects">Featured</a> •
   <a href="#recently-updated-repos">Recent Repos</a> •
-  <a href="#automation-heartbeat">Automation</a> •
-  <a href="#wakatime">WakaTime</a>
+  <a href="#automation-heartbeat">Automation</a>
 </p>
 
 <a href="https://github.com/ccstudentcc">
@@ -40,6 +40,10 @@
     <img src="https://img.shields.io/badge/Open%20Source-Love-0d9488?style=for-the-badge" alt="open source" />
   </picture>
 </a>
+
+<p>
+  <sub>Building practical automation workflows for a cleaner developer profile and steady weekly progress.</sub>
+</p>
 
 </div>
 
@@ -128,8 +132,8 @@ All visual components below support both dark mode and light mode automatically.
 </div>
 <!--END_SECTION:featured-->
 
-- Auto-selected from your 3 most recently updated public repositories.
-- 自动选取你最近更新的 3 个公开仓库。
+- Auto-selected from 3 most recently updated public repositories.
+- 自动选取最近更新的 3 个公开仓库。
 
 <a id="recently-updated-repos"></a>
 ## Recently Updated Repos | 最近更新仓库
@@ -208,7 +212,7 @@ Operating Systems:
 <a id="english"></a>
 ## English
 
-<details open>
+<details>
 <summary><b>Open English Section</b></summary>
 
 ### About Me
