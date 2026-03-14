@@ -146,16 +146,44 @@ All visual components below support both dark mode and light mode automatically.
 ## WakaTime This Week | 本周编码时长
 
 <!--START_SECTION:waka-->
-```text
-Total Time: 2 hrs 18 mins
-Daily Average: 19 mins
-Last Sync (UTC): 2026-03-14T16:12:03Z
+<div align="center">
 
-Markdown    1 hr 28 mins   63.6%
-YAML        23 mins        16.8%
-JSON        19 mins        14.1%
-Git Config  4 mins          3.0%
-Python      2 mins          1.7%
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Code%20Time-2%20hrs%2018%20mins-334155?style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/badge/Code%20Time-2%20hrs%2018%20mins-2563eb?style=for-the-badge&logo=wakatime" alt="code time" />
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Daily%20Average-19%20mins-475569?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Daily%20Average-19%20mins-0f172a?style=for-the-badge" alt="daily average" />
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Last%20Sync-2026-03-15%2000:18%20CST-1e293b?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Last%20Sync-2026-03-15%2000:18%20CST-1d4ed8?style=for-the-badge" alt="last sync" />
+</picture>
+
+</div>
+
+```text
+Timezone: Asia/Shanghai (UTC+8)
+
+Languages:
+  Markdown    1 hr 28 mins  [#################---------]  63.6%
+  YAML        23 mins       [####----------------------]  16.8%
+  JSON        19 mins       [####----------------------]  14.1%
+  Git Config  4 mins        [#-------------------------]   3.0%
+  Python      2 mins        [--------------------------]   1.7%
+
+Editors:
+  VS Code  2 hrs 18 mins  [##########################] 100.0%
+
+Projects:
+  ccstudentcc         2 hrs 8 mins  [########################--]  92.8%
+  symkan-experiments  9 mins        [##------------------------]   7.2%
+
+Operating Systems:
+  Linux    1 hr 10 mins  [#############-------------]  50.9%
+  Windows  1 hr 7 mins   [#############-------------]  49.1%
+
 ```
 <!--END_SECTION:waka-->
 
@@ -265,14 +293,14 @@ Python      2 mins          1.7%
 ### Orchestrator Status
 
 <!--START_SECTION:automation_status-->
-- Last automation update: 2026-03-15 00:12 CST
+- Last automation update: 2026-03-15 00:18 CST
 - Timezone: Asia/Shanghai (UTC+8)
 - Orchestrator: profile-readme-automation (DAG nodes 4, edges 2)
 - Scheduler trigger: workflow_dispatch | cron 5 */6 * * * | policy higher-first
 - Worker pool model: logical worker pools inside a single GitHub Actions run
 - Managed jobs: featured-projects, wakatime, daily-quote, snapshot
 - Failure policy: continue-on-error + retry + timeout cancel + dead-letter on exhaust
-- Run URL: https://github.com/ccstudentcc/ccstudentcc/actions/runs/23091537137
+- Run URL: https://github.com/ccstudentcc/ccstudentcc/actions/runs/23091645739
 <!--END_SECTION:automation_status-->
 
 ### Workflow DAG
@@ -314,19 +342,19 @@ Python      2 mins          1.7%
 ### Worker Health Check
 
 <!--START_SECTION:worker_health-->
-- featured-projects: Healthy | heartbeat 2026-03-15 00:12 CST | last success 2026-03-15 00:12 CST
-- wakatime: Healthy | heartbeat 2026-03-15 00:12 CST | last success 2026-03-15 00:12 CST
-- daily-quote: Healthy | heartbeat 2026-03-15 00:12 CST | last success 2026-03-15 00:12 CST
-- snapshot: Healthy | heartbeat 2026-03-15 00:12 CST | last success 2026-03-15 00:12 CST
+- featured-projects: Healthy | heartbeat 2026-03-15 00:18 CST | last success 2026-03-15 00:18 CST
+- wakatime: Healthy | heartbeat 2026-03-15 00:18 CST | last success 2026-03-15 00:18 CST
+- daily-quote: Healthy | heartbeat 2026-03-15 00:18 CST | last success 2026-03-15 00:18 CST
+- snapshot: Healthy | heartbeat 2026-03-15 00:18 CST | last success 2026-03-15 00:18 CST
 <!--END_SECTION:worker_health-->
 
 ### Task State
 
 <!--START_SECTION:task_state-->
-- featured-projects: Success | priority 90 | attempt 1/2 | pool content-pool | updated 2026-03-15 00:12 CST | Updated featured projects: symkan-experiments kan-sr colab
-- wakatime: Success | priority 100 | attempt 1/2 | pool metrics-pool | updated 2026-03-15 00:12 CST | Updated WakaTime section
-- daily-quote: Success | priority 30 | attempt 1/2 | pool engagement-pool | updated 2026-03-15 00:12 CST | Updated daily quote: Anonymous
-- snapshot: Success | priority 60 | attempt 1/2 | pool content-pool | updated 2026-03-15 00:12 CST | Updated recent repository snapshot with 5 entries
+- featured-projects: Success | priority 90 | attempt 1/2 | pool content-pool | updated 2026-03-15 00:18 CST | Updated featured projects: symkan-experiments kan-sr colab
+- wakatime: Success | priority 100 | attempt 1/2 | pool metrics-pool | updated 2026-03-15 00:18 CST | Updated WakaTime section
+- daily-quote: Success | priority 30 | attempt 1/2 | pool engagement-pool | updated 2026-03-15 00:18 CST | Updated daily quote: Anonymous
+- snapshot: Success | priority 60 | attempt 1/2 | pool content-pool | updated 2026-03-15 00:18 CST | Updated recent repository snapshot with 5 entries
 <!--END_SECTION:task_state-->
 
 ### Dead Letter Queue
