@@ -76,13 +76,21 @@ def _progress_bar(percent: float, width: int = 26) -> str:
     return "#" * filled + "-" * (width - filled)
 
 
+def _badge_url(label: str, message: str, color: str, logo: str | None = None) -> str:
+    encoded_label = urllib.parse.quote(label, safe="")
+    encoded_message = urllib.parse.quote(message, safe="")
+    url = f"https://img.shields.io/badge/{encoded_label}-{encoded_message}-{color}?style=for-the-badge"
+    if logo:
+        url += f"&logo={urllib.parse.quote(logo, safe='')}"
+    return url
+
+
 def _render_ranked_lines(items: list[dict], label: str, limit: int = 5) -> list[str]:
     rows = items[:limit]
-    lines = [f"{label}:"]
     if not rows:
-        lines.append("  No tracked data")
-        lines.append("")
-        return lines
+        return []
+
+    lines = [f"{label}:"]
 
     width = max(len((row.get("name") or "Unknown")) for row in rows)
     for row in rows:
@@ -95,6 +103,16 @@ def _render_ranked_lines(items: list[dict], label: str, limit: int = 5) -> list[
     return lines
 
 
+def _top_item(items: list[dict]) -> tuple[str, str, float]:
+    if not items:
+        return "N/A", "0 mins", 0.0
+    item = items[0]
+    name = item.get("name") or "Unknown"
+    text = item.get("text") or item.get("digital") or "0 mins"
+    percent = float(item.get("percent", 0) or 0)
+    return name, text, percent
+
+
 def build_stats_block(payload: dict) -> str:
     data = payload.get("data", {})
     languages = data.get("languages", [])[:5]
@@ -104,24 +122,52 @@ def build_stats_block(payload: dict) -> str:
     total = _get_total_text(data)
     average = _get_average_text(data)
     synced_at = datetime.now(ASIA_SHANGHAI).replace(microsecond=0).strftime("%Y-%m-%d %H:%M CST")
+    has_any_data = any([languages, editors, projects, operating_systems])
+    top_lang_name, top_lang_time, top_lang_percent = _top_item(languages)
+    top_project_name, top_project_time, top_project_percent = _top_item(projects)
+    top_editor_name, _, _ = _top_item(editors)
+
+    code_time_dark = _badge_url("Code Time", total, "334155", logo="wakatime")
+    code_time_light = _badge_url("Code Time", total, "2563eb", logo="wakatime")
+    average_dark = _badge_url("Daily Average", average, "475569")
+    average_light = _badge_url("Daily Average", average, "0f172a")
+    sync_dark = _badge_url("Last Sync", synced_at, "1e293b")
+    sync_light = _badge_url("Last Sync", synced_at, "1d4ed8")
+    top_lang_dark = _badge_url("Top Language", top_lang_name, "0f766e")
+    top_lang_light = _badge_url("Top Language", top_lang_name, "0d9488")
+    top_project_dark = _badge_url("Top Project", top_project_name, "4c1d95")
+    top_project_light = _badge_url("Top Project", top_project_name, "6d28d9")
 
     header_lines = [
         '<div align="center">',
         "",
         "<picture>",
-        f'  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Code%20Time-{total.replace(" ", "%20")}-334155?style=for-the-badge&logo=wakatime" />',
-        f'  <img src="https://img.shields.io/badge/Code%20Time-{total.replace(" ", "%20")}-2563eb?style=for-the-badge&logo=wakatime" alt="code time" />',
+        f'  <source media="(prefers-color-scheme: dark)" srcset="{code_time_dark}" />',
+        f'  <img src="{code_time_light}" alt="code time" />',
         "</picture>",
         "<picture>",
-        f'  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Daily%20Average-{average.replace(" ", "%20")}-475569?style=for-the-badge" />',
-        f'  <img src="https://img.shields.io/badge/Daily%20Average-{average.replace(" ", "%20")}-0f172a?style=for-the-badge" alt="daily average" />',
+        f'  <source media="(prefers-color-scheme: dark)" srcset="{average_dark}" />',
+        f'  <img src="{average_light}" alt="daily average" />',
         "</picture>",
         "<picture>",
-        f'  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Last%20Sync-{synced_at.replace(" ", "%20")}-1e293b?style=for-the-badge" />',
-        f'  <img src="https://img.shields.io/badge/Last%20Sync-{synced_at.replace(" ", "%20")}-1d4ed8?style=for-the-badge" alt="last sync" />',
+        f'  <source media="(prefers-color-scheme: dark)" srcset="{sync_dark}" />',
+        f'  <img src="{sync_light}" alt="last sync" />',
+        "</picture>",
+        "<picture>",
+        f'  <source media="(prefers-color-scheme: dark)" srcset="{top_lang_dark}" />',
+        f'  <img src="{top_lang_light}" alt="top language" />',
+        "</picture>",
+        "<picture>",
+        f'  <source media="(prefers-color-scheme: dark)" srcset="{top_project_dark}" />',
+        f'  <img src="{top_project_light}" alt="top project" />',
         "</picture>",
         "",
+        f"<sub>Focus: {top_lang_name} ({top_lang_time}, {top_lang_percent:.1f}%) | Project: {top_project_name} ({top_project_time}, {top_project_percent:.1f}%) | Editor: {top_editor_name}</sub>",
+        "",
         "</div>",
+        "",
+        "<details open>",
+        "<summary><b>Weekly Breakdown</b></summary>",
         "",
         "```text",
         "Timezone: Asia/Shanghai (UTC+8)",
@@ -134,10 +180,12 @@ def build_stats_block(payload: dict) -> str:
     body_lines.extend(_render_ranked_lines(projects, "Projects"))
     body_lines.extend(_render_ranked_lines(operating_systems, "Operating Systems"))
 
-    if not languages and not editors and not projects and not operating_systems:
+    if not has_any_data:
         body_lines.append("No activity tracked yet")
 
     body_lines.append("```")
+    body_lines.append("")
+    body_lines.append("</details>")
     return "\n".join(header_lines + body_lines)
 
 
