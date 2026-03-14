@@ -1,0 +1,96 @@
+{
+  "workflow": {
+    "name": "profile-readme-automation",
+    "description": "DAG orchestrated README automation for profile content"
+  },
+  "scheduler": {
+    "cron": "5 */6 * * *",
+    "supported_triggers": [
+      "workflow_dispatch",
+      "schedule"
+    ],
+    "priority_policy": "higher-first",
+    "delay_strategy": "defer-until-ready",
+    "parallel_execution": true
+  },
+  "worker_pools": [
+    {
+      "name": "content-pool",
+      "worker_type": "content-sync",
+      "min_workers": 1,
+      "max_workers": 2,
+      "queue_target_per_worker": 1,
+      "scale_metric": "queue_depth",
+      "capabilities": [
+        "featured-projects",
+        "snapshot"
+      ]
+    },
+    {
+      "name": "metrics-pool",
+      "worker_type": "metrics-sync",
+      "min_workers": 1,
+      "max_workers": 1,
+      "queue_target_per_worker": 1,
+      "scale_metric": "queue_depth",
+      "capabilities": [
+        "wakatime"
+      ]
+    },
+    {
+      "name": "engagement-pool",
+      "worker_type": "engagement-sync",
+      "min_workers": 1,
+      "max_workers": 1,
+      "queue_target_per_worker": 2,
+      "scale_metric": "queue_depth",
+      "capabilities": [
+        "daily-quote"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "name": "featured-projects",
+      "worker": "featured-projects",
+      "pool": "content-pool",
+      "priority": 90,
+      "depends_on": [],
+      "condition": "always",
+      "delay_seconds": 0
+    },
+    {
+      "name": "wakatime",
+      "worker": "wakatime",
+      "pool": "metrics-pool",
+      "priority": 100,
+      "depends_on": [],
+      "condition": {
+        "type": "env_exists",
+        "name": "WAKATIME_API_KEY"
+      },
+      "delay_seconds": 0
+    },
+    {
+      "name": "daily-quote",
+      "worker": "daily-quote",
+      "pool": "engagement-pool",
+      "priority": 30,
+      "depends_on": [],
+      "condition": "always",
+      "delay_seconds": 0
+    },
+    {
+      "name": "snapshot",
+      "worker": "snapshot",
+      "pool": "content-pool",
+      "priority": 60,
+      "depends_on": [
+        "featured-projects",
+        "daily-quote"
+      ],
+      "condition": "all_success",
+      "delay_seconds": 0
+    }
+  ]
+}

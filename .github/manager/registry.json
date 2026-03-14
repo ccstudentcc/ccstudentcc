@@ -4,8 +4,15 @@
       "name": "featured-projects",
       "display_name": "Featured Projects",
       "enabled": true,
+      "worker_type": "content-sync",
+      "pool": "content-pool",
+      "capabilities": [
+        "readme-write",
+        "repo-discovery"
+      ],
       "timeout_seconds": 180,
       "max_retries": 1,
+      "retry_backoff_seconds": 5,
       "heartbeat_grace_seconds": 240,
       "command": [
         "bash",
@@ -16,8 +23,15 @@
       "name": "wakatime",
       "display_name": "WakaTime",
       "enabled": true,
+      "worker_type": "metrics-sync",
+      "pool": "metrics-pool",
+      "capabilities": [
+        "readme-write",
+        "external-api"
+      ],
       "timeout_seconds": 180,
       "max_retries": 1,
+      "retry_backoff_seconds": 10,
       "heartbeat_grace_seconds": 240,
       "command": [
         "python",
@@ -28,8 +42,15 @@
       "name": "daily-quote",
       "display_name": "Daily Quote",
       "enabled": true,
+      "worker_type": "engagement-sync",
+      "pool": "engagement-pool",
+      "capabilities": [
+        "readme-write",
+        "content-generation"
+      ],
       "timeout_seconds": 60,
       "max_retries": 1,
+      "retry_backoff_seconds": 5,
       "heartbeat_grace_seconds": 120,
       "command": [
         "python",
@@ -40,8 +61,15 @@
       "name": "snapshot",
       "display_name": "Snapshot",
       "enabled": true,
+      "worker_type": "content-sync",
+      "pool": "content-pool",
+      "capabilities": [
+        "readme-write",
+        "repo-discovery"
+      ],
       "timeout_seconds": 180,
       "max_retries": 1,
+      "retry_backoff_seconds": 5,
       "heartbeat_grace_seconds": 240,
       "command": [
         "python",

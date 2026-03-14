@@ -142,51 +142,6 @@ All visual components below support both dark mode and light mode automatically.
 - [oop](https://github.com/ccstudentcc/oop) - Updated: 2025-01-12 09:52:22 UTC
 <!--END_SECTION:recent_repos-->
 
-<a id="automation-heartbeat"></a>
-## Automation Heartbeat | 自动化心跳
-
-<!--START_SECTION:automation_status-->
-- Last automation update: 2026-03-14 23:16 CST
-- Timezone: Asia/Shanghai (UTC+8)
-- Orchestrator: workflow-manager/controller
-- Managed jobs: featured-projects, wakatime, daily-quote, snapshot
-- Failure policy: continue-on-error + retry + timeout cancel + dead-letter on exhaust
-- Run URL: https://github.com/ccstudentcc/ccstudentcc/actions/runs/23090623968
-<!--END_SECTION:automation_status-->
-
-### Worker Registry
-
-<!--START_SECTION:worker_registry-->
-- featured-projects: Featured Projects | enabled | timeout 180s | retries 1
-- wakatime: WakaTime | enabled | timeout 180s | retries 1
-- daily-quote: Daily Quote | enabled | timeout 60s | retries 1
-- snapshot: Snapshot | enabled | timeout 180s | retries 1
-<!--END_SECTION:worker_registry-->
-
-### Worker Health Check
-
-<!--START_SECTION:worker_health-->
-- featured-projects: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
-- wakatime: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
-- daily-quote: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
-- snapshot: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
-<!--END_SECTION:worker_health-->
-
-### Task State
-
-<!--START_SECTION:task_state-->
-- featured-projects: Success | attempt 1/2 | updated 2026-03-14 23:16 CST | Updated featured projects: symkan-experiments kan-sr colab
-- wakatime: Success | attempt 1/2 | updated 2026-03-14 23:16 CST | Updated WakaTime section
-- daily-quote: Success | attempt 1/2 | updated 2026-03-14 23:16 CST | Updated daily quote: Anonymous
-- snapshot: Success | attempt 1/2 | updated 2026-03-14 23:16 CST | Updated recent repository snapshot with 5 entries
-<!--END_SECTION:task_state-->
-
-### Dead Letter Queue
-
-<!--START_SECTION:dead_letters-->
-- No dead letters.
-<!--END_SECTION:dead_letters-->
-
 <a id="wakatime"></a>
 ## WakaTime This Week | 本周编码时长
 
@@ -249,8 +204,6 @@ No activity tracked yet
 
 </details>
 
----
-
 <a id="zh-cn"></a>
 ## 简体中文
 
@@ -297,6 +250,85 @@ No activity tracked yet
     <img src="https://img.shields.io/badge/GitHub-ccstudentcc-111827?style=for-the-badge&logo=github" alt="github" />
   </picture>
 </a>
+
+</details>
+
+<a id="automation-heartbeat"></a>
+<details>
+<summary><b>Automation Heartbeat | 自动化心跳</b></summary>
+
+### Orchestrator Status
+
+<!--START_SECTION:automation_status-->
+- Last automation update: 2026-03-14 23:16 CST
+- Timezone: Asia/Shanghai (UTC+8)
+- Orchestrator: profile-readme-automation (DAG nodes 4, edges 2)
+- Scheduler trigger: workflow_dispatch | cron 5 */6 * * * | policy higher-first
+- Worker pool model: logical worker pools inside a single GitHub Actions run
+- Managed jobs: featured-projects, wakatime, daily-quote, snapshot
+- Failure policy: continue-on-error + retry + timeout cancel + dead-letter on exhaust
+- Run URL: https://github.com/ccstudentcc/ccstudentcc/actions/runs/23090623968
+<!--END_SECTION:automation_status-->
+
+### Workflow DAG
+
+<!--START_SECTION:workflow_dag-->
+- featured-projects: depends on root | condition always | pool content-pool | priority 90
+- wakatime: depends on root | condition env_exists(WAKATIME_API_KEY) | pool metrics-pool | priority 100
+- daily-quote: depends on root | condition always | pool engagement-pool | priority 30
+- snapshot: depends on featured-projects, daily-quote | condition all_success | pool content-pool | priority 60
+<!--END_SECTION:workflow_dag-->
+
+### Scheduler State
+
+<!--START_SECTION:scheduler_state-->
+- Ready queue: empty
+- Deferred tasks: 0
+- Running tasks: 0
+- Completed tasks: 4
+- Delay strategy: defer-until-ready | parallel execution: True
+<!--END_SECTION:scheduler_state-->
+
+### Logical Worker Pools
+
+<!--START_SECTION:worker_pools-->
+- content-pool: logical type content-sync | desired 1 | active 0 | max 2 | queued 0 | queue 0, active 0, target 1 per worker
+- metrics-pool: logical type metrics-sync | desired 1 | active 0 | max 1 | queued 0 | queue 0, active 0, target 1 per worker
+- engagement-pool: logical type engagement-sync | desired 1 | active 0 | max 1 | queued 0 | queue 0, active 0, target 2 per worker
+<!--END_SECTION:worker_pools-->
+
+### Worker Registry
+
+<!--START_SECTION:worker_registry-->
+- featured-projects: Featured Projects | enabled | type content-sync | pool content-pool | capabilities readme-write, repo-discovery
+- wakatime: WakaTime | enabled | type metrics-sync | pool metrics-pool | capabilities readme-write, external-api
+- daily-quote: Daily Quote | enabled | type engagement-sync | pool engagement-pool | capabilities readme-write, content-generation
+- snapshot: Snapshot | enabled | type content-sync | pool content-pool | capabilities readme-write, repo-discovery
+<!--END_SECTION:worker_registry-->
+
+### Worker Health Check
+
+<!--START_SECTION:worker_health-->
+- featured-projects: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
+- wakatime: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
+- daily-quote: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
+- snapshot: Healthy | heartbeat 2026-03-14 23:16 CST | last success 2026-03-14 23:16 CST
+<!--END_SECTION:worker_health-->
+
+### Task State
+
+<!--START_SECTION:task_state-->
+- featured-projects: Success | priority 90 | attempt 1/2 | pool content-pool | updated 2026-03-14 23:16 CST | Updated featured projects: symkan-experiments kan-sr colab
+- wakatime: Success | priority 100 | attempt 1/2 | pool metrics-pool | updated 2026-03-14 23:16 CST | Updated WakaTime section
+- daily-quote: Success | priority 30 | attempt 1/2 | pool engagement-pool | updated 2026-03-14 23:16 CST | Updated daily quote: Anonymous
+- snapshot: Success | priority 60 | attempt 1/2 | pool content-pool | updated 2026-03-14 23:16 CST | Updated recent repository snapshot with 5 entries
+<!--END_SECTION:task_state-->
+
+### Dead Letter Queue
+
+<!--START_SECTION:dead_letters-->
+- No dead letters.
+<!--END_SECTION:dead_letters-->
 
 </details>
 
