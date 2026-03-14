@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&height=220&text=Hi%2C%20I%27m%20ccstudentcc&fontAlignY=40&desc=Build%20in%20Public&descAlignY=60&color=0:0b1220,50:111827,100:1f2937" />
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=220&text=Hi%2C%20I%27m%20ccstudentcc&fontAlignY=40&desc=Build%20in%20Public&descAlignY=60&color=0:dbeafe,50:bfdbfe,100:93c5fd" alt="header" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&height=220&text=Hi%2C%20I%27m%20ccstudentcc&fontAlignY=40&fontColor=ffffff&desc=Build%20in%20Public&descAlignY=60&descSize=18&descColor=e2e8f0&color=0:1d4ed8,50:2563eb,100:0ea5e9" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=220&text=Hi%2C%20I%27m%20ccstudentcc&fontAlignY=40&fontColor=0f172a&desc=Build%20in%20Public&descAlignY=60&descSize=18&descColor=1e293b&color=0:e0f2fe,50:bfdbfe,100:93c5fd" alt="header" />
 </picture>
 
 # ccstudentcc
