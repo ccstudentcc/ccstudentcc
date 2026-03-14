@@ -77,9 +77,17 @@ def _progress_bar(percent: float, width: int = 26) -> str:
 
 
 def _badge_url(label: str, message: str, color: str, logo: str | None = None) -> str:
+    # Use query-string API to avoid path-separator parsing issues (e.g. '-' in timestamps).
     encoded_label = urllib.parse.quote(label, safe="")
     encoded_message = urllib.parse.quote(message, safe="")
-    url = f"https://img.shields.io/badge/{encoded_label}-{encoded_message}-{color}?style=for-the-badge"
+    encoded_color = urllib.parse.quote(color, safe="")
+    url = (
+        "https://img.shields.io/static/v1"
+        f"?label={encoded_label}"
+        f"&message={encoded_message}"
+        f"&color={encoded_color}"
+        "&style=for-the-badge"
+    )
     if logo:
         url += f"&logo={urllib.parse.quote(logo, safe='')}"
     return url
@@ -171,6 +179,7 @@ def build_stats_block(payload: dict) -> str:
         "",
         "```text",
         "Timezone: Asia/Shanghai (UTC+8)",
+        f"Updated At (CST): {synced_at}",
         ""
     ]
 
