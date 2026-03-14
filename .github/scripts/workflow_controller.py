@@ -286,7 +286,7 @@ def execute_worker(worker: dict, state: dict, dead_letters: list[dict], registry
             time.sleep(POLL_SECONDS)
 
         worker_state["last_completed_at"] = iso_now()
-    worker_state["last_heartbeat_at"] = iso_now()
+        worker_state["last_heartbeat_at"] = iso_now()
         task_state["updated_at"] = iso_now()
 
         if timed_out:
