@@ -149,24 +149,24 @@ All visual components below support both dark mode and light mode automatically.
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Code%20Time-2%20hrs%2018%20mins-334155?style=for-the-badge&logo=wakatime" />
-  <img src="https://img.shields.io/badge/Code%20Time-2%20hrs%2018%20mins-2563eb?style=for-the-badge&logo=wakatime" alt="code time" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=2%20hrs%2018%20mins&color=334155&style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=2%20hrs%2018%20mins&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Daily%20Average-19%20mins-475569?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Daily%20Average-19%20mins-0f172a?style=for-the-badge" alt="daily average" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Daily%20Average&message=19%20mins&color=475569&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Daily%20Average&message=19%20mins&color=0f172a&style=for-the-badge" alt="daily average" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Last%20Sync-2026-03-15%2000%3A22%20CST-1e293b?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Last%20Sync-2026-03-15%2000%3A22%20CST-1d4ed8?style=for-the-badge" alt="last sync" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-15%2000%3A26%20CST&color=1e293b&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-15%2000%3A26%20CST&color=1d4ed8&style=for-the-badge" alt="last sync" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Top%20Language-Markdown-0f766e?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Top%20Language-Markdown-0d9488?style=for-the-badge" alt="top language" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Top%20Language&message=Markdown&color=0f766e&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Top%20Language&message=Markdown&color=0d9488&style=for-the-badge" alt="top language" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/Top%20Project-ccstudentcc-4c1d95?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Top%20Project-ccstudentcc-6d28d9?style=for-the-badge" alt="top project" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Top%20Project&message=ccstudentcc&color=4c1d95&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Top%20Project&message=ccstudentcc&color=6d28d9&style=for-the-badge" alt="top project" />
 </picture>
 
 <sub>Focus: Markdown (1 hr 28 mins, 63.6%) | Project: ccstudentcc (2 hrs 8 mins, 92.8%) | Editor: VS Code</sub>
@@ -178,6 +178,7 @@ All visual components below support both dark mode and light mode automatically.
 
 ```text
 Timezone: Asia/Shanghai (UTC+8)
+Updated At (CST): 2026-03-15 00:26 CST
 
 Languages:
   Markdown    1 hr 28 mins  [#################---------]  63.6%
@@ -308,14 +309,14 @@ Operating Systems:
 ### Orchestrator Status
 
 <!--START_SECTION:automation_status-->
-- Last automation update: 2026-03-15 00:22 CST
+- Last automation update: 2026-03-15 00:26 CST
 - Timezone: Asia/Shanghai (UTC+8)
 - Orchestrator: profile-readme-automation (DAG nodes 4, edges 2)
 - Scheduler trigger: workflow_dispatch | cron 5 */6 * * * | policy higher-first
 - Worker pool model: logical worker pools inside a single GitHub Actions run
 - Managed jobs: featured-projects, wakatime, daily-quote, snapshot
 - Failure policy: continue-on-error + retry + timeout cancel + dead-letter on exhaust
-- Run URL: https://github.com/ccstudentcc/ccstudentcc/actions/runs/23091711728
+- Run URL: https://github.com/ccstudentcc/ccstudentcc/actions/runs/23091774621
 <!--END_SECTION:automation_status-->
 
 ### Workflow DAG
@@ -357,19 +358,19 @@ Operating Systems:
 ### Worker Health Check
 
 <!--START_SECTION:worker_health-->
-- featured-projects: Healthy | heartbeat 2026-03-15 00:22 CST | last success 2026-03-15 00:22 CST
-- wakatime: Healthy | heartbeat 2026-03-15 00:22 CST | last success 2026-03-15 00:22 CST
-- daily-quote: Healthy | heartbeat 2026-03-15 00:22 CST | last success 2026-03-15 00:22 CST
-- snapshot: Healthy | heartbeat 2026-03-15 00:22 CST | last success 2026-03-15 00:22 CST
+- featured-projects: Healthy | heartbeat 2026-03-15 00:26 CST | last success 2026-03-15 00:26 CST
+- wakatime: Healthy | heartbeat 2026-03-15 00:26 CST | last success 2026-03-15 00:26 CST
+- daily-quote: Healthy | heartbeat 2026-03-15 00:26 CST | last success 2026-03-15 00:26 CST
+- snapshot: Healthy | heartbeat 2026-03-15 00:26 CST | last success 2026-03-15 00:26 CST
 <!--END_SECTION:worker_health-->
 
 ### Task State
 
 <!--START_SECTION:task_state-->
-- featured-projects: Success | priority 90 | attempt 1/2 | pool content-pool | updated 2026-03-15 00:22 CST | Updated featured projects: symkan-experiments kan-sr colab
-- wakatime: Success | priority 100 | attempt 1/2 | pool metrics-pool | updated 2026-03-15 00:22 CST | Updated WakaTime section
-- daily-quote: Success | priority 30 | attempt 1/2 | pool engagement-pool | updated 2026-03-15 00:22 CST | Updated daily quote: Anonymous
-- snapshot: Success | priority 60 | attempt 1/2 | pool content-pool | updated 2026-03-15 00:22 CST | Updated recent repository snapshot with 5 entries
+- featured-projects: Success | priority 90 | attempt 1/2 | pool content-pool | updated 2026-03-15 00:26 CST | Updated featured projects: symkan-experiments kan-sr colab
+- wakatime: Success | priority 100 | attempt 1/2 | pool metrics-pool | updated 2026-03-15 00:26 CST | Updated WakaTime section
+- daily-quote: Success | priority 30 | attempt 1/2 | pool engagement-pool | updated 2026-03-15 00:26 CST | Updated daily quote: Anonymous
+- snapshot: Success | priority 60 | attempt 1/2 | pool content-pool | updated 2026-03-15 00:26 CST | Updated recent repository snapshot with 5 entries
 <!--END_SECTION:task_state-->
 
 ### Dead Letter Queue
