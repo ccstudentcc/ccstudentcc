@@ -17,7 +17,7 @@ from readme_utils import update_readme_section
 README_PATH = Path("README.md")
 START_MARKER = "<!--START_SECTION:waka-->"
 END_MARKER = "<!--END_SECTION:waka-->"
-WAKATIME_SUMMARIES_URL = "https://api.wakatime.com/api/v1/users/current/summaries?range=This%20Week"
+WAKATIME_SUMMARIES_BASE_URL = "https://api.wakatime.com/api/v1/users/current/summaries"
 WAKATIME_STATS_URL = "https://api.wakatime.com/api/v1/users/current/stats/last_7_days"
 WAKATIME_ALL_TIME_URL = "https://api.wakatime.com/api/v1/users/current/all_time_since_today"
 WAKATIME_STATUS_BAR_TODAY_URL = "https://api.wakatime.com/api/v1/users/current/status_bar/today"
@@ -55,8 +55,24 @@ def _request_with_fallback(url: str, clean_key: str, headers: dict[str, str]) ->
     except urllib.error.HTTPError as error:
         if error.code not in (401, 403):
             raise
-        fallback_url = f"{url}?api_key={urllib.parse.quote(clean_key)}"
+        separator = "&" if "?" in url else "?"
+        fallback_url = f"{url}{separator}api_key={urllib.parse.quote(clean_key)}"
         return _request_json(fallback_url, {"Accept": "application/json", "User-Agent": "workflow-manager"})
+
+
+def _build_current_week_summaries_url(now: datetime | None = None) -> str:
+    """Build summaries URL for the current week (Monday to today) in Asia/Shanghai."""
+    local_now = now.astimezone(ASIA_SHANGHAI) if now else datetime.now(ASIA_SHANGHAI)
+    today = local_now.date()
+    monday = today - timedelta(days=today.weekday())
+    params = urllib.parse.urlencode(
+        {
+            "start": monday.isoformat(),
+            "end": today.isoformat(),
+            "timezone": "Asia/Shanghai",
+        }
+    )
+    return f"{WAKATIME_SUMMARIES_BASE_URL}?{params}"
 
 
 def fetch_stats(api_key: str) -> tuple[dict, dict | None, dict | None, dict | None]:
@@ -78,7 +94,8 @@ def fetch_stats(api_key: str) -> tuple[dict, dict | None, dict | None, dict | No
         "Authorization": f"Basic {auth}",
         "User-Agent": "workflow-manager"
     }
-    payload = _request_with_fallback(WAKATIME_SUMMARIES_URL, clean_key, headers)
+    summaries_url = _build_current_week_summaries_url()
+    payload = _request_with_fallback(summaries_url, clean_key, headers)
 
     if not isinstance(payload, dict):
         raise RuntimeError("Unexpected WakaTime response: payload is not a JSON object")
