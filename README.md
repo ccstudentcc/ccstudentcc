@@ -259,8 +259,8 @@ All visual components below support both dark mode and light mode automatically.
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=7%20hrs%207%20mins&color=334155&style=for-the-badge&logo=wakatime" />
-  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=7%20hrs%207%20mins&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=2%20hrs%2018%20mins&color=334155&style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=2%20hrs%2018%20mins&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
 </picture>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Daily%20Average&message=19%20mins&color=475569&style=for-the-badge" />
@@ -278,9 +278,13 @@ All visual components below support both dark mode and light mode automatically.
   <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Top%20Project&message=ccstudentcc&color=4c1d95&style=for-the-badge" />
   <img src="https://img.shields.io/static/v1?label=Top%20Project&message=ccstudentcc&color=6d28d9&style=for-the-badge" alt="top project" />
 </picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=All%20Time&message=7%20hrs%207%20mins&color=475569&style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/static/v1?label=All%20Time&message=7%20hrs%207%20mins&color=334155&style=for-the-badge&logo=wakatime" alt="all time code time" />
+</picture>
 
 <sub>Focus: Markdown (1 hr 28 mins, 63.6%) | Project: ccstudentcc (2 hrs 8 mins, 92.8%) | Editor: VS Code</sub>
-<sub>Code Time badge scope: All Time</sub>
+<sub>Code Time badge scope: This Week</sub>
 
 </div>
 
@@ -290,6 +294,7 @@ All visual components below support both dark mode and light mode automatically.
 ```text
 Timezone: Asia/Shanghai (UTC+8)
 Updated At (CST): 2026-03-15 13:29 CST
+Window: This Week | Total: 2 hrs 18 mins
 
 Languages:
   Markdown    1 hr 28 mins  [#################---------]  63.6%

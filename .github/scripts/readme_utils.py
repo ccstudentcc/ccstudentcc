@@ -108,6 +108,15 @@ def update_readme_section(readme_path: Path, start_marker: str, end_marker: str,
         write_text_atomic(readme_path, updated)
 
 
+def try_update_readme_section(readme_path: Path, start_marker: str, end_marker: str, new_block: str) -> bool:
+    """Try to update a README block and return False when markers are absent."""
+    try:
+        update_readme_section(readme_path, start_marker, end_marker, new_block)
+    except ValueError:
+        return False
+    return True
+
+
 def main() -> None:
     """Provide a small CLI so non-Python workers can reuse the locked updater."""
     parser = argparse.ArgumentParser(description="Update a marker-delimited README section with a shared file lock.")
@@ -117,6 +126,7 @@ def main() -> None:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--block")
     group.add_argument("--block-file")
+    parser.add_argument("--allow-missing-markers", action="store_true")
     args = parser.parse_args()
 
     if args.block_file:
@@ -124,7 +134,14 @@ def main() -> None:
     else:
         new_block = args.block
 
-    update_readme_section(Path(args.readme_path), args.start_marker, args.end_marker, new_block)
+    readme_path = Path(args.readme_path)
+    if args.allow_missing_markers:
+        updated = try_update_readme_section(readme_path, args.start_marker, args.end_marker, new_block)
+        if not updated:
+            print(f"Skipped README update because markers were not found: {args.start_marker} / {args.end_marker}")
+        return
+
+    update_readme_section(readme_path, args.start_marker, args.end_marker, new_block)
 
 
 if __name__ == "__main__":

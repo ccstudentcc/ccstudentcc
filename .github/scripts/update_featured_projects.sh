@@ -49,7 +49,7 @@ block_file="$(mktemp)"
   echo '</div>'
 } > "${block_file}"
 
-python .github/scripts/readme_utils.py "${README_PATH}" "${START_MARKER}" "${END_MARKER}" --block-file "${block_file}"
+python .github/scripts/readme_utils.py "${README_PATH}" "${START_MARKER}" "${END_MARKER}" --block-file "${block_file}" --allow-missing-markers
 rm -f "${block_file}"
 
 echo "Updated featured projects: ${repos[*]}"

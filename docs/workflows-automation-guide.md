@@ -126,6 +126,7 @@ Worker execution note:
 - The manager does not call the standalone worker workflows via `workflow_call`; it runs worker scripts directly inside one orchestrated job.
 - Standalone workflows such as `wakatime.yml` remain useful for isolated manual retries.
 - Because the manager runs multiple README writers concurrently, all section replacements must go through the shared locked updater in `.github/scripts/readme_utils.py`.
+- Workers whose README blocks are optional should use the locked updater's tolerant mode instead of failing the entire manager run on missing markers.
 
 ## 6) Badge and Rendering Rules
 
@@ -135,9 +136,9 @@ Worker execution note:
   - `<!--START_SECTION:...-->`
   - `<!--END_SECTION:...-->`
 - WakaTime section scope:
-   - `Code Time` badge uses WakaTime `all_time_since_today` when available.
-   - If all-time API is unavailable, it falls back to `stats/last_7_days`.
-   - Weekly breakdown remains based on `stats/last_7_days`.
+   - Primary `Code Time` badge stays aligned with WakaTime `summaries?range=This Week` so it matches Focus and Weekly Breakdown.
+   - Optional `All Time` badge may be rendered separately when `all_time_since_today` is available.
+   - Focus summary and Weekly Breakdown must always come from the same `This Week` summaries payload as the main badge.
 
 ## 7) Troubleshooting
 
@@ -154,6 +155,7 @@ Checks:
 1. Confirm marker pair exists exactly once.
 2. Confirm marker keys match controller section names.
 3. Check workflow logs for skipped section warnings.
+4. If the block is optional, ensure the worker uses tolerant marker handling instead of failing the run.
 
 ### Symptom: task keeps retrying or fails
 

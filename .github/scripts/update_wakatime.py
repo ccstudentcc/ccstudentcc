@@ -17,7 +17,7 @@ from readme_utils import update_readme_section
 README_PATH = Path("README.md")
 START_MARKER = "<!--START_SECTION:waka-->"
 END_MARKER = "<!--END_SECTION:waka-->"
-WAKATIME_STATS_URL = "https://api.wakatime.com/api/v1/users/current/stats/last_7_days"
+WAKATIME_SUMMARIES_URL = "https://api.wakatime.com/api/v1/users/current/summaries?range=This%20Week"
 WAKATIME_ALL_TIME_URL = "https://api.wakatime.com/api/v1/users/current/all_time_since_today"
 ASIA_SHANGHAI = timezone(timedelta(hours=8))
 
@@ -58,13 +58,13 @@ def _request_with_fallback(url: str, clean_key: str, headers: dict[str, str]) ->
 
 
 def fetch_stats(api_key: str) -> tuple[dict, dict | None]:
-    """Fetch WakaTime weekly stats plus optional all-time summary.
+    """Fetch WakaTime current-week summaries plus optional all-time summary.
 
     Args:
         api_key: WakaTime API key.
 
     Returns:
-        Tuple of (weekly_stats_payload, all_time_payload_or_none).
+        Tuple of (this_week_summaries_payload, all_time_payload_or_none).
 
     Raises:
         RuntimeError: If response is malformed or contains API errors.
@@ -76,7 +76,7 @@ def fetch_stats(api_key: str) -> tuple[dict, dict | None]:
         "Authorization": f"Basic {auth}",
         "User-Agent": "workflow-manager"
     }
-    payload = _request_with_fallback(WAKATIME_STATS_URL, clean_key, headers)
+    payload = _request_with_fallback(WAKATIME_SUMMARIES_URL, clean_key, headers)
 
     if not isinstance(payload, dict):
         raise RuntimeError("Unexpected WakaTime response: payload is not a JSON object")
@@ -109,24 +109,61 @@ def _get_all_time_text(all_time_payload: dict | None) -> str | None:
     )
 
 
-def _get_total_text(data: dict) -> str:
+def _get_total_text(payload: dict) -> str:
+    cumulative_total = payload.get("cumulative_total", {}) if isinstance(payload, dict) else {}
     return (
-        data.get("human_readable_total_including_other_language")
-        or data.get("human_readable_total")
-        or data.get("grand_total", {}).get("text")
-        or data.get("cumulative_total", {}).get("text")
+        cumulative_total.get("text")
+        or cumulative_total.get("digital")
         or "0 secs"
     )
 
 
-def _get_average_text(data: dict) -> str:
+def _get_average_text(payload: dict) -> str:
+    daily_average = payload.get("daily_average", {}) if isinstance(payload, dict) else {}
     return (
-        data.get("human_readable_daily_average_including_other_language")
-        or data.get("human_readable_daily_average")
-        or data.get("daily_average_including_other_language")
-        or data.get("daily_average")
+        daily_average.get("text_including_other_language")
+        or daily_average.get("text")
         or "0 secs"
     )
+
+
+def _humanize_seconds(total_seconds: float) -> str:
+    """Convert seconds to a compact human readable string."""
+    rounded_seconds = max(0, int(round(total_seconds)))
+    hours, remainder = divmod(rounded_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    parts: list[str] = []
+    if hours:
+        parts.append(f"{hours} hr" if hours == 1 else f"{hours} hrs")
+    if minutes:
+        parts.append(f"{minutes} min" if minutes == 1 else f"{minutes} mins")
+    if not parts:
+        parts.append(f"{seconds} sec" if seconds == 1 else f"{seconds} secs")
+    return " ".join(parts)
+
+
+def _aggregate_summary_items(days: list[dict], key: str) -> list[dict]:
+    """Aggregate per-day summary rows into one ranked list by total_seconds."""
+    totals: dict[str, float] = {}
+    for day in days:
+        for item in day.get(key, []) or []:
+            name = str(item.get("name") or "Unknown")
+            totals[name] = totals.get(name, 0.0) + float(item.get("total_seconds", 0) or 0)
+
+    total_seconds = sum(totals.values())
+    ranked = sorted(totals.items(), key=lambda pair: (-pair[1], pair[0].lower()))
+    aggregated: list[dict] = []
+    for name, seconds in ranked:
+        percent = (seconds / total_seconds * 100.0) if total_seconds else 0.0
+        aggregated.append(
+            {
+                "name": name,
+                "total_seconds": seconds,
+                "text": _humanize_seconds(seconds),
+                "percent": percent,
+            }
+        )
+    return aggregated
 
 
 def _progress_bar(percent: float, width: int = 26) -> str:
@@ -193,15 +230,18 @@ def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> st
     Returns:
         Section content for marker replacement.
     """
-    data = payload.get("data", {})
-    languages = data.get("languages", [])[:5]
-    editors = data.get("editors", [])[:5]
-    projects = data.get("projects", [])[:5]
-    operating_systems = data.get("operating_systems", [])[:5]
-    weekly_total = _get_total_text(data)
+    days = payload.get("data", []) if isinstance(payload, dict) else []
+    if not isinstance(days, list):
+        raise RuntimeError("Unexpected WakaTime summaries response: data is not a list")
+
+    languages = _aggregate_summary_items(days, "languages")[:5]
+    editors = _aggregate_summary_items(days, "editors")[:5]
+    projects = _aggregate_summary_items(days, "projects")[:5]
+    operating_systems = _aggregate_summary_items(days, "operating_systems")[:5]
+    weekly_total = _get_total_text(payload)
     all_time_total = _get_all_time_text(all_time_payload)
-    total = all_time_total or weekly_total
-    average = _get_average_text(data)
+    total = weekly_total
+    average = _get_average_text(payload)
     synced_at = datetime.now(ASIA_SHANGHAI).replace(microsecond=0).strftime("%Y-%m-%d %H:%M CST")
     has_any_data = any([languages, editors, projects, operating_systems])
     top_lang_name, top_lang_time, top_lang_percent = _top_item(languages)
@@ -218,6 +258,8 @@ def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> st
     top_lang_light = _badge_url("Top Language", top_lang_name, "0d9488")
     top_project_dark = _badge_url("Top Project", top_project_name, "4c1d95")
     top_project_light = _badge_url("Top Project", top_project_name, "6d28d9")
+    all_time_dark = _badge_url("All Time", all_time_total, "475569", logo="wakatime") if all_time_total else None
+    all_time_light = _badge_url("All Time", all_time_total, "334155", logo="wakatime") if all_time_total else None
 
     header_lines = [
         '<div align="center">',
@@ -242,9 +284,23 @@ def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> st
         f'  <source media="(prefers-color-scheme: dark)" srcset="{top_project_dark}" />',
         f'  <img src="{top_project_light}" alt="top project" />',
         "</picture>",
+    ]
+
+    if all_time_dark and all_time_light:
+        header_lines.extend(
+            [
+                "<picture>",
+                f'  <source media="(prefers-color-scheme: dark)" srcset="{all_time_dark}" />',
+                f'  <img src="{all_time_light}" alt="all time code time" />',
+                "</picture>",
+            ]
+        )
+
+    header_lines.extend(
+        [
         "",
         f"<sub>Focus: {top_lang_name} ({top_lang_time}, {top_lang_percent:.1f}%) | Project: {top_project_name} ({top_project_time}, {top_project_percent:.1f}%) | Editor: {top_editor_name}</sub>",
-        f"<sub>Code Time badge scope: {'All Time' if all_time_total else 'Last 7 Days (fallback)'}</sub>",
+        "<sub>Code Time badge scope: This Week</sub>",
         "",
         "</div>",
         "",
@@ -254,8 +310,10 @@ def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> st
         "```text",
         "Timezone: Asia/Shanghai (UTC+8)",
         f"Updated At (CST): {synced_at}",
+        f"Window: This Week | Total: {weekly_total}",
         ""
     ]
+    )
 
     body_lines: list[str] = []
     body_lines.extend(_render_ranked_lines(languages, "Languages"))
