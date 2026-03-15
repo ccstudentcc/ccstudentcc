@@ -1,103 +1,97 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-label="Animated project carousel">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#e0f2fe" />
-      <stop offset="50%" stop-color="#dbeafe" />
-      <stop offset="100%" stop-color="#ccfbf1" />
-    </linearGradient>
-    <linearGradient id="card1" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1d4ed8" />
-      <stop offset="100%" stop-color="#0284c7" />
-    </linearGradient>
-    <linearGradient id="card2" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0f766e" />
-      <stop offset="100%" stop-color="#0891b2" />
-    </linearGradient>
-    <linearGradient id="card3" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0369a1" />
-      <stop offset="100%" stop-color="#1d4ed8" />
-    </linearGradient>
-    <clipPath id="viewport">
-      <rect x="20" y="36" width="1160" height="208" rx="24" />
-    </clipPath>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
-      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.16" />
-    </filter>
-    <style>
-      .title { font: 700 26px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
-      .subtitle { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
-      .label { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #ffffff; }
-      .desc { font: 500 13px 'Segoe UI', Arial, sans-serif; fill: #e2e8f0; }
-      .chip { font: 700 12px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
-      .track {
-        animation: slide 32s linear infinite;
-      }
-      @keyframes slide {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-1260px); }
-      }
-    </style>
-  </defs>
+    <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e0f2fe" />
+            <stop offset="50%" stop-color="#dbeafe" />
+            <stop offset="100%" stop-color="#ccfbf1" />
+        </linearGradient>
+        <linearGradient id="card1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1d4ed8" />
+            <stop offset="100%" stop-color="#0284c7" />
+        </linearGradient>
+        <linearGradient id="card2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0f766e" />
+            <stop offset="100%" stop-color="#0891b2" />
+        </linearGradient>
+        <linearGradient id="card3" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0369a1" />
+            <stop offset="100%" stop-color="#1d4ed8" />
+        </linearGradient>
+        <clipPath id="viewport">
+            <rect x="20" y="36" width="1160" height="208" rx="24" />
+        </clipPath>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+            <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.16" />
+        </filter>
+        <style>
+            .title { font: 700 26px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+            .subtitle { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+            .label { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #ffffff; }
+            .desc { font: 500 13px 'Segoe UI', Arial, sans-serif; fill: #e2e8f0; }
+            .chip { font: 700 12px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+            .track {
+                animation: slide 32s linear infinite;
+            }
+            @keyframes slide {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-1260px); }
+            }
+        </style>
+    </defs>
 
-  <rect width="1200" height="280" fill="url(#bg)" rx="28" />
-  <text x="36" y="28" class="title">Showcase Motion</text>
-  <text x="260" y="28" class="subtitle">Auto-scrolling project highlights</text>
+    <rect width="1200" height="280" fill="url(#bg)" rx="28" />
+    <text x="36" y="28" class="title">Showcase Motion</text>
+    <text x="260" y="28" class="subtitle">Auto-scrolling project highlights</text>
 
-  <g clip-path="url(#viewport)">
-    <g class="track" filter="url(#shadow)">
-      <g transform="translate(40,56)">
-        <rect width="360" height="172" rx="18" fill="url(#card1)" />
-        <rect x="18" y="16" width="100" height="26" rx="13" fill="#e0f2fe" />
-        <text x="32" y="34" class="chip">Slide 01</text>
-        <text x="20" y="82" class="label">symkan-experiments</text>
-        <text x="20" y="112" class="desc">Research notebooks and model experiments</text>
-        <text x="20" y="136" class="desc">Iteration-driven workflow with clear logs</text>
-      </g>
+    <g clip-path="url(#viewport)">
+        <g class="track" filter="url(#shadow)">
+            <g transform="translate(40,56)">
+                <rect width="360" height="172" rx="18" fill="url(#card1)" />
+                <rect x="18" y="16" width="100" height="26" rx="13" fill="#e0f2fe" />
+                <text x="32" y="34" class="chip">Slide 01</text>
+                <text x="20" y="82" class="label">symkan-experiments</text>
+                <text x="20" y="112" class="desc">No description yet</text>
+            </g>
 
-      <g transform="translate(430,56)">
-        <rect width="360" height="172" rx="18" fill="url(#card2)" />
-        <rect x="18" y="16" width="100" height="26" rx="13" fill="#dcfce7" />
-        <text x="32" y="34" class="chip">Slide 02</text>
-        <text x="20" y="82" class="label">kan-sr</text>
-        <text x="20" y="112" class="desc">Super-resolution pipeline and training loop</text>
-        <text x="20" y="136" class="desc">Focused on reproducibility and quality</text>
-      </g>
+            <g transform="translate(430,56)">
+                <rect width="360" height="172" rx="18" fill="url(#card2)" />
+                <rect x="18" y="16" width="100" height="26" rx="13" fill="#dcfce7" />
+                <text x="32" y="34" class="chip">Slide 02</text>
+                <text x="20" y="82" class="label">kan-sr</text>
+                <text x="20" y="112" class="desc">No description yet</text>
+            </g>
 
-      <g transform="translate(820,56)">
-        <rect width="360" height="172" rx="18" fill="url(#card3)" />
-        <rect x="18" y="16" width="100" height="26" rx="13" fill="#dbeafe" />
-        <text x="32" y="34" class="chip">Slide 03</text>
-        <text x="20" y="82" class="label">colab</text>
-        <text x="20" y="112" class="desc">Practical demos and quick prototyping</text>
-        <text x="20" y="136" class="desc">Notebook-first experiments for sharing</text>
-      </g>
+            <g transform="translate(820,56)">
+                <rect width="360" height="172" rx="18" fill="url(#card3)" />
+                <rect x="18" y="16" width="100" height="26" rx="13" fill="#dbeafe" />
+                <text x="32" y="34" class="chip">Slide 03</text>
+                <text x="20" y="82" class="label">colab</text>
+                <text x="20" y="112" class="desc">auto save</text>
+            </g>
 
-      <g transform="translate(1210,56)">
-        <rect width="360" height="172" rx="18" fill="url(#card1)" />
-        <rect x="18" y="16" width="100" height="26" rx="13" fill="#e0f2fe" />
-        <text x="32" y="34" class="chip">Slide 01</text>
-        <text x="20" y="82" class="label">symkan-experiments</text>
-        <text x="20" y="112" class="desc">Research notebooks and model experiments</text>
-        <text x="20" y="136" class="desc">Iteration-driven workflow with clear logs</text>
-      </g>
+            <g transform="translate(1210,56)">
+                <rect width="360" height="172" rx="18" fill="url(#card1)" />
+                <rect x="18" y="16" width="100" height="26" rx="13" fill="#e0f2fe" />
+                <text x="32" y="34" class="chip">Slide 01</text>
+                <text x="20" y="82" class="label">symkan-experiments</text>
+                <text x="20" y="112" class="desc">No description yet</text>
+            </g>
 
-      <g transform="translate(1600,56)">
-        <rect width="360" height="172" rx="18" fill="url(#card2)" />
-        <rect x="18" y="16" width="100" height="26" rx="13" fill="#dcfce7" />
-        <text x="32" y="34" class="chip">Slide 02</text>
-        <text x="20" y="82" class="label">kan-sr</text>
-        <text x="20" y="112" class="desc">Super-resolution pipeline and training loop</text>
-        <text x="20" y="136" class="desc">Focused on reproducibility and quality</text>
-      </g>
+            <g transform="translate(1600,56)">
+                <rect width="360" height="172" rx="18" fill="url(#card2)" />
+                <rect x="18" y="16" width="100" height="26" rx="13" fill="#dcfce7" />
+                <text x="32" y="34" class="chip">Slide 02</text>
+                <text x="20" y="82" class="label">kan-sr</text>
+                <text x="20" y="112" class="desc">No description yet</text>
+            </g>
 
-      <g transform="translate(1990,56)">
-        <rect width="360" height="172" rx="18" fill="url(#card3)" />
-        <rect x="18" y="16" width="100" height="26" rx="13" fill="#dbeafe" />
-        <text x="32" y="34" class="chip">Slide 03</text>
-        <text x="20" y="82" class="label">colab</text>
-        <text x="20" y="112" class="desc">Practical demos and quick prototyping</text>
-        <text x="20" y="136" class="desc">Notebook-first experiments for sharing</text>
-      </g>
+            <g transform="translate(1990,56)">
+                <rect width="360" height="172" rx="18" fill="url(#card3)" />
+                <rect x="18" y="16" width="100" height="26" rx="13" fill="#dbeafe" />
+                <text x="32" y="34" class="chip">Slide 03</text>
+                <text x="20" y="82" class="label">colab</text>
+                <text x="20" y="112" class="desc">auto save</text>
+            </g>
+        </g>
     </g>
-  </g>
 </svg>
