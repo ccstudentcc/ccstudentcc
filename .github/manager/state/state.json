@@ -3,10 +3,10 @@
     "name": "profile-readme-automation",
     "description": "DAG orchestrated README automation for profile content",
     "status": "Completed",
-    "started_at": "2026-03-15T03:02:01Z",
-    "completed_at": "2026-03-15T03:02:05Z",
-    "run_id": "23102077749",
-    "run_url": "https://github.com/ccstudentcc/ccstudentcc/actions/runs/23102077749",
+    "started_at": "2026-03-15T03:49:19Z",
+    "completed_at": "2026-03-15T03:49:23Z",
+    "run_id": "23102792233",
+    "run_url": "https://github.com/ccstudentcc/ccstudentcc/actions/runs/23102792233",
     "dag_nodes": 4,
     "dag_edges": 2
   },
@@ -21,6 +21,138 @@
     "deferred_tasks": 0,
     "running_tasks": 0,
     "completed_tasks": 4
+  },
+  "message_queue": {
+    "backend": "github-actions-internal-queue",
+    "delivery_guarantee": "at-least-once",
+    "ordering": "priority-then-scheduled-at",
+    "persistence": "state-json-and-dead-letter-json",
+    "dead_letter_enabled": true,
+    "middleware_options": [
+      "RabbitMQ",
+      "Kafka",
+      "Redis Streams",
+      "Amazon SQS",
+      "NSQ"
+    ],
+    "current_depth": 0,
+    "max_depth_seen": 3,
+    "total_dispatched": 4,
+    "total_completed": 4
+  },
+  "state_store": {
+    "backend": "json-files-in-repo",
+    "ha_model": "git-versioned-single-writer",
+    "latency_target": "low",
+    "transaction_model": "atomic-file-write",
+    "metadata_scope": [
+      "workflow-definition",
+      "task-state",
+      "execution-logs",
+      "dependency-graph"
+    ],
+    "database_options": [
+      "PostgreSQL(JSONB)",
+      "MySQL",
+      "MongoDB",
+      "etcd",
+      "Temporal(Cassandra/MySQL)"
+    ],
+    "paths": {
+      "workflow_spec": ".github/manager/workflow.json",
+      "runtime_state": ".github/manager/state/state.json",
+      "dead_letters": ".github/manager/state/dead-letters.json"
+    },
+    "last_persisted_at": "2026-03-15T03:49:23Z"
+  },
+  "event_bus": {
+    "backend": "internal-event-log",
+    "delivery_semantics": "at-least-once",
+    "trigger_mode": "event-driven",
+    "subscribers": [
+      "scheduler",
+      "task-dependency-gate",
+      "readme-renderer"
+    ],
+    "integration_options": [
+      "Kafka",
+      "NATS",
+      "AWS EventBridge"
+    ],
+    "published_events": 10,
+    "last_event_at": "2026-03-15T03:49:23Z",
+    "recent_events": [
+      {
+        "id": "evt-0001",
+        "at": "2026-03-15T03:49:19Z",
+        "type": "workflow.started",
+        "source": "profile-readme-automation",
+        "details": "Trigger=workflow_dispatch"
+      },
+      {
+        "id": "evt-0002",
+        "at": "2026-03-15T03:49:19Z",
+        "type": "task.dispatched",
+        "source": "wakatime",
+        "details": "Dispatched on pool metrics-pool attempt 1/2"
+      },
+      {
+        "id": "evt-0003",
+        "at": "2026-03-15T03:49:19Z",
+        "type": "task.dispatched",
+        "source": "featured-projects",
+        "details": "Dispatched on pool content-pool attempt 1/2"
+      },
+      {
+        "id": "evt-0004",
+        "at": "2026-03-15T03:49:19Z",
+        "type": "task.dispatched",
+        "source": "daily-quote",
+        "details": "Dispatched on pool engagement-pool attempt 1/2"
+      },
+      {
+        "id": "evt-0005",
+        "at": "2026-03-15T03:49:21Z",
+        "type": "task.succeeded",
+        "source": "wakatime",
+        "details": "Updated WakaTime section"
+      },
+      {
+        "id": "evt-0006",
+        "at": "2026-03-15T03:49:21Z",
+        "type": "task.succeeded",
+        "source": "featured-projects",
+        "details": "Updated featured projects: symkan-experiments kan-sr colab"
+      },
+      {
+        "id": "evt-0007",
+        "at": "2026-03-15T03:49:21Z",
+        "type": "task.succeeded",
+        "source": "daily-quote",
+        "details": "Updated daily quote: Mahatma Gandhi"
+      },
+      {
+        "id": "evt-0008",
+        "at": "2026-03-15T03:49:21Z",
+        "type": "task.dispatched",
+        "source": "snapshot",
+        "details": "Dispatched on pool content-pool attempt 1/2"
+      },
+      {
+        "id": "evt-0009",
+        "at": "2026-03-15T03:49:23Z",
+        "type": "task.succeeded",
+        "source": "snapshot",
+        "details": "Updated recent repository snapshot with 5 entries and refreshed showcase assets"
+      },
+      {
+        "id": "evt-0010",
+        "at": "2026-03-15T03:49:23Z",
+        "type": "workflow.completed",
+        "source": "profile-readme-automation",
+        "details": "All terminal task states reached"
+      }
+    ]
   },
   "worker_pools": {
     "content-pool": {
@@ -82,10 +214,10 @@
       "enabled": true,
       "timeout_seconds": 180,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-15T03:02:03Z",
-      "last_started_at": "2026-03-15T03:02:01Z",
-      "last_completed_at": "2026-03-15T03:02:03Z",
-      "last_success_at": "2026-03-15T03:02:03Z",
+      "last_heartbeat_at": "2026-03-15T03:49:21Z",
+      "last_started_at": "2026-03-15T03:49:19Z",
+      "last_completed_at": "2026-03-15T03:49:21Z",
+      "last_success_at": "2026-03-15T03:49:21Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
@@ -103,10 +235,10 @@
       "enabled": true,
       "timeout_seconds": 180,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-15T03:02:03Z",
-      "last_started_at": "2026-03-15T03:02:01Z",
-      "last_completed_at": "2026-03-15T03:02:03Z",
-      "last_success_at": "2026-03-15T03:02:03Z",
+      "last_heartbeat_at": "2026-03-15T03:49:21Z",
+      "last_started_at": "2026-03-15T03:49:19Z",
+      "last_completed_at": "2026-03-15T03:49:21Z",
+      "last_success_at": "2026-03-15T03:49:21Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
@@ -124,10 +256,10 @@
       "enabled": true,
       "timeout_seconds": 60,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-15T03:02:03Z",
-      "last_started_at": "2026-03-15T03:02:01Z",
-      "last_completed_at": "2026-03-15T03:02:03Z",
-      "last_success_at": "2026-03-15T03:02:03Z",
+      "last_heartbeat_at": "2026-03-15T03:49:21Z",
+      "last_started_at": "2026-03-15T03:49:19Z",
+      "last_completed_at": "2026-03-15T03:49:21Z",
+      "last_success_at": "2026-03-15T03:49:21Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
@@ -145,10 +277,10 @@
       "enabled": true,
       "timeout_seconds": 180,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-15T03:02:05Z",
-      "last_started_at": "2026-03-15T03:02:03Z",
-      "last_completed_at": "2026-03-15T03:02:05Z",
-      "last_success_at": "2026-03-15T03:02:05Z",
+      "last_heartbeat_at": "2026-03-15T03:49:23Z",
+      "last_started_at": "2026-03-15T03:49:21Z",
+      "last_completed_at": "2026-03-15T03:49:23Z",
+      "last_success_at": "2026-03-15T03:49:23Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
@@ -174,10 +306,10 @@
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "scheduled_at": "2026-03-15T03:02:01Z",
-      "started_at": "2026-03-15T03:02:01Z",
-      "completed_at": "2026-03-15T03:02:03Z",
-      "updated_at": "2026-03-15T03:02:03Z",
+      "scheduled_at": "2026-03-15T03:49:19Z",
+      "started_at": "2026-03-15T03:49:19Z",
+      "completed_at": "2026-03-15T03:49:21Z",
+      "updated_at": "2026-03-15T03:49:21Z",
       "message": "Updated featured projects: symkan-experiments kan-sr colab"
     },
     "wakatime": {
@@ -191,10 +323,10 @@
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "scheduled_at": "2026-03-15T03:02:01Z",
-      "started_at": "2026-03-15T03:02:01Z",
-      "completed_at": "2026-03-15T03:02:03Z",
-      "updated_at": "2026-03-15T03:02:03Z",
+      "scheduled_at": "2026-03-15T03:49:19Z",
+      "started_at": "2026-03-15T03:49:19Z",
+      "completed_at": "2026-03-15T03:49:21Z",
+      "updated_at": "2026-03-15T03:49:21Z",
       "message": "Updated WakaTime section"
     },
     "daily-quote": {
@@ -208,10 +340,10 @@
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "scheduled_at": "2026-03-15T03:02:01Z",
-      "started_at": "2026-03-15T03:02:01Z",
-      "completed_at": "2026-03-15T03:02:03Z",
-      "updated_at": "2026-03-15T03:02:03Z",
+      "scheduled_at": "2026-03-15T03:49:19Z",
+      "started_at": "2026-03-15T03:49:19Z",
+      "completed_at": "2026-03-15T03:49:21Z",
+      "updated_at": "2026-03-15T03:49:21Z",
       "message": "Updated daily quote: Mahatma Gandhi"
     },
     "snapshot": {
@@ -228,10 +360,10 @@
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "scheduled_at": "2026-03-15T03:02:01Z",
-      "started_at": "2026-03-15T03:02:03Z",
-      "completed_at": "2026-03-15T03:02:05Z",
-      "updated_at": "2026-03-15T03:02:05Z",
+      "scheduled_at": "2026-03-15T03:49:19Z",
+      "started_at": "2026-03-15T03:49:21Z",
+      "completed_at": "2026-03-15T03:49:23Z",
+      "updated_at": "2026-03-15T03:49:23Z",
       "message": "Updated recent repository snapshot with 5 entries and refreshed showcase assets"
     }
   }
