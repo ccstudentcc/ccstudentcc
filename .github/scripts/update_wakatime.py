@@ -18,7 +18,9 @@ README_PATH = Path("README.md")
 START_MARKER = "<!--START_SECTION:waka-->"
 END_MARKER = "<!--END_SECTION:waka-->"
 WAKATIME_SUMMARIES_URL = "https://api.wakatime.com/api/v1/users/current/summaries?range=This%20Week"
+WAKATIME_STATS_URL = "https://api.wakatime.com/api/v1/users/current/stats/last_7_days"
 WAKATIME_ALL_TIME_URL = "https://api.wakatime.com/api/v1/users/current/all_time_since_today"
+WAKATIME_STATUS_BAR_TODAY_URL = "https://api.wakatime.com/api/v1/users/current/status_bar/today"
 ASIA_SHANGHAI = timezone(timedelta(hours=8))
 
 
@@ -57,14 +59,14 @@ def _request_with_fallback(url: str, clean_key: str, headers: dict[str, str]) ->
         return _request_json(fallback_url, {"Accept": "application/json", "User-Agent": "workflow-manager"})
 
 
-def fetch_stats(api_key: str) -> tuple[dict, dict | None]:
-    """Fetch WakaTime current-week summaries plus optional all-time summary.
+def fetch_stats(api_key: str) -> tuple[dict, dict | None, dict | None, dict | None]:
+    """Fetch WakaTime payloads used by README rendering.
 
     Args:
         api_key: WakaTime API key.
 
     Returns:
-        Tuple of (this_week_summaries_payload, all_time_payload_or_none).
+        Tuple of (summaries_payload, stats_payload_or_none, today_payload_or_none, all_time_payload_or_none).
 
     Raises:
         RuntimeError: If response is malformed or contains API errors.
@@ -83,7 +85,23 @@ def fetch_stats(api_key: str) -> tuple[dict, dict | None]:
     if "error" in payload:
         raise RuntimeError(f"WakaTime API error: {payload['error']}")
 
+    stats_payload: dict | None = None
+    today_payload: dict | None = None
     all_time_payload: dict | None = None
+    try:
+        candidate = _request_with_fallback(WAKATIME_STATS_URL, clean_key, headers)
+        if isinstance(candidate, dict) and "error" not in candidate:
+            stats_payload = candidate
+    except Exception:
+        stats_payload = None
+
+    try:
+        candidate = _request_with_fallback(WAKATIME_STATUS_BAR_TODAY_URL, clean_key, headers)
+        if isinstance(candidate, dict) and "error" not in candidate:
+            today_payload = candidate
+    except Exception:
+        today_payload = None
+
     try:
         candidate = _request_with_fallback(WAKATIME_ALL_TIME_URL, clean_key, headers)
         if isinstance(candidate, dict) and "error" not in candidate:
@@ -91,7 +109,7 @@ def fetch_stats(api_key: str) -> tuple[dict, dict | None]:
     except Exception:
         all_time_payload = None
 
-    return payload, all_time_payload
+    return payload, stats_payload, today_payload, all_time_payload
 
 
 def _get_all_time_text(all_time_payload: dict | None) -> str | None:
@@ -124,6 +142,75 @@ def _get_average_text(payload: dict) -> str:
         daily_average.get("text_including_other_language")
         or daily_average.get("text")
         or "0 secs"
+    )
+
+
+def _get_today_total_text(today_payload: dict | None) -> str | None:
+    """Extract today's coding total from status_bar/today payload."""
+    if not today_payload or not isinstance(today_payload, dict):
+        return None
+    data = today_payload.get("data", {})
+    if not isinstance(data, dict):
+        return None
+    grand_total = data.get("grand_total", {})
+    if not isinstance(grand_total, dict):
+        return None
+    return grand_total.get("text") or grand_total.get("digital") or None
+
+
+def _get_stats_data(stats_payload: dict | None) -> dict:
+    """Return stats.data object or empty dict when unavailable."""
+    if not stats_payload or not isinstance(stats_payload, dict):
+        return {}
+    data = stats_payload.get("data", {})
+    return data if isinstance(data, dict) else {}
+
+
+def _is_zero_like(text: str | None) -> bool:
+    """Best-effort check for placeholder zero durations."""
+    if not text:
+        return True
+    normalized = text.strip().lower()
+    return normalized in {"", "0", "0 sec", "0 secs", "0 min", "0 mins", "0 hr", "0 hrs", "00:00"}
+
+
+def _normalize_stats_items(stats_data: dict, key: str) -> list[dict]:
+    """Normalize stats endpoint category arrays to renderable rows."""
+    raw_items = stats_data.get(key, []) if isinstance(stats_data, dict) else []
+    if not isinstance(raw_items, list):
+        return []
+
+    rows: list[dict] = []
+    for item in raw_items:
+        if not isinstance(item, dict):
+            continue
+        seconds = float(item.get("total_seconds", 0) or 0)
+        rows.append(
+            {
+                "name": str(item.get("name") or "Unknown"),
+                "total_seconds": seconds,
+                "text": item.get("text") or item.get("digital") or _humanize_seconds(seconds),
+                "percent": float(item.get("percent", 0) or 0),
+            }
+        )
+    return rows
+
+
+def _get_stats_total_text(stats_data: dict) -> str | None:
+    """Extract total time text from stats/last_7_days payload."""
+    return (
+        stats_data.get("human_readable_total_including_other_language")
+        or stats_data.get("human_readable_total")
+        or None
+    )
+
+
+def _get_stats_average_text(stats_data: dict) -> str | None:
+    """Extract daily average text from stats/last_7_days payload."""
+    return (
+        stats_data.get("human_readable_daily_average_including_other_language")
+        or stats_data.get("human_readable_daily_average")
+        or None
     )
 
 
@@ -221,7 +308,12 @@ def _top_item(items: list[dict]) -> tuple[str, str, float]:
     return name, text, percent
 
 
-def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> str:
+def build_stats_block(
+    payload: dict,
+    stats_payload: dict | None = None,
+    today_payload: dict | None = None,
+    all_time_payload: dict | None = None,
+) -> str:
     """Build markdown/HTML block for README WakaTime section.
 
     Args:
@@ -234,22 +326,36 @@ def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> st
     if not isinstance(days, list):
         raise RuntimeError("Unexpected WakaTime summaries response: data is not a list")
 
-    languages = _aggregate_summary_items(days, "languages")[:5]
-    editors = _aggregate_summary_items(days, "editors")[:5]
-    projects = _aggregate_summary_items(days, "projects")[:5]
-    operating_systems = _aggregate_summary_items(days, "operating_systems")[:5]
+    stats_data = _get_stats_data(stats_payload)
+
+    languages = _aggregate_summary_items(days, "languages")[:5] or _normalize_stats_items(stats_data, "languages")[:5]
+    editors = _aggregate_summary_items(days, "editors")[:5] or _normalize_stats_items(stats_data, "editors")[:5]
+    projects = _aggregate_summary_items(days, "projects")[:5] or _normalize_stats_items(stats_data, "projects")[:5]
+    operating_systems = _aggregate_summary_items(days, "operating_systems")[:5] or _normalize_stats_items(stats_data, "operating_systems")[:5]
+    machines = _aggregate_summary_items(days, "machines")[:5] or _normalize_stats_items(stats_data, "machines")[:5]
+
     weekly_total = _get_total_text(payload)
+    stats_total = _get_stats_total_text(stats_data)
+    if _is_zero_like(weekly_total) and stats_total:
+        weekly_total = stats_total
+
+    today_total = _get_today_total_text(today_payload)
     all_time_total = _get_all_time_text(all_time_payload)
     total = weekly_total
     average = _get_average_text(payload)
+    stats_average = _get_stats_average_text(stats_data)
+    if _is_zero_like(average) and stats_average:
+        average = stats_average
+
+    code_time_badge_text = today_total if (today_total and not _is_zero_like(today_total)) else total
     synced_at = datetime.now(ASIA_SHANGHAI).replace(microsecond=0).strftime("%Y-%m-%d %H:%M CST")
-    has_any_data = any([languages, editors, projects, operating_systems])
+    has_any_data = any([languages, editors, projects, operating_systems, machines])
     top_lang_name, top_lang_time, top_lang_percent = _top_item(languages)
     top_project_name, top_project_time, top_project_percent = _top_item(projects)
     top_editor_name, _, _ = _top_item(editors)
 
-    code_time_dark = _badge_url("Code Time", total, "334155", logo="wakatime")
-    code_time_light = _badge_url("Code Time", total, "2563eb", logo="wakatime")
+    code_time_dark = _badge_url("Code Time", code_time_badge_text, "334155", logo="wakatime")
+    code_time_light = _badge_url("Code Time", code_time_badge_text, "2563eb", logo="wakatime")
     average_dark = _badge_url("Daily Average", average, "475569")
     average_light = _badge_url("Daily Average", average, "0f172a")
     sync_dark = _badge_url("Last Sync", synced_at, "1e293b")
@@ -300,7 +406,7 @@ def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> st
         [
         "",
         f"<sub>Focus: {top_lang_name} ({top_lang_time}, {top_lang_percent:.1f}%) | Project: {top_project_name} ({top_project_time}, {top_project_percent:.1f}%) | Editor: {top_editor_name}</sub>",
-        "<sub>Code Time badge scope: This Week</sub>",
+        "<sub>Code Time badge scope: Today (fallback: Last 7 Days)</sub>",
         "",
         "</div>",
         "",
@@ -320,6 +426,7 @@ def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> st
     body_lines.extend(_render_ranked_lines(editors, "Editors"))
     body_lines.extend(_render_ranked_lines(projects, "Projects"))
     body_lines.extend(_render_ranked_lines(operating_systems, "Operating Systems"))
+    body_lines.extend(_render_ranked_lines(machines, "Machines"))
 
     if not has_any_data:
         body_lines.append("No activity tracked yet")
@@ -338,14 +445,14 @@ def main() -> None:
         raise RuntimeError("WAKATIME_API_KEY is not configured")
 
     try:
-        payload, all_time_payload = fetch_stats(api_key)
+        payload, stats_payload, today_payload, all_time_payload = fetch_stats(api_key)
     except urllib.error.HTTPError as error:
         body = error.read().decode("utf-8", errors="replace")
         raise RuntimeError(f"WakaTime API request failed: {error.code} {body}") from error
     except urllib.error.URLError as error:
         raise RuntimeError(f"WakaTime API request failed: {error.reason}") from error
 
-    block = build_stats_block(payload, all_time_payload)
+    block = build_stats_block(payload, stats_payload, today_payload, all_time_payload)
     update_readme_section(README_PATH, START_MARKER, END_MARKER, block)
     print("Updated WakaTime section")
 

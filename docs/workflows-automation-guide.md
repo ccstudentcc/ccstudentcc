@@ -137,9 +137,9 @@ Worker execution note:
   - `<!--START_SECTION:...-->`
   - `<!--END_SECTION:...-->`
 - WakaTime section scope:
-   - Primary `Code Time` badge stays aligned with WakaTime `summaries?range=This Week` so it matches Focus and Weekly Breakdown.
+   - Primary `Code Time` badge prefers WakaTime `status_bar/today` and falls back to `stats/last_7_days` when today payload is empty or stale.
    - Optional `All Time` badge may be rendered separately when `all_time_since_today` is available.
-   - Focus summary and Weekly Breakdown must always come from the same `This Week` summaries payload as the main badge.
+   - Focus summary and Weekly Breakdown prefer `summaries?range=This Week`; when summaries are empty, category rows fall back to `stats/last_7_days`.
 
 ## 7) Troubleshooting
 
