@@ -13,6 +13,54 @@
     "delay_strategy": "defer-until-ready",
     "parallel_execution": true
   },
+  "message_queue": {
+    "backend": "github-actions-internal-queue",
+    "delivery_guarantee": "at-least-once",
+    "ordering": "priority-then-scheduled-at",
+    "persistence": "state-json-and-dead-letter-json",
+    "dead_letter_enabled": true,
+    "middleware_options": [
+      "RabbitMQ",
+      "Kafka",
+      "Redis Streams",
+      "Amazon SQS",
+      "NSQ"
+    ]
+  },
+  "state_store": {
+    "backend": "json-files-in-repo",
+    "ha_model": "git-versioned-single-writer",
+    "latency_target": "low",
+    "transaction_model": "atomic-file-write",
+    "metadata_scope": [
+      "workflow-definition",
+      "task-state",
+      "execution-logs",
+      "dependency-graph"
+    ],
+    "database_options": [
+      "PostgreSQL(JSONB)",
+      "MySQL",
+      "MongoDB",
+      "etcd",
+      "Temporal(Cassandra/MySQL)"
+    ]
+  },
+  "event_bus": {
+    "backend": "internal-event-log",
+    "delivery_semantics": "at-least-once",
+    "trigger_mode": "event-driven",
+    "subscribers": [
+      "scheduler",
+      "task-dependency-gate",
+      "readme-renderer"
+    ],
+    "integration_options": [
+      "Kafka",
+      "NATS",
+      "AWS EventBridge"
+    ]
+  },
   "worker_pools": [
     {
       "name": "content-pool",

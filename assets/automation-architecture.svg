@@ -1,0 +1,110 @@
+<svg width="1880" height="360" viewBox="0 0 1880 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">README Automation Architecture</title>
+  <desc id="desc">Ordered flow: Orchestrator to DAG to Scheduler to Queue to State Store to Event Bus to Worker Pools to Registry to Health to Tasks to DLQ.</desc>
+  <defs>
+    <style>
+      .bg-light { fill: #f0f9ff; }
+      .bg-dark { fill: #0b1220; display: none; }
+      .title { font: 700 30px 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #334155; }
+      .node { fill: #ffffff; stroke: #7dd3fc; stroke-width: 2; rx: 14; }
+      .node-title { font: 700 16px 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .node-sub { font: 500 12px 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #475569; }
+      .edge { stroke: #0284c7; stroke-width: 3; fill: none; marker-end: url(#arrow-main); }
+      .edge-soft { stroke: #0ea5e9; stroke-width: 2; fill: none; stroke-dasharray: 6 6; marker-end: url(#arrow-soft); }
+      .hint { font: 600 12px 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #075985; }
+      .arrow-main { fill: #0284c7; }
+      .arrow-soft { fill: #0ea5e9; }
+
+      @media (prefers-color-scheme: dark) {
+        .bg-light { display: none; }
+        .bg-dark { display: block; }
+        .title { fill: #e2e8f0; }
+        .subtitle { fill: #94a3b8; }
+        .node { fill: #111827; stroke: #334155; }
+        .node-title { fill: #e5e7eb; }
+        .node-sub { fill: #94a3b8; }
+        .edge { stroke: #38bdf8; }
+        .edge-soft { stroke: #7dd3fc; }
+        .hint { fill: #7dd3fc; }
+        .arrow-main { fill: #38bdf8; }
+        .arrow-soft { fill: #7dd3fc; }
+      }
+    </style>
+    <marker id="arrow-main" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path class="arrow-main" d="M0,0 L0,6 L9,3 z"/>
+    </marker>
+    <marker id="arrow-soft" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path class="arrow-soft" d="M0,0 L0,6 L9,3 z"/>
+    </marker>
+  </defs>
+
+  <rect class="bg-light" x="0" y="0" width="1880" height="360" rx="20"/>
+  <rect class="bg-dark" x="0" y="0" width="1880" height="360" rx="20"/>
+
+  <text x="30" y="50" class="title">README Automation Architecture</text>
+  <text x="30" y="78" class="subtitle">Orchestrator -> DAG -> Scheduler -> Queue -> State Store -> Event Bus -> Worker Pools -> Registry -> Health -> Tasks -> DLQ</text>
+
+  <!-- Nodes in strict architecture order -->
+  <rect class="node" x="20" y="125" width="170" height="88"/>
+  <text x="34" y="160" class="node-title">Orchestrator</text>
+  <text x="34" y="182" class="node-sub">workflow_controller.py</text>
+
+  <rect class="node" x="220" y="125" width="120" height="88"/>
+  <text x="250" y="160" class="node-title">DAG</text>
+  <text x="234" y="182" class="node-sub">depends_on</text>
+
+  <rect class="node" x="370" y="125" width="140" height="88"/>
+  <text x="390" y="160" class="node-title">Scheduler</text>
+  <text x="384" y="182" class="node-sub">priority + delay</text>
+
+  <rect class="node" x="540" y="125" width="120" height="88"/>
+  <text x="573" y="160" class="node-title">Queue</text>
+  <text x="554" y="182" class="node-sub">ready/retry</text>
+
+  <rect class="node" x="690" y="125" width="150" height="88"/>
+  <text x="714" y="160" class="node-title">State Store</text>
+  <text x="708" y="182" class="node-sub">state + logs</text>
+
+  <rect class="node" x="870" y="125" width="140" height="88"/>
+  <text x="897" y="160" class="node-title">Event Bus</text>
+  <text x="888" y="182" class="node-sub">task.* events</text>
+
+  <rect class="node" x="1040" y="125" width="150" height="88"/>
+  <text x="1058" y="160" class="node-title">Worker Pools</text>
+  <text x="1058" y="182" class="node-sub">content/metrics</text>
+
+  <rect class="node" x="1220" y="125" width="130" height="88"/>
+  <text x="1250" y="160" class="node-title">Registry</text>
+  <text x="1238" y="182" class="node-sub">capabilities</text>
+
+  <rect class="node" x="1380" y="125" width="120" height="88"/>
+  <text x="1410" y="160" class="node-title">Health</text>
+  <text x="1400" y="182" class="node-sub">heartbeat</text>
+
+  <rect class="node" x="1530" y="125" width="120" height="88"/>
+  <text x="1565" y="160" class="node-title">Tasks</text>
+  <text x="1548" y="182" class="node-sub">task state</text>
+
+  <rect class="node" x="1680" y="125" width="120" height="88"/>
+  <text x="1720" y="160" class="node-title">DLQ</text>
+  <text x="1692" y="182" class="node-sub">failed tasks</text>
+
+  <!-- Main sequential edges -->
+  <path class="edge" d="M190 169 L220 169"/>
+  <path class="edge" d="M340 169 L370 169"/>
+  <path class="edge" d="M510 169 L540 169"/>
+  <path class="edge" d="M660 169 L690 169"/>
+  <path class="edge" d="M840 169 L870 169"/>
+  <path class="edge" d="M1010 169 L1040 169"/>
+  <path class="edge" d="M1190 169 L1220 169"/>
+  <path class="edge" d="M1350 169 L1380 169"/>
+  <path class="edge" d="M1500 169 L1530 169"/>
+  <path class="edge" d="M1650 169 L1680 169"/>
+
+  <!-- Secondary relations -->
+  <path class="edge-soft" d="M600 213 C600 250, 765 250, 765 213"/>
+  <path class="edge-soft" d="M940 213 C940 255, 1115 255, 1115 213"/>
+  <text x="626" y="272" class="hint">persist and recover</text>
+  <text x="944" y="292" class="hint">emit and consume events</text>
+</svg>
