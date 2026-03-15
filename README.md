@@ -259,16 +259,16 @@ All visual components below support both dark mode and light mode automatically.
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=2%20hrs%2018%20mins&color=334155&style=for-the-badge&logo=wakatime" />
-  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=2%20hrs%2018%20mins&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=8%20hrs%2024%20mins&color=334155&style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=8%20hrs%2024%20mins&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Daily%20Average&message=19%20mins&color=475569&style=for-the-badge" />
-  <img src="https://img.shields.io/static/v1?label=Daily%20Average&message=19%20mins&color=0f172a&style=for-the-badge" alt="daily average" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Daily%20Average&message=1%20hr%2012%20mins&color=475569&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Daily%20Average&message=1%20hr%2012%20mins&color=0f172a&style=for-the-badge" alt="daily average" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-16%2000%3A18%20CST&color=1e293b&style=for-the-badge" />
-  <img src="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-16%2000%3A18%20CST&color=1d4ed8&style=for-the-badge" alt="last sync" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-16%2000%3A56%20CST&color=1e293b&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-16%2000%3A56%20CST&color=1d4ed8&style=for-the-badge" alt="last sync" />
 </picture>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Top%20Language&message=Markdown&color=0f766e&style=for-the-badge" />
@@ -279,11 +279,11 @@ All visual components below support both dark mode and light mode automatically.
   <img src="https://img.shields.io/static/v1?label=Top%20Project&message=ccstudentcc&color=6d28d9&style=for-the-badge" alt="top project" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=All%20Time&message=2%20hrs%2019%20mins&color=475569&style=for-the-badge&logo=wakatime" />
-  <img src="https://img.shields.io/static/v1?label=All%20Time&message=2%20hrs%2019%20mins&color=334155&style=for-the-badge&logo=wakatime" alt="all time code time" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=All%20Time&message=8%20hrs%2025%20mins&color=475569&style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/static/v1?label=All%20Time&message=8%20hrs%2025%20mins&color=334155&style=for-the-badge&logo=wakatime" alt="all time code time" />
 </picture>
 
-<sub>Focus: Markdown (1 hr 28 mins, 63.6%) | Project: ccstudentcc (2 hrs 8 mins, 92.8%) | Editor: VS Code</sub>
+<sub>Focus: Markdown (6 hrs 4 mins, 72.3%) | Project: ccstudentcc (8 hrs 7 mins, 96.6%) | Editor: VS Code</sub>
 <sub>Code Time badge scope: Today (fallback: Last 7 Days)</sub>
 
 </div>
@@ -293,30 +293,30 @@ All visual components below support both dark mode and light mode automatically.
 
 ```text
 Timezone: Asia/Shanghai (UTC+8)
-Updated At (CST): 2026-03-16 00:18 CST
-Window: This Week | Total: 2 hrs 18 mins
+Updated At (CST): 2026-03-16 00:56 CST
+Window: This Week | Total: 8 hrs 24 mins
 
 Languages:
-  Markdown    1 hr 28 mins  [#################---------]  63.6%
-  YAML        23 mins       [####----------------------]  16.8%
-  JSON        19 mins       [####----------------------]  14.1%
-  Git Config  4 mins        [#-------------------------]   3.0%
-  Python      2 mins        [--------------------------]   1.7%
+  Markdown     6 hrs 4 mins  [###################-------]  72.3%
+  JSON         51 mins       [###-----------------------]  10.2%
+  Image (svg)  40 mins       [##------------------------]   8.0%
+  YAML         30 mins       [##------------------------]   6.0%
+  Python       12 mins       [#-------------------------]   2.4%
 
 Editors:
-  VS Code  2 hrs 18 mins  [##########################] 100.0%
+  VS Code  8 hrs 24 mins  [##########################] 100.0%
 
 Projects:
-  ccstudentcc         2 hrs 8 mins  [########################--]  92.8%
-  symkan-experiments  9 mins        [##------------------------]   7.2%
+  ccstudentcc         8 hrs 7 mins  [#########################-]  96.6%
+  symkan-experiments  17 mins       [#-------------------------]   3.4%
 
 Operating Systems:
-  Linux    1 hr 10 mins  [#############-------------]  50.9%
-  Windows  1 hr 7 mins   [#############-------------]  49.1%
+  Windows  7 hrs 13 mins  [######################----]  86.0%
+  Linux    1 hr 10 mins  [####----------------------]  14.0%
 
 Machines:
-  codespaces-cec6ef  1 hr 10 mins  [#############-------------]  50.9%
-  Peng               1 hr 7 mins   [#############-------------]  49.1%
+  Peng               7 hrs 13 mins  [######################----]  86.0%
+  codespaces-cec6ef  1 hr 10 mins  [####----------------------]  14.0%
 
 Generated by workflow-manager
 ```
