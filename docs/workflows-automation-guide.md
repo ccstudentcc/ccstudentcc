@@ -103,6 +103,7 @@ Quick meaning:
 From repository root:
 
 ```bash
+set PYTHONPATH=.github/scripts
 python .github/scripts/validate_workflow_chain.py
 python .github/scripts/workflow_controller.py
 ```
@@ -139,7 +140,7 @@ Worker execution note:
 - WakaTime section scope:
    - Primary `Code Time` badge prefers WakaTime `status_bar/today` and falls back to `stats/last_7_days` when today payload is empty or stale.
    - Optional `All Time` badge may be rendered separately when `all_time_since_today` is available.
-   - Focus summary and Weekly Breakdown prefer `summaries?range=This Week`; when summaries are empty, category rows fall back to `stats/last_7_days`.
+   - Focus summary and Weekly Breakdown use explicit `summaries?start=<monday>&end=<today>&timezone=Asia/Shanghai` for current-week coverage; when summaries are empty, category rows fall back to `stats/last_7_days`.
 
 ## 7) Troubleshooting
 
@@ -180,6 +181,13 @@ Checks:
 2. Confirm `WAKATIME_API_KEY` is available to the manager run, because the manager executes `.github/scripts/update_wakatime.py` directly rather than dispatching `wakatime.yml`.
 3. Confirm every README-writing worker still uses `.github/scripts/readme_utils.py`; bypassing the shared lock can reintroduce lost updates during parallel runs.
 4. Confirm `flow_order.latest_completed_cycle.completed_sequence` still matches the canonical chain before debugging worker-specific logic.
+
+### Symptom: `status_bar/today` has non-zero time, but Weekly Breakdown shows only older days or all zeros
+
+Checks:
+1. Query `summaries?range=This Week&timezone=Asia/Shanghai` and compare with `summaries?start=<monday>&end=<today>&timezone=Asia/Shanghai`; some accounts may receive stale windows for the relative range.
+2. Treat explicit `start/end` as source of truth for weekly rendering and keep `status_bar/today` for the Code Time badge.
+3. Confirm returned `data[].range.date` includes today's local date before investigating README rendering.
 
 ## 8) How To Extend (Human or AI)
 
