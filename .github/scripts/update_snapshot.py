@@ -3,9 +3,12 @@ from __future__ import annotations
 import json
 import os
 import urllib.request
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from readme_utils import update_readme_section
+
+ASIA_SHANGHAI = timezone(timedelta(hours=8))
 
 
 README_PATH = Path("README.md")
@@ -28,9 +31,16 @@ def github_request(url: str) -> list[dict]:
 
 
 def format_repo_line(owner: str, repo: dict) -> str:
+    pushed_at_raw = repo['pushed_at']
+    try:
+        dt_utc = datetime.fromisoformat(pushed_at_raw.replace("Z", "+00:00"))
+        dt_cst = dt_utc.astimezone(ASIA_SHANGHAI)
+        pushed_at = dt_cst.strftime("%Y-%m-%d %H:%M CST")
+    except (ValueError, AttributeError):
+        pushed_at = pushed_at_raw
     return (
         f"- [{repo['name']}](https://github.com/{owner}/{repo['name']})"
-        f" - Updated: {repo['pushed_at'].replace('T', ' ').replace('Z', ' UTC')}"
+        f" - Updated: {pushed_at}"
     )
 
 

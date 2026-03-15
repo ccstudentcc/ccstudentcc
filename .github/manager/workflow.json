@@ -4,7 +4,7 @@
     "description": "DAG orchestrated README automation for profile content"
   },
   "scheduler": {
-    "cron": "5 */6 * * *",
+    "cron": "0 4,16 * * *",
     "supported_triggers": [
       "workflow_dispatch",
       "schedule"
