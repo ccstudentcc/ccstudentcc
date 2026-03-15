@@ -259,16 +259,16 @@ All visual components below support both dark mode and light mode automatically.
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=0%20secs&color=334155&style=for-the-badge&logo=wakatime" />
-  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=0%20secs&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=6%20hrs%2053%20mins&color=334155&style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=6%20hrs%2053%20mins&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
 </picture>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Daily%20Average&message=19%20mins&color=475569&style=for-the-badge" />
   <img src="https://img.shields.io/static/v1?label=Daily%20Average&message=19%20mins&color=0f172a&style=for-the-badge" alt="daily average" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-15%2013%3A15%20CST&color=1e293b&style=for-the-badge" />
-  <img src="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-15%2013%3A15%20CST&color=1d4ed8&style=for-the-badge" alt="last sync" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-15%2013%3A17%20CST&color=1e293b&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-15%2013%3A17%20CST&color=1d4ed8&style=for-the-badge" alt="last sync" />
 </picture>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Top%20Language&message=Markdown&color=0f766e&style=for-the-badge" />
@@ -289,7 +289,7 @@ All visual components below support both dark mode and light mode automatically.
 
 ```text
 Timezone: Asia/Shanghai (UTC+8)
-Updated At (CST): 2026-03-15 13:15 CST
+Updated At (CST): 2026-03-15 13:17 CST
 
 Languages:
   Markdown    1 hr 28 mins  [#################---------]  63.6%
