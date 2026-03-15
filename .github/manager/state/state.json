@@ -26,19 +26,40 @@
     "backend": "github-actions-internal-queue",
     "delivery_guarantee": "at-least-once",
     "ordering": "priority-then-scheduled-at",
-    "persistence": "state-json-and-dead-letter-json",
+    "persistence": "queue-json + state-json + dead-letter-json",
     "dead_letter_enabled": true,
-    "middleware_options": [
-      "RabbitMQ",
-      "Kafka",
-      "Redis Streams",
-      "Amazon SQS",
-      "NSQ"
+    "operations": [
+      {
+        "name": "priority-sort",
+        "summary": "Ready tasks are ordered by priority, scheduled_at, then task name."
+      },
+      {
+        "name": "deferred-release-gate",
+        "summary": "Tasks stay deferred until their scheduled time is reached."
+      },
+      {
+        "name": "dependency-readiness-check",
+        "summary": "Only dependency-complete tasks can enter the dispatch queue."
+      },
+      {
+        "name": "retry-backoff-reschedule",
+        "summary": "Failed or timed-out tasks are re-queued using each worker's retry backoff."
+      },
+      {
+        "name": "dead-letter-capture",
+        "summary": "Exhausted failures are persisted to dead-letters.json for inspection."
+      }
     ],
+    "snapshot_path": ".github/manager/state/queue.json",
+    "snapshot_updated_at": "2026-03-15T03:55:20Z",
     "current_depth": 0,
     "max_depth_seen": 3,
     "total_dispatched": 4,
-    "total_completed": 4
+    "total_completed": 4,
+    "ready_entries": 0,
+    "deferred_entries": 0,
+    "retry_entries": 0,
+    "running_leases": 0
   },
   "state_store": {
     "backend": "json-files-in-repo",
@@ -49,20 +70,125 @@
       "workflow-definition",
       "task-state",
       "execution-logs",
-      "dependency-graph"
+      "dependency-graph",
+      "scheduler-state",
+      "queue-snapshots",
+      "metadata-manifest"
     ],
-    "database_options": [
-      "PostgreSQL(JSONB)",
-      "MySQL",
-      "MongoDB",
-      "etcd",
-      "Temporal(Cassandra/MySQL)"
+    "store_features": [
+      {
+        "name": "dag-snapshot-json",
+        "summary": "The resolved dependency graph is persisted to .github/manager/state/dag.json."
+      },
+      {
+        "name": "scheduler-snapshot-json",
+        "summary": "Scheduler policy, ready queue, and queue depth are persisted to .github/manager/state/scheduler.json."
+      },
+      {
+        "name": "runtime-state-json",
+        "summary": "The orchestrator persists workflow, worker, and task state to .github/manager/state/state.json."
+      },
+      {
+        "name": "queue-snapshot-json",
+        "summary": "Ready, deferred, retry, running, and terminal queue views are persisted to .github/manager/state/queue.json."
+      },
+      {
+        "name": "event-log-json",
+        "summary": "Published workflow events are persisted to .github/manager/state/event-log.json."
+      },
+      {
+        "name": "dead-letter-json",
+        "summary": "Exhausted task failures are preserved in .github/manager/state/dead-letters.json."
+      },
+      {
+        "name": "metadata-manifest-json",
+        "summary": "Document inventory, write batches, and store consistency are tracked in .github/manager/state/metadata-store.json."
+      }
     ],
     "paths": {
       "workflow_spec": ".github/manager/workflow.json",
       "runtime_state": ".github/manager/state/state.json",
-      "dead_letters": ".github/manager/state/dead-letters.json"
+      "dag_snapshot": ".github/manager/state/dag.json",
+      "scheduler_snapshot": ".github/manager/state/scheduler.json",
+      "queue_snapshot": ".github/manager/state/queue.json",
+      "event_log": ".github/manager/state/event-log.json",
+      "dead_letters": ".github/manager/state/dead-letters.json",
+      "metadata_manifest": ".github/manager/state/metadata-store.json"
     },
+    "manifest_version": 1,
+    "documents": [
+      {
+        "name": "workflow_spec",
+        "path": ".github/manager/workflow.json",
+        "exists": true,
+        "size_bytes": 0,
+        "updated_at": "2026-03-15T03:55:20Z"
+      },
+      {
+        "name": "runtime_state",
+        "path": ".github/manager/state/state.json",
+        "exists": true,
+        "size_bytes": 0,
+        "updated_at": "2026-03-15T03:55:20Z"
+      },
+      {
+        "name": "dag_snapshot",
+        "path": ".github/manager/state/dag.json",
+        "exists": true,
+        "size_bytes": 0,
+        "updated_at": "2026-03-15T03:55:20Z"
+      },
+      {
+        "name": "scheduler_snapshot",
+        "path": ".github/manager/state/scheduler.json",
+        "exists": true,
+        "size_bytes": 0,
+        "updated_at": "2026-03-15T03:55:20Z"
+      },
+      {
+        "name": "queue_snapshot",
+        "path": ".github/manager/state/queue.json",
+        "exists": true,
+        "size_bytes": 0,
+        "updated_at": "2026-03-15T03:55:20Z"
+      },
+      {
+        "name": "event_log",
+        "path": ".github/manager/state/event-log.json",
+        "exists": true,
+        "size_bytes": 0,
+        "updated_at": "2026-03-15T03:55:20Z"
+      },
+      {
+        "name": "dead_letters",
+        "path": ".github/manager/state/dead-letters.json",
+        "exists": true,
+        "size_bytes": 0,
+        "updated_at": "2026-03-15T03:55:20Z"
+      },
+      {
+        "name": "metadata_manifest",
+        "path": ".github/manager/state/metadata-store.json",
+        "exists": true,
+        "size_bytes": 0,
+        "updated_at": "2026-03-15T03:55:20Z"
+      }
+    ],
+    "document_count": 8,
+    "available_documents": 8,
+    "total_size_bytes": 0,
+    "missing_documents": [],
+    "write_count": 1,
+    "last_write_batch": [
+      ".github/manager/state/state.json",
+      ".github/manager/state/dag.json",
+      ".github/manager/state/scheduler.json",
+      ".github/manager/state/dead-letters.json",
+      ".github/manager/state/queue.json",
+      ".github/manager/state/event-log.json",
+      ".github/manager/state/metadata-store.json"
+    ],
+    "consistency_status": "healthy",
     "last_persisted_at": "2026-03-15T03:55:20Z"
   },
   "event_bus": {
@@ -75,10 +201,20 @@
       "readme-renderer"
     ],
     "integration_options": [
-      "Kafka",
-      "NATS",
-      "AWS EventBridge"
+      {
+        "name": "state-json-timeline",
+        "summary": "Published events are appended to event_bus.recent_events in runtime state."
+      },
+      {
+        "name": "readme-console-refresh",
+        "summary": "Event activity is rendered back into the README automation console."
+      },
+      {
+        "name": "github-actions-annotations",
+        "summary": "Failures and skipped sections are surfaced through workflow warnings and logs."
+      }
     ],
+    "event_log_path": ".github/manager/state/event-log.json",
     "published_events": 10,
     "last_event_at": "2026-03-15T03:55:20Z",
     "recent_events": [

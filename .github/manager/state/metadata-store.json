@@ -1,0 +1,78 @@
+{
+  "generated_at": "2026-03-15T03:55:20Z",
+  "backend": "json-files-in-repo",
+  "transaction_model": "atomic-file-write",
+  "manifest_version": 1,
+  "write_count": 1,
+  "last_persisted_at": "2026-03-15T03:55:20Z",
+  "last_write_batch": [
+    ".github/manager/state/state.json",
+    ".github/manager/state/dag.json",
+    ".github/manager/state/scheduler.json",
+    ".github/manager/state/dead-letters.json",
+    ".github/manager/state/queue.json",
+    ".github/manager/state/event-log.json",
+    ".github/manager/state/metadata-store.json"
+  ],
+  "consistency_status": "healthy",
+  "total_size_bytes": 0,
+  "missing_documents": [],
+  "documents": [
+    {
+      "name": "workflow_spec",
+      "path": ".github/manager/workflow.json",
+      "exists": true,
+      "size_bytes": 0,
+      "updated_at": "2026-03-15T03:55:20Z"
+    },
+    {
+      "name": "runtime_state",
+      "path": ".github/manager/state/state.json",
+      "exists": true,
+      "size_bytes": 0,
+      "updated_at": "2026-03-15T03:55:20Z"
+    },
+    {
+      "name": "dag_snapshot",
+      "path": ".github/manager/state/dag.json",
+      "exists": true,
+      "size_bytes": 0,
+      "updated_at": "2026-03-15T03:55:20Z"
+    },
+    {
+      "name": "scheduler_snapshot",
+      "path": ".github/manager/state/scheduler.json",
+      "exists": true,
+      "size_bytes": 0,
+      "updated_at": "2026-03-15T03:55:20Z"
+    },
+    {
+      "name": "queue_snapshot",
+      "path": ".github/manager/state/queue.json",
+      "exists": true,
+      "size_bytes": 0,
+      "updated_at": "2026-03-15T03:55:20Z"
+    },
+    {
+      "name": "event_log",
+      "path": ".github/manager/state/event-log.json",
+      "exists": true,
+      "size_bytes": 0,
+      "updated_at": "2026-03-15T03:55:20Z"
+    },
+    {
+      "name": "dead_letters",
+      "path": ".github/manager/state/dead-letters.json",
+      "exists": true,
+      "size_bytes": 0,
+      "updated_at": "2026-03-15T03:55:20Z"
+    },
+    {
+      "name": "metadata_manifest",
+      "path": ".github/manager/state/metadata-store.json",
+      "exists": true,
+      "size_bytes": 0,
+      "updated_at": "2026-03-15T03:55:20Z"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Fetch WakaTime stats and render the README WakaTime section."""
+
 import base64
 import json
 import os
@@ -20,12 +22,32 @@ ASIA_SHANGHAI = timezone(timedelta(hours=8))
 
 
 def _request_json(url: str, headers: dict[str, str]) -> dict:
+    """Issue HTTP request and parse JSON response.
+
+    Args:
+        url: Request URL.
+        headers: HTTP headers.
+
+    Returns:
+        Parsed JSON object.
+    """
     request = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.load(response)
 
 
 def fetch_stats(api_key: str) -> dict:
+    """Fetch WakaTime summary with Basic-auth primary and query fallback.
+
+    Args:
+        api_key: WakaTime API key.
+
+    Returns:
+        API payload as dict.
+
+    Raises:
+        RuntimeError: If response is malformed or contains API errors.
+    """
     # WakaTime Basic auth uses "api_key:" as credentials.
     clean_key = api_key.strip()
     auth = base64.b64encode(f"{clean_key}:".encode("utf-8")).decode("ascii")
@@ -71,12 +93,14 @@ def _get_average_text(data: dict) -> str:
 
 
 def _progress_bar(percent: float, width: int = 26) -> str:
+    """Render fixed-width ASCII progress bar from percentage."""
     clamped = max(0.0, min(100.0, float(percent)))
     filled = int(round(clamped / 100.0 * width))
     return "#" * filled + "-" * (width - filled)
 
 
 def _badge_url(label: str, message: str, color: str, logo: str | None = None) -> str:
+    """Build shields static/v1 badge URL for README badges."""
     # Use query-string API to avoid path-separator parsing issues (e.g. '-' in timestamps).
     encoded_label = urllib.parse.quote(label, safe="")
     encoded_message = urllib.parse.quote(message, safe="")
@@ -94,6 +118,7 @@ def _badge_url(label: str, message: str, color: str, logo: str | None = None) ->
 
 
 def _render_ranked_lines(items: list[dict], label: str, limit: int = 5) -> list[str]:
+    """Render ranked text table lines for category breakdown."""
     rows = items[:limit]
     if not rows:
         return []
@@ -112,6 +137,7 @@ def _render_ranked_lines(items: list[dict], label: str, limit: int = 5) -> list[
 
 
 def _top_item(items: list[dict]) -> tuple[str, str, float]:
+    """Return (name, time_text, percent) tuple for top ranked item."""
     if not items:
         return "N/A", "0 mins", 0.0
     item = items[0]
@@ -122,6 +148,14 @@ def _top_item(items: list[dict]) -> tuple[str, str, float]:
 
 
 def build_stats_block(payload: dict) -> str:
+    """Build markdown/HTML block for README WakaTime section.
+
+    Args:
+        payload: WakaTime API payload.
+
+    Returns:
+        Section content for marker replacement.
+    """
     data = payload.get("data", {})
     languages = data.get("languages", [])[:5]
     editors = data.get("editors", [])[:5]
@@ -200,6 +234,7 @@ def build_stats_block(payload: dict) -> str:
 
 
 def main() -> None:
+    """Fetch stats, render section block, and update README markers."""
     api_key = os.getenv("WAKATIME_API_KEY")
     if not api_key:
         raise RuntimeError("WAKATIME_API_KEY is not configured")

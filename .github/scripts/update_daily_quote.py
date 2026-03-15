@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Update README daily quote section from a deterministic quote pool."""
+
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -25,11 +27,25 @@ END_MARKER = "<!--END_SECTION:daily_quote-->"
 
 
 def main() -> None:
+    """Render and persist today's quote into README marker section."""
     today = datetime.now(timezone.utc).date()
     quote, author = QUOTES[today.toordinal() % len(QUOTES)]
-    block = f"> {quote}\n>\n> — {author}"
+    block = build_quote_block(quote, author)
     update_readme_section(README_PATH, START_MARKER, END_MARKER, block)
     print(f"Updated daily quote: {author}")
+
+
+def build_quote_block(quote: str, author: str) -> str:
+    """Build markdown blockquote payload for README quote section.
+
+    Args:
+        quote: Quote text.
+        author: Quote author.
+
+    Returns:
+        Markdown blockquote content.
+    """
+    return f"> {quote}\n>\n> — {author}"
 
 
 if __name__ == "__main__":

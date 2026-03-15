@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+"""Refresh snapshot-related README sections and showcase SVG assets."""
+
 import json
 import os
+import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from html import escape
@@ -26,6 +29,17 @@ SHOWCASE_COLORS = ["1d4ed8", "0891b2", "0f766e"]
 
 
 def try_update_readme_section(readme_path: Path, start_marker: str, end_marker: str, new_block: str) -> bool:
+    """Try updating a README marker section and tolerate missing markers.
+
+    Args:
+        readme_path: Target README path.
+        start_marker: Marker that starts the managed block.
+        end_marker: Marker that ends the managed block.
+        new_block: Replacement markdown/html content.
+
+    Returns:
+        True when section update succeeds; False when marker pair is absent.
+    """
     try:
         update_readme_section(readme_path, start_marker, end_marker, new_block)
         return True
@@ -34,6 +48,14 @@ def try_update_readme_section(readme_path: Path, start_marker: str, end_marker: 
 
 
 def github_request(url: str) -> list[dict]:
+    """Issue a GitHub API GET request and return parsed JSON list.
+
+    Args:
+        url: GitHub API URL.
+
+    Returns:
+        Decoded JSON list payload.
+    """
     headers = {
         "Accept": "application/vnd.github+json",
         "User-Agent": "workflow-manager"
@@ -62,13 +84,44 @@ def format_repo_line(owner: str, repo: dict) -> str:
 
 
 def short_text(value: str | None, fallback: str, max_len: int = 46) -> str:
+    """Return clipped single-line text for badges/cards."""
     source = (value or "").strip() or fallback
     if len(source) <= max_len:
         return source
     return source[: max_len - 3].rstrip() + "..."
 
 
+def build_static_badge(label: str, message: str, color: str, style: str = "for-the-badge") -> str:
+    """Build a shields static/v1 badge URL.
+
+    Args:
+        label: Badge label text.
+        message: Badge message text.
+        color: Badge color.
+        style: Shields style value.
+
+    Returns:
+        Encoded shields static badge URL.
+    """
+    label_q = urllib.parse.quote(label, safe="")
+    message_q = urllib.parse.quote(message, safe="")
+    color_q = urllib.parse.quote(color, safe="")
+    return (
+        "https://img.shields.io/static/v1"
+        f"?label={label_q}&message={message_q}&color={color_q}&style={style}"
+    )
+
+
 def format_showcase_cells(owner: str, repos: list[dict]) -> str:
+    """Render showcase slide badges and summaries for top repositories.
+
+    Args:
+        owner: GitHub repository owner.
+        repos: Recently updated repositories.
+
+    Returns:
+        HTML block for README showcase slides.
+    """
     if not repos:
         return "<p align=\"center\"><sub>No repositories available for showcase.</sub></p>"
 
@@ -79,10 +132,10 @@ def format_showcase_cells(owner: str, repos: list[dict]) -> str:
         name = repo.get("name", "unknown")
         desc = short_text(repo.get("description"), "No description yet")
         title = short_text(name, "unknown", 24)
-        badge_name = name.replace("-", "--")
+        badge_url = build_static_badge(f"Slide 0{idx}", name, color)
         badge = (
             f'<a href="https://github.com/{owner}/{name}">'
-            f'<img src="https://img.shields.io/badge/Slide%200{idx}-{badge_name}-{color}?style=for-the-badge" alt="slide {idx}" />'
+            f'<img src="{badge_url}" alt="slide {idx}" />'
             f'</a>'
         )
         summary = (
@@ -93,7 +146,7 @@ def format_showcase_cells(owner: str, repos: list[dict]) -> str:
         summaries.append(summary)
 
     while len(badge_links) < 3:
-        badge_links.append('<img src="https://img.shields.io/badge/Slide-Waiting%20for%20more%20projects-64748b?style=for-the-badge" alt="waiting" />')
+        badge_links.append(f'<img src="{build_static_badge("Slide", "Waiting for more projects", "64748b")}" alt="waiting" />')
         summaries.append("<sub>Waiting for more projects.</sub>")
 
     badges_block = "\n".join(badge_links)
@@ -109,35 +162,52 @@ def format_showcase_cells(owner: str, repos: list[dict]) -> str:
 
 
 def build_realtime_panel(owner: str, repos: list[dict]) -> str:
-        now_cst = datetime.now(ASIA_SHANGHAI).strftime("%Y-%m-%d %H:%M CST")
-        top_repo = repos[0]["name"] if repos else "n/a"
-        return "\n".join(
-                [
-                        f"- Live sync: {now_cst}",
-                        "- Data source: GitHub REST API + workflow-manager snapshot worker",
-                        "- Showcase source: top 3 recently updated public repositories",
-                        f"- Current top repository: [{top_repo}](https://github.com/{owner}/{top_repo})" if repos else "- Current top repository: n/a"
-                ]
-        )
+    """Build realtime panel lines for the KPI section.
+
+    Args:
+        owner: GitHub repository owner.
+        repos: Recently updated repositories.
+
+    Returns:
+        Markdown bullet list payload.
+    """
+    now_cst = datetime.now(ASIA_SHANGHAI).strftime("%Y-%m-%d %H:%M CST")
+    top_repo = repos[0]["name"] if repos else "n/a"
+    return "\n".join(
+        [
+            f"- Live sync: {now_cst}",
+            "- Data source: GitHub REST API + workflow-manager snapshot worker",
+            "- Showcase source: top 3 recently updated public repositories",
+            f"- Current top repository: [{top_repo}](https://github.com/{owner}/{top_repo})" if repos else "- Current top repository: n/a"
+        ]
+    )
 
 
 def build_showcase_svg(repos: list[dict]) -> str:
-        defaults = [
-                {"name": "Project-01", "description": "Repository showcase"},
-                {"name": "Project-02", "description": "Repository showcase"},
-                {"name": "Project-03", "description": "Repository showcase"}
-        ]
-        cards = (repos[:3] + defaults)[:3]
+    """Build animated showcase SVG content.
 
-        def line1(item: dict) -> str:
-                return short_text(item.get("name"), "Repository", 28)
+    Args:
+        repos: Recently updated repositories.
 
-        def line2(item: dict) -> str:
-                return short_text(item.get("description"), "No description yet", 44)
+    Returns:
+        SVG XML string.
+    """
+    defaults = [
+        {"name": "Project-01", "description": "Repository showcase"},
+        {"name": "Project-02", "description": "Repository showcase"},
+        {"name": "Project-03", "description": "Repository showcase"}
+    ]
+    cards = (repos[:3] + defaults)[:3]
 
-        c1, c2, c3 = cards
+    def line1(item: dict) -> str:
+        return short_text(item.get("name"), "Repository", 28)
 
-        return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-label="Animated project carousel">
+    def line2(item: dict) -> str:
+        return short_text(item.get("description"), "No description yet", 44)
+
+    c1, c2, c3 = cards
+
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-label="Animated project carousel">
     <defs>
         <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#e0f2fe" />
@@ -238,6 +308,7 @@ def build_showcase_svg(repos: list[dict]) -> str:
 
 
 def main() -> None:
+    """Fetch recent repos and refresh snapshot-driven README sections."""
     owner = os.getenv("GITHUB_REPOSITORY_OWNER", "ccstudentcc")
     url = f"https://api.github.com/users/{owner}/repos?sort=updated&per_page=100"
     repos = github_request(url)
@@ -283,6 +354,7 @@ def main() -> None:
 
 
 def build_hero_subtitle(owner: str, repos: list[dict]) -> str:
+    """Build the hero subtitle narrative based on most recent repository."""
     if not repos:
         return "Main narrative: building in public with weekly automation and continuous iteration."
 

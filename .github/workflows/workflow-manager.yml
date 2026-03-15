@@ -31,11 +31,17 @@ jobs:
       - name: Ensure featured projects script is executable
         run: chmod +x .github/scripts/update_featured_projects.sh
 
+      - name: Validate workflow chain coverage
+        run: python .github/scripts/validate_workflow_chain.py
+
       - name: Run workflow controller
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
         run: python .github/scripts/workflow_controller.py
+
+      - name: Validate workflow chain post-run
+        run: python .github/scripts/validate_workflow_chain.py
 
       - name: Commit manager state
         uses: stefanzweifel/git-auto-commit-action@v5

@@ -17,14 +17,29 @@
     "backend": "github-actions-internal-queue",
     "delivery_guarantee": "at-least-once",
     "ordering": "priority-then-scheduled-at",
-    "persistence": "state-json-and-dead-letter-json",
+    "persistence": "queue-json + state-json + dead-letter-json",
     "dead_letter_enabled": true,
-    "middleware_options": [
-      "RabbitMQ",
-      "Kafka",
-      "Redis Streams",
-      "Amazon SQS",
-      "NSQ"
+    "operations": [
+      {
+        "name": "priority-sort",
+        "summary": "Ready tasks are ordered by priority, scheduled_at, then task name."
+      },
+      {
+        "name": "deferred-release-gate",
+        "summary": "Tasks stay deferred until their scheduled time is reached."
+      },
+      {
+        "name": "dependency-readiness-check",
+        "summary": "Only dependency-complete tasks can enter the dispatch queue."
+      },
+      {
+        "name": "retry-backoff-reschedule",
+        "summary": "Failed or timed-out tasks are re-queued using each worker's retry backoff."
+      },
+      {
+        "name": "dead-letter-capture",
+        "summary": "Exhausted failures are persisted to dead-letters.json for inspection."
+      }
     ]
   },
   "state_store": {
@@ -36,14 +51,40 @@
       "workflow-definition",
       "task-state",
       "execution-logs",
-      "dependency-graph"
+      "dependency-graph",
+      "scheduler-state",
+      "queue-snapshots",
+      "metadata-manifest"
     ],
-    "database_options": [
-      "PostgreSQL(JSONB)",
-      "MySQL",
-      "MongoDB",
-      "etcd",
-      "Temporal(Cassandra/MySQL)"
+    "store_features": [
+      {
+        "name": "dag-snapshot-json",
+        "summary": "The resolved dependency graph is persisted to .github/manager/state/dag.json."
+      },
+      {
+        "name": "scheduler-snapshot-json",
+        "summary": "Scheduler policy, ready queue, and queue depth are persisted to .github/manager/state/scheduler.json."
+      },
+      {
+        "name": "runtime-state-json",
+        "summary": "The orchestrator persists workflow, worker, and task state to .github/manager/state/state.json."
+      },
+      {
+        "name": "queue-snapshot-json",
+        "summary": "Ready, deferred, retry, running, and terminal queue views are persisted to .github/manager/state/queue.json."
+      },
+      {
+        "name": "event-log-json",
+        "summary": "Published workflow events are persisted to .github/manager/state/event-log.json."
+      },
+      {
+        "name": "dead-letter-json",
+        "summary": "Exhausted task failures are preserved in .github/manager/state/dead-letters.json."
+      },
+      {
+        "name": "metadata-manifest-json",
+        "summary": "Document inventory, write batches, and store consistency are tracked in .github/manager/state/metadata-store.json."
+      }
     ]
   },
   "event_bus": {
@@ -56,9 +97,18 @@
       "readme-renderer"
     ],
     "integration_options": [
-      "Kafka",
-      "NATS",
-      "AWS EventBridge"
+      {
+        "name": "state-json-timeline",
+        "summary": "Published events are appended to event_bus.recent_events in runtime state."
+      },
+      {
+        "name": "readme-console-refresh",
+        "summary": "Event activity is rendered back into the README automation console."
+      },
+      {
+        "name": "github-actions-annotations",
+        "summary": "Failures and skipped sections are surfaced through workflow warnings and logs."
+      }
     ]
   },
   "worker_pools": [

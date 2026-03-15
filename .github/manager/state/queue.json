@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-03-15T03:55:20Z",
+  "backend": "github-actions-internal-queue",
+  "ordering": "priority-then-scheduled-at",
+  "ready_queue": [],
+  "deferred_queue": [],
+  "retry_queue": [],
+  "running_leases": [],
+  "terminal_tasks": [
+    {
+      "task": "snapshot",
+      "status": "Success",
+      "priority": 60,
+      "pool": "content-pool",
+      "worker": "snapshot",
+      "scheduled_at": "2026-03-15T03:55:16Z",
+      "updated_at": "2026-03-15T03:55:20Z",
+      "attempt": 1,
+      "max_attempts": 2
+    },
+    {
+      "task": "daily-quote",
+      "status": "Success",
+      "priority": 30,
+      "pool": "engagement-pool",
+      "worker": "daily-quote",
+      "scheduled_at": "2026-03-15T03:55:16Z",
+      "updated_at": "2026-03-15T03:55:18Z",
+      "attempt": 1,
+      "max_attempts": 2
+    },
+    {
+      "task": "featured-projects",
+      "status": "Success",
+      "priority": 90,
+      "pool": "content-pool",
+      "worker": "featured-projects",
+      "scheduled_at": "2026-03-15T03:55:16Z",
+      "updated_at": "2026-03-15T03:55:18Z",
+      "attempt": 1,
+      "max_attempts": 2
+    },
+    {
+      "task": "wakatime",
+      "status": "Success",
+      "priority": 100,
+      "pool": "metrics-pool",
+      "worker": "wakatime",
+      "scheduled_at": "2026-03-15T03:55:16Z",
+      "updated_at": "2026-03-15T03:55:18Z",
+      "attempt": 1,
+      "max_attempts": 2
+    }
+  ],
+  "stats": {
+    "ready": 0,
+    "deferred": 0,
+    "retry": 0,
+    "running": 0,
+    "terminal": 4,
+    "dead_letters": 0
+  }
+}
