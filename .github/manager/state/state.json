@@ -13,7 +13,7 @@
   "failure_policy": "continue-on-error + retry + timeout cancel + dead-letter on exhaust",
   "scheduler": {
     "trigger": "schedule",
-    "cron": "5 */6 * * *",
+    "cron": "0 4,16 * * *",
     "priority_policy": "higher-first",
     "delay_strategy": "defer-until-ready",
     "parallel_execution": true,
