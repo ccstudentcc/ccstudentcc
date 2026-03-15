@@ -353,6 +353,8 @@ def render_scheduler_state(state: dict) -> str:
     scheduler = state["scheduler"]
     ready_queue = ", ".join(scheduler["ready_queue"]) if scheduler["ready_queue"] else "empty"
     lines = [
+        f"- Trigger: {scheduler['trigger']}",
+        f"- Cron: {scheduler['cron']}",
         f"- Ready queue: {ready_queue}",
         f"- Deferred tasks: {scheduler['deferred_tasks']}",
         f"- Running tasks: {scheduler['running_tasks']}",
@@ -366,7 +368,7 @@ def render_worker_pools(state: dict) -> str:
     lines = []
     for name, pool in state["worker_pools"].items():
         lines.append(
-            f"- {name}: logical type {pool['worker_type']} | desired {pool['desired_workers']} | active {pool['active_workers']} | max {pool['max_workers']} | queued {pool['queued_tasks']} | {pool['last_scale_reason']}"
+            f"- {name}: logical type {pool['worker_type']} | desired {pool['desired_workers']} | active {pool['active_workers']} | max {pool['max_workers']} | queued {pool['queued_tasks']} | completed {pool['completed_tasks']} | {pool['last_scale_reason']}"
         )
     return "\n".join(lines) if lines else "- No worker pools configured."
 

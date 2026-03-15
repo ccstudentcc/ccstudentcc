@@ -264,6 +264,23 @@ def main() -> None:
         format_showcase_cells(owner, showcase)
     )
 
+    try_update_readme_section(
+        README_PATH,
+        REALTIME_START_MARKER,
+        REALTIME_END_MARKER,
+        build_realtime_panel(owner, showcase)
+    )
+    try_update_readme_section(
+        README_PATH,
+        HERO_SUBTITLE_START_MARKER,
+        HERO_SUBTITLE_END_MARKER,
+        build_hero_subtitle(owner, showcase)
+    )
+
+    SHOWCASE_SVG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    SHOWCASE_SVG_PATH.write_text(build_showcase_svg(showcase), encoding="utf-8")
+    print(f"Updated recent repository snapshot with {len(selected)} entries and refreshed showcase assets")
+
 
 def build_hero_subtitle(owner: str, repos: list[dict]) -> str:
     if not repos:
@@ -276,22 +293,6 @@ def build_hero_subtitle(owner: str, repos: list[dict]) -> str:
         f"Main narrative: shipping around [{top_name}](https://github.com/{owner}/{top_name}) this week, "
         f"with focus on {description}."
     )
-    update_readme_section(
-        README_PATH,
-        REALTIME_START_MARKER,
-        REALTIME_END_MARKER,
-        build_realtime_panel(owner, showcase)
-    )
-    update_readme_section(
-        README_PATH,
-        HERO_SUBTITLE_START_MARKER,
-        HERO_SUBTITLE_END_MARKER,
-        build_hero_subtitle(owner, showcase)
-    )
-
-    SHOWCASE_SVG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    SHOWCASE_SVG_PATH.write_text(build_showcase_svg(showcase), encoding="utf-8")
-    print(f"Updated recent repository snapshot with {len(selected)} entries and refreshed showcase assets")
 
 
 if __name__ == "__main__":
