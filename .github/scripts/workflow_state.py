@@ -434,7 +434,7 @@ def initialize_state(registry: dict[str, Any], workflow_spec: dict[str, Any]) ->
         A tuple of (state, dead_letters, expanded_task_specs).
     """
     existing_state = cast(dict[str, Any], load_json(STATE_PATH, {}))
-    dead_letters = cast(list[dict[str, Any]], load_json(DEAD_LETTERS_PATH, []))
+    dead_letters: list[dict[str, Any]] = []
     workers_by_name = {worker["name"]: worker for worker in registry["workers"]}
     pool_defs = {pool["name"]: pool for pool in workflow_spec["worker_pools"]}
     task_specs = expand_task_specs(workflow_spec["tasks"])

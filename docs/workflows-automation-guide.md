@@ -63,6 +63,7 @@ Behavior notes:
 - Missing `WAKATIME_API_KEY` does not break whole orchestration; the related task can be skipped by condition.
 - Missing optional README markers should not hard-fail the controller; unavailable sections are skipped with warnings.
 - `workflow-manager` launches independent workers in parallel, but all README marker updates are serialized through `.github/scripts/readme_utils.py` so one worker cannot overwrite another worker's section.
+- `featured-projects` worker calls `readme_utils.py --allow-missing-markers` so a missing `<!--START_SECTION:featured-->` block does not fail the task; the README update is silently skipped while the repo-discovery step still runs.
 
 ## 4) Runtime State Files
 
@@ -82,7 +83,7 @@ Quick meaning:
 - `scheduler.json`: scheduler policy and queue counters.
 - `queue.json`: ready/deferred/retry/running/terminal queue snapshot.
 - `event-log.json`: emitted orchestration events.
-- `dead-letters.json`: exhausted failures.
+- `dead-letters.json`: exhausted failures from the current run only (reset at start of each run; historical entries are preserved in git history).
 - `metadata-store.json`: persisted document inventory and consistency metadata.
 
 ## 5) How To Run
@@ -165,6 +166,13 @@ Checks:
 3. Inspect `.github/manager/state/event-log.json` for failure timeline.
 4. Inspect `.github/manager/state/state.json -> flow_order.latest_completed_cycle` to confirm the latest manager pass realized the full canonical stage order.
 
+### Symptom: DLQ section shows a failure for a task that succeeded in the latest run
+
+Checks:
+1. Dead letters are reset at the start of each orchestration run; stale DLQ entries from previous runs do not carry over.
+2. If the dead letter still appears after a run where the task shows `status: Success`, ensure local state files are in sync with the latest commit (`git pull`).
+3. Trigger the workflow once more; the DLQ section should be empty when all current-run tasks succeed.
+
 ### Symptom: running Workflow Manager does not refresh WakaTime, but running `Waka Readme` directly does
 
 Checks:
@@ -227,3 +235,4 @@ Minimum sync checklist per change:
 2. If rendering logic or marker ownership changes, update sections 1, 6, and 10.
 3. If secrets, triggers, or workflow names change, update sections 2, 3, and 5.
 4. If extension steps change, update sections 8 and 9.
+5. If dead-letter scope or tolerant-mode behavior changes, update sections 3, 4, and 7.
