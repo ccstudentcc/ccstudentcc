@@ -122,6 +122,10 @@ CI order in `.github/workflows/workflow-manager.yml`:
 - Keep README marker pairs intact for all managed sections:
   - `<!--START_SECTION:...-->`
   - `<!--END_SECTION:...-->`
+- WakaTime section scope:
+   - `Code Time` badge uses WakaTime `all_time_since_today` when available.
+   - If all-time API is unavailable, it falls back to `stats/last_7_days`.
+   - Weekly breakdown remains based on `stats/last_7_days`.
 
 ## 7) Troubleshooting
 

@@ -17,7 +17,8 @@ from readme_utils import update_readme_section
 README_PATH = Path("README.md")
 START_MARKER = "<!--START_SECTION:waka-->"
 END_MARKER = "<!--END_SECTION:waka-->"
-WAKATIME_URL = "https://api.wakatime.com/api/v1/users/current/stats/last_7_days"
+WAKATIME_STATS_URL = "https://api.wakatime.com/api/v1/users/current/stats/last_7_days"
+WAKATIME_ALL_TIME_URL = "https://api.wakatime.com/api/v1/users/current/all_time_since_today"
 ASIA_SHANGHAI = timezone(timedelta(hours=8))
 
 
@@ -36,19 +37,38 @@ def _request_json(url: str, headers: dict[str, str]) -> dict:
         return json.load(response)
 
 
-def fetch_stats(api_key: str) -> dict:
-    """Fetch WakaTime summary with Basic-auth primary and query fallback.
+def _request_with_fallback(url: str, clean_key: str, headers: dict[str, str]) -> dict:
+    """Request WakaTime endpoint with Basic-auth primary and query fallback.
+
+    Args:
+        url: WakaTime API endpoint.
+        clean_key: Trimmed API key.
+        headers: Base HTTP headers.
+
+    Returns:
+        Parsed JSON payload.
+    """
+    try:
+        return _request_json(url, headers)
+    except urllib.error.HTTPError as error:
+        if error.code not in (401, 403):
+            raise
+        fallback_url = f"{url}?api_key={urllib.parse.quote(clean_key)}"
+        return _request_json(fallback_url, {"Accept": "application/json", "User-Agent": "workflow-manager"})
+
+
+def fetch_stats(api_key: str) -> tuple[dict, dict | None]:
+    """Fetch WakaTime weekly stats plus optional all-time summary.
 
     Args:
         api_key: WakaTime API key.
 
     Returns:
-        API payload as dict.
+        Tuple of (weekly_stats_payload, all_time_payload_or_none).
 
     Raises:
         RuntimeError: If response is malformed or contains API errors.
     """
-    # WakaTime Basic auth uses "api_key:" as credentials.
     clean_key = api_key.strip()
     auth = base64.b64encode(f"{clean_key}:".encode("utf-8")).decode("ascii")
     headers = {
@@ -56,20 +76,37 @@ def fetch_stats(api_key: str) -> dict:
         "Authorization": f"Basic {auth}",
         "User-Agent": "workflow-manager"
     }
-    try:
-        payload = _request_json(WAKATIME_URL, headers)
-    except urllib.error.HTTPError as error:
-        if error.code not in (401, 403):
-            raise
-        # Fallback path for environments where proxy/auth middlewares reject Basic auth.
-        fallback_url = f"{WAKATIME_URL}?api_key={urllib.parse.quote(clean_key)}"
-        payload = _request_json(fallback_url, {"Accept": "application/json", "User-Agent": "workflow-manager"})
+    payload = _request_with_fallback(WAKATIME_STATS_URL, clean_key, headers)
 
     if not isinstance(payload, dict):
         raise RuntimeError("Unexpected WakaTime response: payload is not a JSON object")
     if "error" in payload:
         raise RuntimeError(f"WakaTime API error: {payload['error']}")
-    return payload
+
+    all_time_payload: dict | None = None
+    try:
+        candidate = _request_with_fallback(WAKATIME_ALL_TIME_URL, clean_key, headers)
+        if isinstance(candidate, dict) and "error" not in candidate:
+            all_time_payload = candidate
+    except Exception:
+        all_time_payload = None
+
+    return payload, all_time_payload
+
+
+def _get_all_time_text(all_time_payload: dict | None) -> str | None:
+    """Extract all-time code-time text from all_time_since_today payload."""
+    if not all_time_payload:
+        return None
+    data = all_time_payload.get("data", {}) if isinstance(all_time_payload, dict) else {}
+    if not isinstance(data, dict):
+        return None
+    return (
+        data.get("text")
+        or data.get("human_readable_total")
+        or data.get("total")
+        or None
+    )
 
 
 def _get_total_text(data: dict) -> str:
@@ -147,7 +184,7 @@ def _top_item(items: list[dict]) -> tuple[str, str, float]:
     return name, text, percent
 
 
-def build_stats_block(payload: dict) -> str:
+def build_stats_block(payload: dict, all_time_payload: dict | None = None) -> str:
     """Build markdown/HTML block for README WakaTime section.
 
     Args:
@@ -161,7 +198,9 @@ def build_stats_block(payload: dict) -> str:
     editors = data.get("editors", [])[:5]
     projects = data.get("projects", [])[:5]
     operating_systems = data.get("operating_systems", [])[:5]
-    total = _get_total_text(data)
+    weekly_total = _get_total_text(data)
+    all_time_total = _get_all_time_text(all_time_payload)
+    total = all_time_total or weekly_total
     average = _get_average_text(data)
     synced_at = datetime.now(ASIA_SHANGHAI).replace(microsecond=0).strftime("%Y-%m-%d %H:%M CST")
     has_any_data = any([languages, editors, projects, operating_systems])
@@ -205,6 +244,7 @@ def build_stats_block(payload: dict) -> str:
         "</picture>",
         "",
         f"<sub>Focus: {top_lang_name} ({top_lang_time}, {top_lang_percent:.1f}%) | Project: {top_project_name} ({top_project_time}, {top_project_percent:.1f}%) | Editor: {top_editor_name}</sub>",
+        f"<sub>Code Time badge scope: {'All Time' if all_time_total else 'Last 7 Days (fallback)'}</sub>",
         "",
         "</div>",
         "",
@@ -240,14 +280,14 @@ def main() -> None:
         raise RuntimeError("WAKATIME_API_KEY is not configured")
 
     try:
-        payload = fetch_stats(api_key)
+        payload, all_time_payload = fetch_stats(api_key)
     except urllib.error.HTTPError as error:
         body = error.read().decode("utf-8", errors="replace")
         raise RuntimeError(f"WakaTime API request failed: {error.code} {body}") from error
     except urllib.error.URLError as error:
         raise RuntimeError(f"WakaTime API request failed: {error.reason}") from error
 
-    block = build_stats_block(payload)
+    block = build_stats_block(payload, all_time_payload)
     update_readme_section(README_PATH, START_MARKER, END_MARKER, block)
     print("Updated WakaTime section")
 

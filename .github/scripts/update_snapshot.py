@@ -173,14 +173,18 @@ def build_realtime_panel(owner: str, repos: list[dict]) -> str:
     """
     now_cst = datetime.now(ASIA_SHANGHAI).strftime("%Y-%m-%d %H:%M CST")
     top_repo = repos[0]["name"] if repos else "n/a"
-    return "\n".join(
-        [
-            f"- Live sync: {now_cst}",
-            "- Data source: GitHub REST API + workflow-manager snapshot worker",
-            "- Showcase source: top 3 recently updated public repositories",
-            f"- Current top repository: [{top_repo}](https://github.com/{owner}/{top_repo})" if repos else "- Current top repository: n/a"
-        ]
-    )
+    lines = [
+        f"<sub>- Live sync: {escape(now_cst)}</sub>",
+        "<sub>- Data source: GitHub REST API + workflow-manager snapshot worker</sub>",
+        "<sub>- Showcase source: top 3 recently updated public repositories</sub>",
+    ]
+    if repos:
+        lines.append(
+            f"<sub>- Current top repository: <a href=\"https://github.com/{owner}/{top_repo}\">{escape(top_repo)}</a></sub>"
+        )
+    else:
+        lines.append("<sub>- Current top repository: n/a</sub>")
+    return "\n".join(lines)
 
 
 def build_showcase_svg(repos: list[dict]) -> str:
@@ -361,9 +365,11 @@ def build_hero_subtitle(owner: str, repos: list[dict]) -> str:
     top = repos[0]
     top_name = top.get("name", "latest-project")
     description = short_text(top.get("description"), "active project exploration", 54)
+    safe_name = escape(str(top_name))
+    safe_description = escape(description)
     return (
-        f"Main narrative: shipping around [{top_name}](https://github.com/{owner}/{top_name}) this week, "
-        f"with focus on {description}."
+        f"Main narrative: shipping around <a href=\"https://github.com/{owner}/{top_name}\">{safe_name}</a> this week, "
+        f"with focus on {safe_description}."
     )
 
 
