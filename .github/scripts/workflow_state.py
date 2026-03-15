@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from workflow_common import (
+    CANONICAL_FLOW_ORDER,
     DAG_PATH,
     DEAD_LETTERS_PATH,
     EVENT_LOG_PATH,
@@ -29,6 +30,79 @@ from workflow_common import (
 from workflow_renderer import render_readme as render_dashboard_readme
 from workflow_runtime import compute_health
 from workflow_common import TERMINAL_STATUSES
+
+
+def initial_flow_order_state(existing_flow: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Create runtime flow-order tracking state for the latest orchestration cycles."""
+    existing_flow = existing_flow or {}
+    recent_cycles = cast(list[dict[str, Any]], existing_flow.get("recent_cycles", []))[-9:]
+    return {
+        "expected_sequence": list(CANONICAL_FLOW_ORDER),
+        "cycles_started": int(existing_flow.get("cycles_started", 0)),
+        "cycles_completed": int(existing_flow.get("cycles_completed", 0)),
+        "active_cycle": None,
+        "latest_completed_cycle": existing_flow.get("latest_completed_cycle"),
+        "recent_cycles": recent_cycles,
+        "last_completed_at": existing_flow.get("last_completed_at"),
+    }
+
+
+def begin_flow_cycle(state: dict[str, Any], reason: str) -> None:
+    """Start one tracked flow-order cycle for the current persistence pass."""
+    flow = state["flow_order"]
+    flow["cycles_started"] = int(flow.get("cycles_started", 0)) + 1
+    flow["active_cycle"] = {
+        "id": flow["cycles_started"],
+        "reason": reason,
+        "started_at": iso_now(),
+        "expected_sequence": list(CANONICAL_FLOW_ORDER),
+        "completed_sequence": [],
+        "stages": [],
+        "is_in_order": True,
+        "is_complete": False,
+    }
+
+
+def record_flow_stage(state: dict[str, Any], stage_name: str, details: str) -> None:
+    """Append one realized flow stage into the active cycle and check ordering."""
+    flow = state["flow_order"]
+    active_cycle = cast(dict[str, Any] | None, flow.get("active_cycle"))
+    if not active_cycle:
+        begin_flow_cycle(state, "implicit-cycle")
+        active_cycle = cast(dict[str, Any], flow.get("active_cycle"))
+
+    current_index = len(cast(list[str], active_cycle["completed_sequence"]))
+    expected_stage = CANONICAL_FLOW_ORDER[current_index] if current_index < len(CANONICAL_FLOW_ORDER) else None
+    matches_expected = stage_name == expected_stage
+    active_cycle["is_in_order"] = bool(active_cycle.get("is_in_order", True)) and matches_expected
+    active_cycle["completed_sequence"].append(stage_name)
+    active_cycle["stages"].append(
+        {
+            "stage": stage_name,
+            "at": iso_now(),
+            "details": details[:240],
+            "expected_stage": expected_stage,
+            "matches_expected": matches_expected,
+        }
+    )
+
+
+def complete_flow_cycle(state: dict[str, Any]) -> None:
+    """Close the active flow cycle and retain it for later validation."""
+    flow = state["flow_order"]
+    active_cycle = cast(dict[str, Any] | None, flow.get("active_cycle"))
+    if not active_cycle:
+        return
+
+    active_cycle["completed_at"] = iso_now()
+    active_cycle["is_complete"] = cast(list[str], active_cycle["completed_sequence"]) == CANONICAL_FLOW_ORDER
+    flow["cycles_completed"] = int(flow.get("cycles_completed", 0)) + 1
+    flow["last_completed_at"] = active_cycle["completed_at"]
+    flow["latest_completed_cycle"] = active_cycle
+    recent_cycles = cast(list[dict[str, Any]], flow.get("recent_cycles", []))
+    recent_cycles.append(active_cycle)
+    flow["recent_cycles"] = recent_cycles[-10:]
+    flow["active_cycle"] = None
 
 
 def build_queue_entry(task_name: str, task_state: dict[str, Any], position: int | None = None) -> dict[str, Any]:
@@ -447,6 +521,7 @@ def initialize_state(registry: dict[str, Any], workflow_spec: dict[str, Any]) ->
             "last_event_at": None,
             "recent_events": [],
         },
+        "flow_order": initial_flow_order_state(cast(dict[str, Any], existing_state.get("flow_order", {}))),
         "worker_pools": {},
         "managed_jobs": [task["name"] for task in task_specs],
         "workers": existing_state.get("workers", {}),
@@ -488,10 +563,10 @@ def prepare_state_store_batch(state: dict[str, Any]) -> None:
         relative_repo_path(STATE_PATH),
         relative_repo_path(DAG_PATH),
         relative_repo_path(SCHEDULER_PATH),
-        relative_repo_path(DEAD_LETTERS_PATH),
         relative_repo_path(QUEUE_PATH),
-        relative_repo_path(EVENT_LOG_PATH),
         relative_repo_path(METADATA_STORE_PATH),
+        relative_repo_path(EVENT_LOG_PATH),
+        relative_repo_path(DEAD_LETTERS_PATH),
     ]
 
 
@@ -506,9 +581,7 @@ def persist_runtime_artifacts(state: dict[str, Any], dead_letters: list[dict[str
 
     save_json(DAG_PATH, build_dag_snapshot(state))
     save_json(SCHEDULER_PATH, build_scheduler_snapshot(state))
-    save_json(DEAD_LETTERS_PATH, dead_letters[-20:])
     save_json(QUEUE_PATH, queue_snapshot)
-    save_json(EVENT_LOG_PATH, build_event_log_payload(state))
 
 
 def persist_state_and_manifest(state: dict[str, Any]) -> None:
@@ -526,9 +599,26 @@ def persist_state_and_manifest(state: dict[str, Any]) -> None:
 def persist(state: dict[str, Any], dead_letters: list[dict[str, Any]], registry: dict[str, Any]) -> None:
     """Persist all workflow artifacts and re-render README dashboard."""
     refresh_worker_health(state, registry)
+    begin_flow_cycle(state, "persist")
+    record_flow_stage(state, "Orchestrator", f"workflow={state['workflow']['name']} status={state['workflow']['status']}")
+    record_flow_stage(state, "DAG", f"nodes={state['workflow']['dag_nodes']} edges={state['workflow']['dag_edges']}")
+    record_flow_stage(state, "Scheduler", f"ready={len(state['scheduler'].get('ready_queue', []))} running={state['scheduler'].get('running_tasks', 0)}")
+    record_flow_stage(state, "Queue", f"depth={state['message_queue'].get('current_depth', 0)} dispatched={state['message_queue'].get('total_dispatched', 0)}")
     prepare_state_store_batch(state)
+    record_flow_stage(state, "State Store", f"write={state['state_store'].get('write_count', 0)} batch={len(state['state_store'].get('last_write_batch', []))}")
     persist_runtime_artifacts(state, dead_letters)
+    record_flow_stage(state, "Event Bus", f"published={state['event_bus'].get('published_events', 0)}")
+    record_flow_stage(state, "Worker Pools", f"pools={len(state['worker_pools'])}")
+    record_flow_stage(state, "Registry", f"workers={len(state['workers'])}")
+    healthy_workers = sum(1 for worker in state['workers'].values() if worker.get('health') == 'Healthy')
+    record_flow_stage(state, "Health", f"healthy={healthy_workers}/{len(state['workers'])}")
+    terminal_tasks = sum(1 for task in state['tasks'].values() if task['status'] in TERMINAL_STATUSES)
+    record_flow_stage(state, "Tasks", f"terminal={terminal_tasks}/{len(state['tasks'])}")
+    record_flow_stage(state, "DLQ", f"dead_letters={len(dead_letters)}")
+    complete_flow_cycle(state)
     persist_state_and_manifest(state)
+    save_json(EVENT_LOG_PATH, build_event_log_payload(state))
+    save_json(DEAD_LETTERS_PATH, dead_letters[-20:])
     render_dashboard_readme(state, dead_letters[-10:])
 
 

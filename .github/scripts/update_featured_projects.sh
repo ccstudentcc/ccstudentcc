@@ -49,36 +49,7 @@ block_file="$(mktemp)"
   echo '</div>'
 } > "${block_file}"
 
-temp_readme="$(mktemp)"
-awk -v start="${START_MARKER}" -v end="${END_MARKER}" -v block_file="${block_file}" '
-  BEGIN {
-    in_block = 0
-    while ((getline line < block_file) > 0) {
-      block = block line "\n"
-    }
-    close(block_file)
-  }
-  {
-    if ($0 == start) {
-      print $0
-      printf "%s", block
-      in_block = 1
-      next
-    }
-
-    if ($0 == end) {
-      in_block = 0
-      print $0
-      next
-    }
-
-    if (!in_block) {
-      print $0
-    }
-  }
-' "${README_PATH}" > "${temp_readme}"
-
-mv "${temp_readme}" "${README_PATH}"
+python .github/scripts/readme_utils.py "${README_PATH}" "${START_MARKER}" "${END_MARKER}" --block-file "${block_file}"
 rm -f "${block_file}"
 
 echo "Updated featured projects: ${repos[*]}"

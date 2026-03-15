@@ -36,6 +36,11 @@ Core flow order:
 Canonical one-line flow order:
 - Orchestrator • DAG • Scheduler • Queue • State Store • Event Bus • Worker Pools • Registry • Health • Tasks • DLQ
 
+Runtime enforcement note:
+- The canonical flow order is recorded at runtime, not only described in docs.
+- Each persistence pass writes the realized stage sequence into `state.json -> flow_order.latest_completed_cycle`.
+- Validation fails when the latest cycle is out of order, incomplete, or diverges from the canonical sequence.
+
 ## 2) Workflow Inventory
 
 - `workflow-manager.yml`: Main DAG orchestrator. Triggered by schedule and manual dispatch.
@@ -57,6 +62,7 @@ Used by orchestrator and worker scripts:
 Behavior notes:
 - Missing `WAKATIME_API_KEY` does not break whole orchestration; the related task can be skipped by condition.
 - Missing optional README markers should not hard-fail the controller; unavailable sections are skipped with warnings.
+- `workflow-manager` launches independent workers in parallel, but all README marker updates are serialized through `.github/scripts/readme_utils.py` so one worker cannot overwrite another worker's section.
 
 ## 4) Runtime State Files
 
@@ -71,6 +77,7 @@ The orchestrator persists concrete runtime artifacts here:
 
 Quick meaning:
 - `state.json`: top-level workflow, worker, and task states.
+- `state.json.flow_order`: latest realized canonical stage cycle for runtime verification.
 - `dag.json`: resolved graph snapshot.
 - `scheduler.json`: scheduler policy and queue counters.
 - `queue.json`: ready/deferred/retry/running/terminal queue snapshot.
@@ -115,6 +122,11 @@ CI order in `.github/workflows/workflow-manager.yml`:
 2. Run workflow controller
 3. Commit README and state artifacts
 
+Worker execution note:
+- The manager does not call the standalone worker workflows via `workflow_call`; it runs worker scripts directly inside one orchestrated job.
+- Standalone workflows such as `wakatime.yml` remain useful for isolated manual retries.
+- Because the manager runs multiple README writers concurrently, all section replacements must go through the shared locked updater in `.github/scripts/readme_utils.py`.
+
 ## 6) Badge and Rendering Rules
 
 - Use Shields `static/v1` format for custom badges.
@@ -149,6 +161,15 @@ Checks:
 1. Inspect `.github/manager/state/state.json` task status/message.
 2. Inspect `.github/manager/state/dead-letters.json`.
 3. Inspect `.github/manager/state/event-log.json` for failure timeline.
+4. Inspect `.github/manager/state/state.json -> flow_order.latest_completed_cycle` to confirm the latest manager pass realized the full canonical stage order.
+
+### Symptom: running Workflow Manager does not refresh WakaTime, but running `Waka Readme` directly does
+
+Checks:
+1. Confirm the WakaTime task is not merely skipped by inspecting `.github/manager/state/state.json` for `tasks.wakatime.status`.
+2. Confirm `WAKATIME_API_KEY` is available to the manager run, because the manager executes `.github/scripts/update_wakatime.py` directly rather than dispatching `wakatime.yml`.
+3. Confirm every README-writing worker still uses `.github/scripts/readme_utils.py`; bypassing the shared lock can reintroduce lost updates during parallel runs.
+4. Confirm `flow_order.latest_completed_cycle.completed_sequence` still matches the canonical chain before debugging worker-specific logic.
 
 ## 8) How To Extend (Human or AI)
 

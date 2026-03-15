@@ -23,6 +23,19 @@ POLL_SECONDS = 2
 ASIA_SHANGHAI = timezone(timedelta(hours=8))
 TERMINAL_STATUSES = {"Success", "Failed", "Skipped", "Blocked"}
 WAITING_STATUSES = {"Pending", "Deferred", "Retry"}
+CANONICAL_FLOW_ORDER = [
+    "Orchestrator",
+    "DAG",
+    "Scheduler",
+    "Queue",
+    "State Store",
+    "Event Bus",
+    "Worker Pools",
+    "Registry",
+    "Health",
+    "Tasks",
+    "DLQ",
+]
 
 
 def utc_now() -> datetime:

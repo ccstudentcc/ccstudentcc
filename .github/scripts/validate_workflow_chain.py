@@ -14,6 +14,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from workflow_common import CANONICAL_FLOW_ORDER
+
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_MANAGER_PATH = ROOT / ".github/workflows/workflow-manager.yml"
 WORKFLOW_SPEC_PATH = ROOT / ".github/manager/workflow.json"
@@ -24,19 +26,7 @@ DOC_PATH = ROOT / "docs/workflows-automation-guide.md"
 RENDERER_PATH = ROOT / ".github/scripts/workflow_renderer.py"
 CONTROLLER_PATH = ROOT / ".github/scripts/workflow_controller.py"
 
-EXPECTED_FLOW = [
-    "Orchestrator",
-    "DAG",
-    "Scheduler",
-    "Queue",
-    "State Store",
-    "Event Bus",
-    "Worker Pools",
-    "Registry",
-    "Health",
-    "Tasks",
-    "DLQ",
-]
+EXPECTED_FLOW = CANONICAL_FLOW_ORDER
 EXPECTED_FLOW_BULLET = " • ".join(EXPECTED_FLOW)
 EXPECTED_MARKER_KEYS = [
     "automation_status",
@@ -138,11 +128,20 @@ def validate_state_artifacts(state: dict[str, Any]) -> None:
         "message_queue",
         "state_store",
         "event_bus",
+        "flow_order",
         "worker_pools",
         "workers",
         "tasks",
     }
     ensure(required_state_keys.issubset(set(state.keys())), "state.json 缺少关键链路字段")
+
+    flow_order = state.get("flow_order", {})
+    ensure(flow_order.get("expected_sequence") == EXPECTED_FLOW, "state.json 中的 flow_order.expected_sequence 与标准链路不一致")
+    latest_cycle = flow_order.get("latest_completed_cycle")
+    ensure(isinstance(latest_cycle, dict), "state.json 缺少 flow_order.latest_completed_cycle")
+    ensure(latest_cycle.get("completed_sequence") == EXPECTED_FLOW, "最新 flow cycle 未完整覆盖标准链路")
+    ensure(bool(latest_cycle.get("is_in_order")), "最新 flow cycle 未按标准顺序执行")
+    ensure(bool(latest_cycle.get("is_complete")), "最新 flow cycle 未标记为 complete")
 
 
 

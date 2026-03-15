@@ -172,6 +172,8 @@ def render_automation_status(state: dict[str, Any]) -> str:
     scheduler = state["scheduler"]
     queue = state["message_queue"]
     store = state["state_store"]
+    flow = cast(dict[str, Any], state.get("flow_order", {}))
+    latest_cycle = cast(dict[str, Any], flow.get("latest_completed_cycle") or {})
     status = workflow.get("status", "Unknown")
     status_color = {
         "Completed": "16a34a",
@@ -198,6 +200,13 @@ def render_automation_status(state: dict[str, Any]) -> str:
         f"- **State persistence:** write #{store.get('write_count', 0)} | docs {store.get('available_documents', 0)}/{store.get('document_count', 0)} | {store.get('consistency_status', 'unknown')}",
         f"- **Queue snapshot:** ready {queue.get('ready_entries', 0)} | deferred {queue.get('deferred_entries', 0)} | retry {queue.get('retry_entries', 0)} | running {queue.get('running_leases', 0)}"
     ]
+    if latest_cycle:
+        lines.append(
+            f"- **Flow realization:** cycle #{latest_cycle.get('id', 'n/a')} | in-order `{latest_cycle.get('is_in_order', False)}` | complete `{latest_cycle.get('is_complete', False)}`"
+        )
+        lines.append(
+            f"- **Latest realized sequence:** {' -> '.join(cast(list[str], latest_cycle.get('completed_sequence', [])))}"
+        )
     if workflow.get("run_url"):
         lines.append(f"- **Run URL:** [Open latest run]({workflow['run_url']})")
     return "\n".join(lines)
