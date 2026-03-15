@@ -434,7 +434,7 @@ def initialize_state(registry: dict[str, Any], workflow_spec: dict[str, Any]) ->
         A tuple of (state, dead_letters, expanded_task_specs).
     """
     existing_state = cast(dict[str, Any], load_json(STATE_PATH, {}))
-    dead_letters = cast(list[dict[str, Any]], load_json(DEAD_LETTERS_PATH, []))
+    dead_letters: list[dict[str, Any]] = []
     workers_by_name = {worker["name"]: worker for worker in registry["workers"]}
     pool_defs = {pool["name"]: pool for pool in workflow_spec["worker_pools"]}
     task_specs = expand_task_specs(workflow_spec["tasks"])
@@ -548,15 +548,8 @@ def initialize_state(registry: dict[str, Any], workflow_spec: dict[str, Any]) ->
     return state, dead_letters, task_specs
 
 
-def refresh_worker_health(state: dict[str, Any], registry: dict[str, Any]) -> None:
-    """Refresh worker health status using heartbeat grace windows."""
-    for worker in registry["workers"]:
-        worker_state = state["workers"][worker["name"]]
-        worker_state["health"] = compute_health(worker_state, worker["heartbeat_grace_seconds"])
-
-
 def prepare_state_store_batch(state: dict[str, Any]) -> None:
-    """Prepare state-store metadata before writing runtime snapshots."""
+    """Increment write counter and record next write batch paths."""
     state["state_store"]["write_count"] = int(state["state_store"].get("write_count", 0)) + 1
     state["state_store"]["last_persisted_at"] = iso_now()
     state["state_store"]["last_write_batch"] = [
@@ -638,44 +631,48 @@ def write_step_summary(state: dict[str, Any], dead_letters: list[dict[str, Any]]
         "",
         f"- Workflow: {state['workflow']['name']}",
         f"- Status: {state['workflow']['status']}",
-        f"- Succeeded: {len(succeeded)}",
-        f"- Failed: {len(failed)}",
-        f"- Skipped: {len(skipped)}",
-        f"- Blocked: {len(blocked)}",
+        f"- Trigger: {state['scheduler']['trigger']}",
+        f"- Started: {state['workflow']['started_at']}",
+        f"- Completed: {state['workflow'].get('completed_at', 'n/a')}",
         "",
-    ]
+        f"| Task | Status | Pool | Attempt |",
+        f"|------|--------|------|---------|"]
+    for name, task in state["tasks"].items():
+        lines.append(f"| {name} | {task['status']} | {task['pool']} | {task['attempt']}/{task['max_attempts']} |")
 
-    if failed:
-        lines.append("### Failed Tasks")
-        lines.append("")
-        for name in failed:
-            task = state["tasks"][name]
-            lines.append(f"- {name}: {task['message']}")
-        lines.append("")
+    lines.extend([
+        "",
+        f"Succeeded: {len(succeeded)} | Failed: {len(failed)} | Skipped: {len(skipped)} | Blocked: {len(blocked)}",
+    ])
 
     if dead_letters:
-        lines.append("### Dead Letters")
-        lines.append("")
-        for item in dead_letters[-5:]:
-            lines.append(f"- {item['task']}: {item['reason']}")
-        lines.append("")
+        lines.extend(["", "### Dead Letters", ""])
+        for item in dead_letters:
+            lines.append(f"- `{item['task']}`: {item['reason'][:120]}")
 
     Path(summary_path).write_text("\n".join(lines), encoding="utf-8")
 
 
 def log_run_summary(state: dict[str, Any], dead_letters: list[dict[str, Any]]) -> None:
-    """Emit concise run summary to standard output and warnings channel."""
-    failed = [name for name, task in state["tasks"].items() if task["status"] == "Failed"]
-    blocked = [name for name, task in state["tasks"].items() if task["status"] == "Blocked"]
-    succeeded = [name for name, task in state["tasks"].items() if task["status"] == "Success"]
+    """Print compact console run summary."""
+    succeeded = sum(1 for task in state["tasks"].values() if task["status"] == "Success")
+    failed = sum(1 for task in state["tasks"].values() if task["status"] == "Failed")
+    skipped = sum(1 for task in state["tasks"].values() if task["status"] == "Skipped")
+    blocked = sum(1 for task in state["tasks"].values() if task["status"] == "Blocked")
+    total = len(state["tasks"])
+    print(f"Run summary: {succeeded}/{total} succeeded, {failed} failed, {skipped} skipped, {blocked} blocked")
+    for name, task in state["tasks"].items():
+        print(f"  {name}: {task['status']} [{task['pool']}] attempt={task['attempt']}/{task['max_attempts']} | {task.get('message', '')[:120]}")
+    if dead_letters:
+        print(f"Dead letters ({len(dead_letters)}):")
+        for item in dead_letters:
+            print(f"  {item['task']}: {str(item.get('reason', ''))[:120]}")
 
-    print("Workflow summary:")
-    print(f"  succeeded={len(succeeded)} failed={len(failed)} blocked={len(blocked)} dead_letters={len(dead_letters)}")
 
-    for name in failed:
-        print(f"  FAILED {name}: {state['tasks'][name]['message']}")
-    for name in blocked:
-        print(f"  BLOCKED {name}: {state['tasks'][name]['message']}")
-
-    if failed:
-        print(f"::warning::{len(failed)} task(s) failed. See Step Summary for details.")
+def refresh_worker_health(state: dict[str, Any], registry: dict[str, Any]) -> None:
+    """Refresh all worker health fields before persistence."""
+    registry_by_name = {worker["name"]: worker for worker in registry["workers"]}
+    for worker_name, worker_state in state["workers"].items():
+        worker = registry_by_name.get(worker_name)
+        if worker:
+            worker_state["health"] = compute_health(worker_state, worker["heartbeat_grace_seconds"])
