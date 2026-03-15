@@ -395,6 +395,14 @@ def persist(state: dict, dead_letters: list[dict], registry: dict) -> None:
     render_readme(state, dead_letters[-10:])
 
 
+def try_update_readme_section(start_marker: str, end_marker: str, new_block: str) -> bool:
+    try:
+        update_readme_section(README_PATH, start_marker, end_marker, new_block)
+        return True
+    except ValueError:
+        return False
+
+
 def render_automation_status(state: dict) -> str:
     workflow = state["workflow"]
     scheduler = state["scheduler"]
@@ -748,17 +756,31 @@ def render_dead_letters(dead_letters: list[dict]) -> str:
 
 
 def render_readme(state: dict, dead_letters: list[dict]) -> None:
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["automation_status"], render_automation_status(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["workflow_dag"], render_workflow_dag(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["scheduler_state"], render_scheduler_state(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["message_queue"], render_message_queue(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["state_store"], render_state_store(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["event_bus"], render_event_bus(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["worker_pools"], render_worker_pools(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["worker_registry"], render_worker_registry(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["worker_health"], render_worker_health(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["task_state"], render_task_state(state))
-    update_readme_section(README_PATH, *AUTOMATION_MARKERS["dead_letters"], render_dead_letters(dead_letters))
+    sections: dict[str, str] = {
+        "automation_status": render_automation_status(state),
+        "workflow_dag": render_workflow_dag(state),
+        "scheduler_state": render_scheduler_state(state),
+        "message_queue": render_message_queue(state),
+        "state_store": render_state_store(state),
+        "event_bus": render_event_bus(state),
+        "worker_pools": render_worker_pools(state),
+        "worker_registry": render_worker_registry(state),
+        "worker_health": render_worker_health(state),
+        "task_state": render_task_state(state),
+        "dead_letters": render_dead_letters(dead_letters)
+    }
+
+    missing_sections: list[str] = []
+    for section, content in sections.items():
+        start_marker, end_marker = AUTOMATION_MARKERS[section]
+        if not try_update_readme_section(start_marker, end_marker, content):
+            missing_sections.append(section)
+
+    if missing_sections:
+        print(
+            "::warning::Skipped README automation sections with missing markers: "
+            + ", ".join(missing_sections)
+        )
 
 
 def refresh_scheduler_state(state: dict, ready_queue: list[str], running: dict[str, dict]) -> None:
