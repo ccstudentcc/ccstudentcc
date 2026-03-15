@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-15T03:55:20Z",
+  "generated_at": "2026-03-15T05:03:25Z",
   "backend": "github-actions-internal-queue",
   "ordering": "priority-then-scheduled-at",
   "ready_queue": [],
@@ -13,30 +13,8 @@
       "priority": 60,
       "pool": "content-pool",
       "worker": "snapshot",
-      "scheduled_at": "2026-03-15T03:55:16Z",
-      "updated_at": "2026-03-15T03:55:20Z",
-      "attempt": 1,
-      "max_attempts": 2
-    },
-    {
-      "task": "daily-quote",
-      "status": "Success",
-      "priority": 30,
-      "pool": "engagement-pool",
-      "worker": "daily-quote",
-      "scheduled_at": "2026-03-15T03:55:16Z",
-      "updated_at": "2026-03-15T03:55:18Z",
-      "attempt": 1,
-      "max_attempts": 2
-    },
-    {
-      "task": "featured-projects",
-      "status": "Success",
-      "priority": 90,
-      "pool": "content-pool",
-      "worker": "featured-projects",
-      "scheduled_at": "2026-03-15T03:55:16Z",
-      "updated_at": "2026-03-15T03:55:18Z",
+      "scheduled_at": "2026-03-15T05:03:21Z",
+      "updated_at": "2026-03-15T05:03:25Z",
       "attempt": 1,
       "max_attempts": 2
     },
@@ -46,8 +24,30 @@
       "priority": 100,
       "pool": "metrics-pool",
       "worker": "wakatime",
-      "scheduled_at": "2026-03-15T03:55:16Z",
-      "updated_at": "2026-03-15T03:55:18Z",
+      "scheduled_at": "2026-03-15T05:03:21Z",
+      "updated_at": "2026-03-15T05:03:23Z",
+      "attempt": 1,
+      "max_attempts": 2
+    },
+    {
+      "task": "featured-projects",
+      "status": "Success",
+      "priority": 90,
+      "pool": "content-pool",
+      "worker": "featured-projects",
+      "scheduled_at": "2026-03-15T05:03:21Z",
+      "updated_at": "2026-03-15T05:03:23Z",
+      "attempt": 1,
+      "max_attempts": 2
+    },
+    {
+      "task": "daily-quote",
+      "status": "Success",
+      "priority": 30,
+      "pool": "engagement-pool",
+      "worker": "daily-quote",
+      "scheduled_at": "2026-03-15T05:03:21Z",
+      "updated_at": "2026-03-15T05:03:23Z",
       "attempt": 1,
       "max_attempts": 2
     }
