@@ -10,25 +10,14 @@ concurrency:
 
 jobs:
   update-daily-quote:
-    name: Refresh Daily Quote
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Update quote section
-        run: python .github/scripts/update_daily_quote.py
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore(readme): refresh daily quote"
-          file_pattern: README.md
+    uses: ./.github/workflows/_managed-readme-worker.yml
+    with:
+      job_name: Refresh Daily Quote
+      timeout_minutes: 5
+      execution_mode: python
+      command: python .github/scripts/update_daily_quote.py
+      summary_label: Daily Quote
+      commit_message: 'chore(readme): refresh daily quote'
+      commit_scope: README.md
+      setup_python: true
+      required_secrets: 'None'

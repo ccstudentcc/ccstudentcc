@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from workflow_common import CANONICAL_FLOW_ORDER
+from workflow_contract import worker_contracts_by_name
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_MANAGER_PATH = ROOT / ".github/workflows/workflow-manager.yml"
@@ -28,6 +29,7 @@ CONTROLLER_PATH = ROOT / ".github/scripts/workflow_controller.py"
 
 EXPECTED_FLOW = CANONICAL_FLOW_ORDER
 EXPECTED_FLOW_BULLET = " • ".join(EXPECTED_FLOW)
+EXPECTED_FLOW_CONSOLE = " -> ".join(EXPECTED_FLOW)
 EXPECTED_MARKER_KEYS = [
     "automation_status",
     "workflow_dag",
@@ -86,6 +88,84 @@ def extract_renderer_marker_keys(content: str) -> list[str]:
     assert block is not None
     keys = re.findall(r'"([a-z_]+)"\s*:\s*\(', block.group(1))
     return keys
+
+
+
+def shell_command_from_contract(contract: dict[str, Any]) -> str:
+    """Return the worker contract command as used by the managed wrapper."""
+    command = contract.get("command", [])
+    execution_mode = contract.get("execution_mode")
+    ensure(isinstance(command, list) and bool(command), f"Worker {contract.get('name')} command 无效")
+    if execution_mode == "bash" and len(command) == 2 and command[0] == "bash":
+        return command[1]
+    return " ".join(command)
+
+
+
+def quoted_yaml_value(value: str) -> str:
+    """Return simple regex alternates for quoted/unquoted YAML scalar matching."""
+    escaped = re.escape(value)
+    return rf"(?:'{escaped}'|\"{escaped}\"|{escaped})"
+
+
+
+def ensure_wrapper_field(content: str, field: str, expected: str, worker_name: str) -> None:
+    """Ensure a workflow wrapper `with:` field matches expected scalar content."""
+    pattern = rf"^\s+{re.escape(field)}:\s*{quoted_yaml_value(expected)}\s*$"
+    ensure(
+        re.search(pattern, content, re.MULTILINE) is not None,
+        f"Worker {worker_name} wrapper {field} 与 contract 不一致: expected {expected}",
+    )
+
+
+
+def validate_worker_workflow_wrapper(contract: dict[str, Any], workflow_text: str, workflow_path: Path) -> None:
+    """Validate one standalone worker workflow wrapper against contract metadata."""
+    worker_name = str(contract.get("name", workflow_path.stem))
+    ensure(
+        "uses: ./.github/workflows/_managed-readme-worker.yml" in workflow_text,
+        f"Worker {worker_name} 未使用共享 managed worker workflow shell",
+    )
+
+    ensure_wrapper_field(workflow_text, "execution_mode", str(contract["execution_mode"]), worker_name)
+    ensure_wrapper_field(workflow_text, "command", shell_command_from_contract(contract), worker_name)
+    ensure_wrapper_field(workflow_text, "summary_label", str(contract["summary_label"]), worker_name)
+    ensure_wrapper_field(workflow_text, "commit_scope", " ".join(contract["commit_scope"]), worker_name)
+
+    required_secrets = contract["required_secrets"]
+    expected_required_secrets = "None" if not required_secrets else " ".join(required_secrets)
+    ensure_wrapper_field(workflow_text, "required_secrets", expected_required_secrets, worker_name)
+
+    if not required_secrets:
+        ensure(
+            re.search(r"^\s+required_secrets:\s*(?:'None'|\"None\"|None)\s*$", workflow_text, re.MULTILINE) is not None,
+            f"Worker {worker_name} 缺少 required_secrets=None 标记",
+        )
+        return
+
+    for secret_name in required_secrets:
+        ensure(
+            re.search(rf"^\s+{re.escape(secret_name)}:\s*$", workflow_text, re.MULTILINE) is not None,
+            f"Worker {worker_name} workflow_call 未声明 secret: {secret_name}",
+        )
+        ensure(
+            f"${{{{ secrets.{secret_name} }}}}" in workflow_text,
+            f"Worker {worker_name} wrapper 未引用 secret: {secret_name}",
+        )
+
+
+
+def validate_registry_worker_workflows(registry: dict[str, Any], root: Path = ROOT) -> None:
+    """Validate worker registry contracts against standalone workflow wrappers."""
+    contracts = worker_contracts_by_name(registry)
+    ensure(bool(contracts), "registry.json 缺少 worker contracts")
+
+    for worker_name, contract in contracts.items():
+        workflow_rel = contract["workflow"]
+        workflow_path = root / workflow_rel
+        ensure(workflow_path.exists(), f"Worker {worker_name} 声明的 workflow 不存在: {workflow_rel}")
+        workflow_text = workflow_path.read_text(encoding="utf-8")
+        validate_worker_workflow_wrapper(contract, workflow_text, workflow_path)
 
 
 
@@ -166,6 +246,8 @@ def validate_scripts_alignment(renderer_text: str, controller_text: str) -> None
 
     ensure("from workflow_runtime import" in controller_text, "workflow_controller.py 未接入 workflow_runtime 分层")
     ensure("from workflow_state import" in controller_text, "workflow_controller.py 未接入 workflow_state 分层")
+    ensure("from workflow_contract import worker_contracts_by_name" in controller_text, "workflow_controller.py 未导入 worker_contracts_by_name")
+    ensure("worker_contracts_by_name(registry)" in controller_text, "workflow_controller.py 未使用 worker_contracts_by_name")
 
 
 
@@ -181,12 +263,13 @@ def run() -> None:
     controller_text = CONTROLLER_PATH.read_text(encoding="utf-8")
 
     validate_manager_and_registry(workflow_spec, registry, workflow_manager_text)
+    validate_registry_worker_workflows(registry)
     validate_state_artifacts(state)
     validate_readme_and_docs(readme_text, doc_text)
     validate_scripts_alignment(renderer_text, controller_text)
 
     print("workflow-chain validation passed")
-    print(f"flow: {EXPECTED_FLOW_BULLET}")
+    print(f"flow: {EXPECTED_FLOW_CONSOLE}")
 
 
 

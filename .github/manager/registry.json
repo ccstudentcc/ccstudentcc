@@ -17,7 +17,19 @@
       "command": [
         "bash",
         ".github/scripts/update_featured_projects.sh"
-      ]
+      ],
+      "execution_mode": "bash",
+      "workflow": ".github/workflows/featured-projects.yml",
+      "required_secrets": [
+        "GITHUB_TOKEN"
+      ],
+      "commit_scope": [
+        "README.md"
+      ],
+      "optional_readme_markers": [
+        "featured"
+      ],
+      "summary_label": "Featured Projects"
     },
     {
       "name": "wakatime",
@@ -36,7 +48,19 @@
       "command": [
         "python",
         ".github/scripts/update_wakatime.py"
-      ]
+      ],
+      "execution_mode": "python",
+      "workflow": ".github/workflows/wakatime.yml",
+      "required_secrets": [
+        "WAKATIME_API_KEY"
+      ],
+      "commit_scope": [
+        "README.md"
+      ],
+      "optional_readme_markers": [
+        "waka"
+      ],
+      "summary_label": "WakaTime"
     },
     {
       "name": "daily-quote",
@@ -55,7 +79,17 @@
       "command": [
         "python",
         ".github/scripts/update_daily_quote.py"
-      ]
+      ],
+      "execution_mode": "python",
+      "workflow": ".github/workflows/daily-quote.yml",
+      "required_secrets": [],
+      "commit_scope": [
+        "README.md"
+      ],
+      "optional_readme_markers": [
+        "daily_quote"
+      ],
+      "summary_label": "Daily Quote"
     },
     {
       "name": "snapshot",
@@ -74,7 +108,23 @@
       "command": [
         "python",
         ".github/scripts/update_snapshot.py"
-      ]
+      ],
+      "execution_mode": "python",
+      "workflow": ".github/workflows/snapshot.yml",
+      "required_secrets": [
+        "GITHUB_TOKEN"
+      ],
+      "commit_scope": [
+        "README.md",
+        "assets/showcase-carousel.svg"
+      ],
+      "optional_readme_markers": [
+        "recent_repos",
+        "realtime_panel",
+        "showcase_slides",
+        "hero_subtitle"
+      ],
+      "summary_label": "Snapshot"
     }
   ]
 }

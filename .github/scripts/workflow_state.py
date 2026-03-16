@@ -26,10 +26,11 @@ from workflow_common import (
     load_json,
     relative_repo_path,
     save_json,
+    TERMINAL_STATUSES,
 )
+from workflow_contract import extract_contract_metadata, worker_contracts_by_name
 from workflow_renderer import render_readme as render_dashboard_readme
 from workflow_runtime import compute_health
-from workflow_common import TERMINAL_STATUSES
 
 
 def initial_flow_order_state(existing_flow: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -372,6 +373,7 @@ def initial_worker_state(worker: dict[str, Any]) -> dict[str, Any]:
         "timeout_seconds": worker["timeout_seconds"],
         "max_retries": worker["max_retries"],
         "retry_backoff_seconds": worker.get("retry_backoff_seconds", 5),
+        "contract": extract_contract_metadata(worker),
         "last_heartbeat_at": None,
         "last_started_at": None,
         "last_completed_at": None,
@@ -412,6 +414,7 @@ def initial_task_state(task: dict[str, Any], worker: dict[str, Any]) -> dict[str
         "priority": task.get("priority", 0),
         "depends_on": task.get("depends_on", []),
         "condition": stringify_condition(task.get("condition", "always")),
+        "contract": extract_contract_metadata(worker),
         "status": status,
         "attempt": 0,
         "max_attempts": worker["max_retries"] + 1,
@@ -435,7 +438,7 @@ def initialize_state(registry: dict[str, Any], workflow_spec: dict[str, Any]) ->
     """
     existing_state = cast(dict[str, Any], load_json(STATE_PATH, {}))
     dead_letters: list[dict[str, Any]] = []
-    workers_by_name = {worker["name"]: worker for worker in registry["workers"]}
+    workers_by_name = worker_contracts_by_name(registry)
     pool_defs = {pool["name"]: pool for pool in workflow_spec["worker_pools"]}
     task_specs = expand_task_specs(workflow_spec["tasks"])
     validate_dag(task_specs)
@@ -671,7 +674,7 @@ def log_run_summary(state: dict[str, Any], dead_letters: list[dict[str, Any]]) -
 
 def refresh_worker_health(state: dict[str, Any], registry: dict[str, Any]) -> None:
     """Refresh all worker health fields before persistence."""
-    registry_by_name = {worker["name"]: worker for worker in registry["workers"]}
+    registry_by_name = worker_contracts_by_name(registry)
     for worker_name, worker_state in state["workers"].items():
         worker = registry_by_name.get(worker_name)
         if worker:

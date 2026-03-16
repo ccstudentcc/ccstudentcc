@@ -10,6 +10,7 @@ import sys
 from typing import Any, cast
 
 from workflow_common import POLL_SECONDS, REGISTRY_PATH, WORKFLOW_PATH, iso_now, load_json
+from workflow_contract import worker_contracts_by_name
 from workflow_runtime import (
     collect_ready_tasks,
     launch_task,
@@ -33,7 +34,7 @@ def main() -> int:
     registry = cast(dict[str, Any], load_json(REGISTRY_PATH, {"workers": []}))
     workflow_spec = cast(dict[str, Any], load_json(WORKFLOW_PATH, {"workflow": {}, "scheduler": {}, "worker_pools": [], "tasks": []}))
     state, dead_letters, task_specs_list = initialize_state(registry, workflow_spec)
-    registry_by_name = {worker["name"]: worker for worker in registry["workers"]}
+    registry_by_name = worker_contracts_by_name(registry)
     task_specs = {task["name"]: task for task in task_specs_list}
     running: dict[str, dict[str, Any]] = {}
     publish_event(state, "workflow.started", state["workflow"]["name"], f"Trigger={state['scheduler']['trigger']}")
