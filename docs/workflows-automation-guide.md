@@ -237,8 +237,10 @@ This section lists common issues observed when running the local manager or CI a
 
 - Persistence metadata/date mismatch (dashboard shows `last persisted` newer than file mtimes, or vice versa)
    - Symptom: Dashboard or README shows a `last persisted` timestamp that does not match the filesystem `mtime` of the state files.
-   - Cause: Write-batching and debounce logic can delay actual filesystem writes; metadata manifest may be updated at a different point than the physical file mtime unless the controller flushes and refreshes inventory.
-   - Fix: For debugging, disable batching by setting `WORKFLOW_WRITE_BATCHING=false` or call `flush_json_writes(force=True)` to force writes. The controller has been updated to refresh state-store inventory after flush and reconcile `last_persisted_at` to the latest file mtime; ensure you are running a controller version that contains this fix.
+   - Cause: Historically this was due to write-batching and debounce logic delaying filesystem writes. The controller now additionally computes a per-file checksum when building the metadata manifest and uses that checksum to determine whether a document's content actually changed. As a result:
+     - `documents[].updated_at` reflects the last *content-change* time (determined by checksum), not merely the last write time.
+     - `last_persisted_at` is the timestamp of the manifest inventory refresh (the last time the controller inspected and refreshed document metadata), which may differ from per-file mtimes when files were re-written without content changes.
+   - Fix: For debugging, disable batching by setting `WORKFLOW_WRITE_BATCHING=false` or call `flush_json_writes(force=True)` to force writes. If you need to determine whether a file's content changed, compare the manifest `checksum` for the document to previous runs; unchanged checksums indicate content was not modified even if the file mtime changed. Ensure you are running a controller version that contains the checksum-aware manifest update.
 
 - Persistence write failures recorded in metrics or errors log
    - Symptom: `persistence-metrics.json` shows `last_error` and `.github/manager/state/persistence-errors.log` contains entries like `Failed to persist ... after 3 attempts`.

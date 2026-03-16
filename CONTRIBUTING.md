@@ -74,6 +74,7 @@ Troubleshooting (common automation issues)
 
 - Missing secrets: tasks guarded by `env_exists(...)` will be skipped if required env vars (e.g. `WAKATIME_API_KEY`) are not present. Add secrets to repository settings for CI or set them in your local environment (use a `.env` file ignored by git for local testing).
 - Persistence mismatches: if dashboard `last persisted` does not match file mtimes, try disabling batching (`WORKFLOW_WRITE_BATCHING=false`) or use `flush_json_writes(force=True)` to force disk writes. Recent controller updates refresh the metadata manifest after flush to align `last_persisted_at` with actual file mtimes.
+ - Persistence mismatches: if dashboard `last persisted` does not match file mtimes, try disabling batching (`WORKFLOW_WRITE_BATCHING=false`) or use `flush_json_writes(force=True)` to force disk writes. Note: the controller now records a per-document `checksum` in the metadata manifest; `documents[].updated_at` reflects the last *content-change* time (checksum change) while `last_persisted_at` reflects when the manifest was last refreshed (inventory check). Use the `checksum` to determine whether content actually changed.
 - Inspecting failures: collect `.github/manager/state/persistence-metrics.json`, `.github/manager/state/persistence-errors.log`, `.github/manager/state/event-log.json`, and `.github/manager/state/metadata-store.json` when diagnosing persistence issues.
 
 

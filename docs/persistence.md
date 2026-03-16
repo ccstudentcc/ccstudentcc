@@ -32,6 +32,13 @@ Developer guidance
 - For debugging or unit tests that require immediate persistence, set `WORKFLOW_WRITE_BATCHING=false` or call `flush_json_writes(force=True)`.
  - For debugging or unit tests that require immediate persistence, set `WORKFLOW_WRITE_BATCHING=false` or call `flush_json_writes(force=True)`.
  - Note: `persist(..., force=True)` no longer unconditionally enqueues a new write when the runtime state has not meaningfully changed. The controller computes a persist signature and will skip enqueueing/writing if the signature matches the previous one. When `force=True` and no change is detected, the runtime will only attempt to flush any already-enqueued writes but will not create redundant writes of identical content.
+- For debugging or unit tests that require immediate persistence, set `WORKFLOW_WRITE_BATCHING=false` or call `flush_json_writes(force=True)`.
+- Note: `persist(..., force=True)` no longer unconditionally enqueues a new write when the runtime state has not meaningfully changed. The controller computes a persist signature and will skip enqueueing/writing if the signature matches the previous one. When `force=True` and no change is detected, the runtime will only attempt to flush any already-enqueued writes but will not create redundant writes of identical content.
+
+Content-change vs write timestamp semantics
+
+- The persistence manifest (`.github/manager/state/metadata-store.json`) now records a per-document `checksum` (sha256). The `documents[].updated_at` field represents the last time the *file content* changed (as determined by checksum), not merely the last time the file was re-written by the controller. This avoids reporting false content-change timestamps when a write-batch re-writes files with identical content.
+- The manifest's `last_persisted_at` is a bookkeeping timestamp that represents the time the controller last inspected and refreshed the manifest (i.e. the last inventory/check time). When diagnosing mismatches between the manifest timestamps and file mtimes, prefer the per-document `checksum` to determine whether content actually changed.
 - The persistence layer retries failed writes. Exhausted retries are recorded in `.github/manager/state/persistence-errors.log` and the metrics file.
 
 Operational notes
