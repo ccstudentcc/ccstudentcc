@@ -14,8 +14,12 @@ Execution entrypoint:
 
 Orchestration modules:
 - `.github/scripts/workflow_common.py` (shared constants/time/json/path helpers)
+- `.github/scripts/workflow_contract.py` (worker contract normalization and validation)
 - `.github/scripts/workflow_runtime.py` (scheduler loop and worker process execution)
 - `.github/scripts/workflow_state.py` (state bootstrap, snapshots, persistence, step summary)
+
+Managed worker shell:
+- `.github/workflows/_managed-readme-worker.yml` (shared reusable workflow used by standalone worker wrappers)
 
 Rendering entrypoint:
 - `.github/scripts/workflow_renderer.py`
@@ -44,16 +48,35 @@ Runtime enforcement note:
 ## 2) Workflow Inventory
 
 - `workflow-manager.yml`: Main DAG orchestrator. Triggered by schedule and manual dispatch.
-- `snapshot.yml`: Refreshes showcase snapshot and carousel SVG.
-- `featured-projects.yml`: Refreshes featured projects section.
-- `wakatime.yml`: Refreshes WakaTime section.
-- `daily-quote.yml`: Refreshes daily quote section.
+- `_managed-readme-worker.yml`: Shared reusable worker shell for standalone worker wrappers.
+- `snapshot.yml`: Thin wrapper for snapshot refresh.
+- `featured-projects.yml`: Thin wrapper for featured projects refresh.
+- `wakatime.yml`: Thin wrapper for WakaTime refresh.
+- `daily-quote.yml`: Thin wrapper for daily quote refresh.
 
-All worker workflows support:
+All standalone worker workflows support:
 - `workflow_call`
 - `workflow_dispatch`
+- concurrency isolation per worker (`readme-worker-<name>`)
 
-## 3) Required Inputs / Secrets
+Wrapper alignment rules:
+- Each worker wrapper must call `./.github/workflows/_managed-readme-worker.yml`.
+- Wrapper `execution_mode`, `command`, `summary_label`, `commit_scope`, and `required_secrets` must stay aligned with `.github/manager/registry.json`.
+- Worker-specific secret contracts must be declared explicitly in `workflow_call.secrets` when the registry contract lists required secrets.
+
+## 3) Worker Contract / Required Inputs / Secrets
+
+Contract source of truth:
+- `.github/manager/registry.json`
+- `.github/scripts/workflow_contract.py`
+
+Every managed worker contract now declares:
+- `execution_mode`
+- `workflow`
+- `required_secrets`
+- `commit_scope`
+- `optional_readme_markers`
+- `summary_label`
 
 Used by orchestrator and worker scripts:
 - `GITHUB_TOKEN` (provided by GitHub Actions runtime)
@@ -64,6 +87,7 @@ Behavior notes:
 - Missing optional README markers should not hard-fail the controller; unavailable sections are skipped with warnings.
 - `workflow-manager` launches independent workers in parallel, but all README marker updates are serialized through `.github/scripts/readme_utils.py` so one worker cannot overwrite another worker's section.
 - `featured-projects` worker calls `readme_utils.py --allow-missing-markers` so a missing `<!--START_SECTION:featured-->` block does not fail the task; the README update is silently skipped while the repo-discovery step still runs.
+- Standalone worker wrappers expose the same secret requirements declared in the registry contract, so drift must be fixed in both places together.
 
 ## 4) Runtime State Files
 
@@ -78,6 +102,8 @@ The orchestrator persists concrete runtime artifacts here:
 
 Quick meaning:
 - `state.json`: top-level workflow, worker, and task states.
+- `state.json.workers.<name>.contract`: persisted contract metadata for each worker (`execution_mode`, `workflow`, `required_secrets`, `commit_scope`, `optional_readme_markers`, `summary_label`).
+- `state.json.tasks.<name>.contract`: task-level copy of the assigned worker contract metadata for easier debugging and rendering.
 - `state.json.flow_order`: latest realized canonical stage cycle for runtime verification.
 - `dag.json`: resolved graph snapshot.
 - `scheduler.json`: scheduler policy and queue counters.
@@ -122,11 +148,13 @@ Expected outcomes:
 CI order in `.github/workflows/workflow-manager.yml`:
 1. Validate workflow chain coverage
 2. Run workflow controller
-3. Commit README and state artifacts
+3. Validate workflow chain post-run
+4. Commit README and state artifacts
 
-Worker execution note:
+Manager / wrapper boundary:
 - The manager does not call the standalone worker workflows via `workflow_call`; it runs worker scripts directly inside one orchestrated job.
-- Standalone workflows such as `wakatime.yml` remain useful for isolated manual retries.
+- Standalone workflows such as `wakatime.yml` remain useful for isolated manual retries and for keeping each worker's Actions contract explicit.
+- The controller/runtime path now loads registry workers through `.github/scripts/workflow_contract.py`, validates contracts up front, and still preserves the raw `command` list for local process spawning.
 - Because the manager runs multiple README writers concurrently, all section replacements must go through the shared locked updater in `.github/scripts/readme_utils.py`.
 - Workers whose README blocks are optional should use the locked updater's tolerant mode instead of failing the entire manager run on missing markers.
 
@@ -193,54 +221,72 @@ Checks:
 
 When adding a new automation task:
 1. Add worker metadata in `.github/manager/registry.json`.
-2. Add task node to `.github/manager/workflow.json` with:
+2. Include the full worker contract:
+   - `execution_mode`
+   - `workflow`
+   - `required_secrets`
+   - `commit_scope`
+   - `optional_readme_markers`
+   - `summary_label`
+3. Add task node to `.github/manager/workflow.json` with:
    - `name`, `worker`, `pool`, `priority`, `depends_on`, `condition`, `delay_seconds`
-3. Validate DAG remains acyclic.
-4. Ensure script writes deterministic output.
-5. Run orchestrator once and verify:
+4. Create or update the standalone worker wrapper under `.github/workflows/` so it delegates to `_managed-readme-worker.yml` and stays contract-aligned.
+5. Validate DAG remains acyclic.
+6. Ensure script writes deterministic output.
+7. Run validator and orchestrator once, then verify:
    - task appears in README automation panel
    - state snapshots include expected transitions
+   - wrapper workflow still matches registry contract
 
 When adding a new README managed block:
 1. Add START/END markers in `README.md`.
 2. Add renderer entry in controller section map.
 3. Keep graceful degradation: missing blocks should warn, not crash.
+4. If the block is optional for a worker, record that marker in the worker contract and preserve tolerant update behavior in the script.
 
 ## 9) AI Agent Checklist
 
 Before making automation changes:
 1. Read `.github/workflows/workflow-manager.yml`.
 2. Read `.github/manager/workflow.json` and `.github/manager/registry.json`.
-3. Read `.github/scripts/workflow_controller.py`, `.github/scripts/workflow_runtime.py`, `.github/scripts/workflow_state.py`.
+3. Read `.github/scripts/workflow_contract.py`, `.github/scripts/workflow_controller.py`, `.github/scripts/workflow_runtime.py`, `.github/scripts/workflow_state.py`.
 4. Confirm target README markers exist.
+5. Confirm each standalone worker wrapper still matches its registry contract.
 
 After making changes:
-1. Run controller (or CI workflow) once.
-2. Confirm no stale `/badge/` custom badges remain.
-3. Confirm state artifacts and README are consistent.
-4. Confirm no new diagnostics in touched files.
+1. Run `validate_workflow_chain.py` first.
+2. Run controller (or CI workflow) when runtime/state behavior changed.
+3. Confirm no stale `/badge/` custom badges remain.
+4. Confirm state artifacts and README are consistent.
+5. Confirm no new diagnostics in touched files.
+6. Check git status in the active workflow worktree before handing off.
 
 ## 10) Source of Truth
 
 Automation behavior is defined by these files together:
 - `.github/workflows/workflow-manager.yml`
+- `.github/workflows/_managed-readme-worker.yml`
+- `.github/workflows/*.yml` standalone worker wrappers
 - `.github/manager/workflow.json`
 - `.github/manager/registry.json`
+- `.github/scripts/workflow_contract.py`
 - `.github/scripts/workflow_controller.py`
 - `.github/scripts/workflow_common.py`
 - `.github/scripts/workflow_runtime.py`
 - `.github/scripts/workflow_state.py`
 - `.github/scripts/workflow_renderer.py`
+- `.github/scripts/validate_workflow_chain.py`
 
-If any conflict appears, prioritize controller runtime behavior and then sync docs/config accordingly.
+If any conflict appears, prioritize validated controller/runtime behavior, then registry contract, then sync wrappers/docs accordingly.
 
 ## 11) Change Synchronization Policy
 
 Whenever automation code is modified, update docs in the same change set to avoid stale guidance.
 
 Minimum sync checklist per change:
-1. If execution flow/state persistence changes, update sections 1, 4, 5, and 10.
-2. If rendering logic or marker ownership changes, update sections 1, 6, and 10.
-3. If secrets, triggers, or workflow names change, update sections 2, 3, and 5.
-4. If extension steps change, update sections 8 and 9.
-5. If dead-letter scope or tolerant-mode behavior changes, update sections 3, 4, and 7.
+1. If worker contract fields or wrapper boundaries change, update sections 1, 2, 3, 8, 9, and 10.
+2. If execution flow/state persistence changes, update sections 1, 4, 5, and 10.
+3. If rendering logic or marker ownership changes, update sections 1, 6, and 10.
+4. If validator coverage changes, update sections 5, 8, 9, and 10.
+5. If secrets, triggers, or workflow names change, update sections 2, 3, and 5.
+6. If dead-letter scope or tolerant-mode behavior changes, update sections 3, 4, and 7.

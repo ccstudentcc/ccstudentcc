@@ -2,6 +2,9 @@ name: Snapshot
 
 on:
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
   workflow_dispatch:
 
 concurrency:
@@ -10,27 +13,16 @@ concurrency:
 
 jobs:
   update-snapshot:
-    name: Refresh Snapshot
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Update recent repositories snapshot
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python .github/scripts/update_snapshot.py
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore(readme): refresh snapshot"
-          file_pattern: README.md assets/showcase-carousel.svg
+    uses: ./.github/workflows/_managed-readme-worker.yml
+    with:
+      job_name: Refresh Snapshot
+      timeout_minutes: 5
+      execution_mode: python
+      command: python .github/scripts/update_snapshot.py
+      summary_label: Snapshot
+      commit_message: 'chore(readme): refresh snapshot'
+      commit_scope: README.md assets/showcase-carousel.svg
+      setup_python: true
+      required_secrets: GITHUB_TOKEN
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -2,6 +2,9 @@ name: Update Featured Projects
 
 on:
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
   workflow_dispatch:
 
 concurrency:
@@ -10,25 +13,16 @@ concurrency:
 
 jobs:
   update-featured-projects:
-    name: Refresh Featured Projects
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Ensure script is executable
-        run: chmod +x .github/scripts/update_featured_projects.sh
-
-      - name: Update featured projects section
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: .github/scripts/update_featured_projects.sh
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore(readme): refresh featured projects"
-          file_pattern: README.md
+    uses: ./.github/workflows/_managed-readme-worker.yml
+    with:
+      job_name: Refresh Featured Projects
+      timeout_minutes: 10
+      execution_mode: bash
+      command: .github/scripts/update_featured_projects.sh
+      summary_label: Featured Projects
+      commit_message: 'chore(readme): refresh featured projects'
+      commit_scope: README.md
+      chmod_target: .github/scripts/update_featured_projects.sh
+      required_secrets: GITHUB_TOKEN
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}

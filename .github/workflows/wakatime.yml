@@ -2,6 +2,9 @@ name: Waka Readme
 
 on:
   workflow_call:
+    secrets:
+      WAKATIME_API_KEY:
+        required: true
   workflow_dispatch:
 
 concurrency:
@@ -10,27 +13,16 @@ concurrency:
 
 jobs:
   update-readme:
-    name: Update WakaTime Stats
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Update README with WakaTime stats
-        env:
-          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
-        run: python .github/scripts/update_wakatime.py
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore(readme): update wakatime stats"
-          file_pattern: README.md
+    uses: ./.github/workflows/_managed-readme-worker.yml
+    with:
+      job_name: Update WakaTime Stats
+      timeout_minutes: 10
+      execution_mode: python
+      command: python .github/scripts/update_wakatime.py
+      summary_label: WakaTime
+      commit_message: 'chore(readme): update wakatime stats'
+      commit_scope: README.md
+      setup_python: true
+      required_secrets: WAKATIME_API_KEY
+    secrets:
+      wakatime_api_key: ${{ secrets.WAKATIME_API_KEY }}

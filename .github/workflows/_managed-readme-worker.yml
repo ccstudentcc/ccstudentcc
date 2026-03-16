@@ -1,0 +1,98 @@
+name: Managed README Worker
+
+on:
+  workflow_call:
+    inputs:
+      job_name:
+        required: true
+        type: string
+      timeout_minutes:
+        required: true
+        type: number
+      execution_mode:
+        required: true
+        type: string
+      command:
+        required: true
+        type: string
+      summary_label:
+        required: true
+        type: string
+      commit_message:
+        required: true
+        type: string
+      commit_scope:
+        required: true
+        type: string
+      setup_python:
+        required: false
+        type: boolean
+        default: false
+      python_version:
+        required: false
+        type: string
+        default: '3.x'
+      chmod_target:
+        required: false
+        type: string
+        default: ''
+      required_secrets:
+        required: false
+        type: string
+        default: 'None'
+      enable_commit:
+        required: false
+        type: boolean
+        default: true
+    secrets:
+      github_token:
+        required: false
+      wakatime_api_key:
+        required: false
+
+jobs:
+  run-worker:
+    name: ${{ inputs.job_name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        if: ${{ inputs.setup_python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python_version }}
+
+      - name: Ensure script is executable
+        if: ${{ inputs.chmod_target != '' }}
+        run: chmod +x "${{ inputs.chmod_target }}"
+
+      - name: Run worker command
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          WAKATIME_API_KEY: ${{ secrets.wakatime_api_key }}
+        run: ${{ inputs.command }}
+
+      - name: Commit changes
+        if: ${{ inputs.enable_commit }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: ${{ inputs.commit_message }}
+          file_pattern: ${{ inputs.commit_scope }}
+
+      - name: Write step summary
+        run: |
+          {
+            echo "## ${{ inputs.summary_label }}"
+            echo
+            echo "- Execution mode: ${{ inputs.execution_mode }}"
+            echo "- Command: \`${{ inputs.command }}\`"
+            echo "- Commit scope: \`${{ inputs.commit_scope }}\`"
+            echo "- Required secrets: ${{ inputs.required_secrets }}"
+            echo "- Commit enabled: ${{ inputs.enable_commit }}"
+            echo "- Commit message: \`${{ inputs.commit_message }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
