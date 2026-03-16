@@ -30,6 +30,8 @@ Developer guidance
 
 - If your code performs frequent state updates (e.g., heartbeat updates), call `flush_json_writes(force=True)` during shutdown or before a prolonged pause to ensure batched updates are written.
 - For debugging or unit tests that require immediate persistence, set `WORKFLOW_WRITE_BATCHING=false` or call `flush_json_writes(force=True)`.
+ - For debugging or unit tests that require immediate persistence, set `WORKFLOW_WRITE_BATCHING=false` or call `flush_json_writes(force=True)`.
+ - Note: `persist(..., force=True)` no longer unconditionally enqueues a new write when the runtime state has not meaningfully changed. The controller computes a persist signature and will skip enqueueing/writing if the signature matches the previous one. When `force=True` and no change is detected, the runtime will only attempt to flush any already-enqueued writes but will not create redundant writes of identical content.
 - The persistence layer retries failed writes. Exhausted retries are recorded in `.github/manager/state/persistence-errors.log` and the metrics file.
 
 Operational notes

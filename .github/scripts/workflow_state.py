@@ -714,7 +714,16 @@ def persist(
     """Persist all workflow artifacts and re-render README dashboard when needed."""
     refresh_worker_health(state, registry)
     signature = build_persist_signature(state, dead_letters)
-    if not force and previous_signature == signature:
+    # Avoid unnecessary writes when there is no meaningful change.
+    # If signatures match, do not enqueue a new write batch. If `force` is
+    # requested, only attempt to flush any pre-existing queued writes but
+    # do not persist identical state to disk (prevents redundant commits).
+    if previous_signature == signature:
+        if force:
+            try:
+                flush_json_writes(force=True)
+            except Exception:
+                pass
         return signature
 
     begin_flow_cycle(state, "persist")
@@ -740,7 +749,7 @@ def persist(
     render_dashboard_readme(state, dead_letters[-10:])
     # Attempt a best-effort flush respecting debounce; when batching disabled this is immediate.
     try:
-        flush_json_writes()
+        flush_json_writes(force=force)
     except Exception:
         # never raise from persist
         pass

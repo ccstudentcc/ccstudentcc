@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-16T13:26:18Z",
+  "generated_at": "2026-03-16T14:49:38Z",
   "node_count": 3,
   "edge_count": 1,
   "roots": [
@@ -17,7 +17,7 @@
       "condition": "env_exists(WAKATIME_API_KEY)",
       "priority": 100,
       "pool": "metrics-pool",
-      "status": "Pending"
+      "status": "Success"
     },
     {
       "task": "daily-quote",
@@ -25,7 +25,7 @@
       "condition": "always",
       "priority": 30,
       "pool": "engagement-pool",
-      "status": "Pending"
+      "status": "Success"
     },
     {
       "task": "snapshot",
@@ -35,7 +35,7 @@
       "condition": "all_success",
       "priority": 60,
       "pool": "content-pool",
-      "status": "Pending"
+      "status": "Failed"
     }
   ]
 }
