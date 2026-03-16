@@ -703,9 +703,6 @@ def persist_state_and_manifest(state: dict[str, Any]) -> None:
     refresh_state_store_inventory(state)
     enqueue_json(METADATA_STORE_PATH, build_metadata_store_payload(state))
 
-    refresh_state_store_inventory(state)
-    enqueue_json(STATE_PATH, state)
-
 
 def persist(
     state: dict[str, Any],
