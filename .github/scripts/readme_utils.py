@@ -13,6 +13,8 @@ from pathlib import Path
 LOCK_TIMEOUT_SECONDS = 120.0
 LOCK_POLL_INTERVAL_SECONDS = 0.1
 STALE_LOCK_SECONDS = 600.0
+ATOMIC_WRITE_RETRIES = 30
+ATOMIC_WRITE_RETRY_DELAY_SECONDS = 0.1
 
 
 class MissingMarkerError(ValueError):
@@ -109,7 +111,25 @@ def write_text_atomic(path: Path, content: str) -> None:
     with tempfile.NamedTemporaryFile("w", encoding="utf-8", delete=False, dir=path.parent, newline="") as handle:
         handle.write(content)
         temp_path = Path(handle.name)
-    os.replace(temp_path, path)
+
+    last_error: OSError | None = None
+    for attempt in range(ATOMIC_WRITE_RETRIES):
+        try:
+            os.replace(temp_path, path)
+            return
+        except PermissionError as error:
+            last_error = error
+            if attempt == ATOMIC_WRITE_RETRIES - 1:
+                break
+            time.sleep(ATOMIC_WRITE_RETRY_DELAY_SECONDS)
+
+    try:
+        temp_path.unlink(missing_ok=True)
+    except OSError:
+        pass
+
+    if last_error is not None:
+        raise last_error
 
 
 def update_readme_section(readme_path: Path, start_marker: str, end_marker: str, new_block: str) -> None:

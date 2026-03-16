@@ -42,6 +42,10 @@ on:
         required: false
         type: string
         default: 'None'
+      verify_command:
+        required: false
+        type: string
+        default: ''
       enable_commit:
         required: false
         type: boolean
@@ -78,6 +82,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.repo_token }}
           WAKATIME_API_KEY: ${{ secrets.wakatime_api_key }}
         run: ${{ inputs.command }}
+
+      - name: Run verification command
+        if: ${{ inputs.verify_command != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.repo_token }}
+          WAKATIME_API_KEY: ${{ secrets.wakatime_api_key }}
+        run: ${{ inputs.verify_command }}
 
       - name: Commit changes
         if: ${{ inputs.enable_commit }}

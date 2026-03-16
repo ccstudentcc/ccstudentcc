@@ -9,6 +9,7 @@ Worker Pools -> Registry -> Health -> Tasks -> DLQ.
 """
 
 import json
+import hashlib
 import re
 import sys
 from pathlib import Path
@@ -30,6 +31,7 @@ README_PATH = ROOT / "README.md"
 DOC_PATH = ROOT / "docs/workflows-automation-guide.md"
 RENDERER_PATH = ROOT / ".github/scripts/workflow_renderer.py"
 CONTROLLER_PATH = ROOT / ".github/scripts/workflow_controller.py"
+SHOWCASE_SVG_PATH = ROOT / "assets/showcase-carousel.svg"
 
 EXPECTED_FLOW = CANONICAL_FLOW_ORDER
 EXPECTED_FLOW_BULLET = " • ".join(EXPECTED_FLOW)
@@ -250,6 +252,22 @@ def validate_readme_and_docs(readme_text: str, doc_text: str) -> None:
 
     for item in EXPECTED_FLOW:
         ensure(item in doc_text, f"文档缺少链路项: {item}")
+
+    showcase_start = "<!--START_SECTION:showcase_image-->"
+    showcase_end = "<!--END_SECTION:showcase_image-->"
+    ensure(readme_text.count(showcase_start) == 1, "README 区块 start marker 必须唯一: showcase_image")
+    ensure(readme_text.count(showcase_end) == 1, "README 区块 end marker 必须唯一: showcase_image")
+
+    image_match = re.search(r"showcase-carousel\.svg\?v=([0-9a-f]{12})", readme_text)
+    ensure(image_match is not None, "README 未包含 showcase-carousel.svg 的 cache-busting v=hash 参数")
+    assert image_match is not None
+
+    svg_text = SHOWCASE_SVG_PATH.read_text(encoding="utf-8")
+    expected_hash = hashlib.sha256(svg_text.encode("utf-8")).hexdigest()[:12]
+    ensure(
+        image_match.group(1) == expected_hash,
+        f"README 中的 showcase hash 与 SVG 内容不一致: readme={image_match.group(1)}, svg={expected_hash}",
+    )
 
 
 

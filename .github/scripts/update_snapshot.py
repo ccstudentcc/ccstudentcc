@@ -3,12 +3,18 @@ from __future__ import annotations
 """Refresh snapshot-related README sections and showcase SVG assets."""
 
 import json
+import hashlib
 import os
+import sys
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from html import escape
 from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 
 from readme_utils import MissingMarkerError, update_readme_section
 
@@ -22,6 +28,8 @@ REALTIME_START_MARKER = "<!--START_SECTION:realtime_panel-->"
 REALTIME_END_MARKER = "<!--END_SECTION:realtime_panel-->"
 SHOWCASE_START_MARKER = "<!--START_SECTION:showcase_slides-->"
 SHOWCASE_END_MARKER = "<!--END_SECTION:showcase_slides-->"
+SHOWCASE_IMAGE_START_MARKER = "<!--START_SECTION:showcase_image-->"
+SHOWCASE_IMAGE_END_MARKER = "<!--END_SECTION:showcase_image-->"
 HERO_SUBTITLE_START_MARKER = "<!--START_SECTION:hero_subtitle-->"
 HERO_SUBTITLE_END_MARKER = "<!--END_SECTION:hero_subtitle-->"
 SHOWCASE_SVG_PATH = Path("assets/showcase-carousel.svg")
@@ -311,6 +319,12 @@ def build_showcase_svg(repos: list[dict]) -> str:
 '''
 
 
+def build_showcase_image_block(svg_content: str) -> str:
+    """Build cache-busted showcase image tag based on SVG content hash."""
+    digest = hashlib.sha256(svg_content.encode("utf-8")).hexdigest()[:12]
+    return f'<img src="./assets/showcase-carousel.svg?v={digest}" alt="showcase carousel animation" width="100%" />'
+
+
 def main() -> None:
     """Fetch recent repos and refresh snapshot-driven README sections."""
     owner = os.getenv("GITHUB_REPOSITORY_OWNER", "ccstudentcc")
@@ -352,8 +366,17 @@ def main() -> None:
         build_hero_subtitle(owner, showcase)
     )
 
+    showcase_svg = build_showcase_svg(showcase)
+
     SHOWCASE_SVG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    SHOWCASE_SVG_PATH.write_text(build_showcase_svg(showcase), encoding="utf-8")
+    SHOWCASE_SVG_PATH.write_text(showcase_svg, encoding="utf-8")
+
+    try_update_readme_section(
+        README_PATH,
+        SHOWCASE_IMAGE_START_MARKER,
+        SHOWCASE_IMAGE_END_MARKER,
+        build_showcase_image_block(showcase_svg)
+    )
     print(f"Updated recent repository snapshot with {len(selected)} entries and refreshed showcase assets")
 
 

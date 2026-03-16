@@ -7,11 +7,16 @@ and updates marker blocks in README.md.
 """
 
 import json
+import sys
 from datetime import datetime, timedelta, timezone
 from html import escape
 from pathlib import Path
 from typing import Any, cast
 from urllib.parse import quote
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 
 from readme_utils import MarkerConflictError, update_readme_section
 

@@ -18,6 +18,7 @@ jobs:
       timeout_minutes: 5
       execution_mode: python
       command: python .github/scripts/update_snapshot.py
+      verify_command: python .github/scripts/validate_workflow_chain.py
       summary_label: Snapshot
       commit_message: 'chore(readme): refresh snapshot'
       commit_scope: README.md assets/showcase-carousel.svg

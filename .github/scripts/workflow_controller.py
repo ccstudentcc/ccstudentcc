@@ -7,7 +7,12 @@ responsibilities to dedicated modules.
 """
 
 import sys
+from pathlib import Path
 from typing import Any, cast
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 
 from workflow_common import POLL_SECONDS, REGISTRY_PATH, WORKFLOW_PATH, iso_now, load_json
 from workflow_contract import worker_contracts_by_name
