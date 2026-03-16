@@ -47,7 +47,7 @@ on:
         type: boolean
         default: true
     secrets:
-      github_token:
+      repo_token:
         required: false
       wakatime_api_key:
         required: false
@@ -75,7 +75,7 @@ jobs:
 
       - name: Run worker command
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.repo_token }}
           WAKATIME_API_KEY: ${{ secrets.wakatime_api_key }}
         run: ${{ inputs.command }}
 

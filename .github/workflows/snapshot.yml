@@ -24,4 +24,4 @@ jobs:
       setup_python: true
       required_secrets: GITHUB_TOKEN
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      repo_token: ${{ secrets.GITHUB_TOKEN }}

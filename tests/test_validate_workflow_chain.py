@@ -43,7 +43,7 @@ jobs:
       commit_scope: README.md assets/showcase-carousel.svg
       required_secrets: GITHUB_TOKEN
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      repo_token: ${{ secrets.GITHUB_TOKEN }}
 """
 
         validate_worker_workflow_wrapper(contract, workflow_text, Path("snapshot.yml"))
@@ -75,7 +75,7 @@ jobs:
       commit_scope: README.md
       required_secrets: GITHUB_TOKEN
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      repo_token: ${{ secrets.GITHUB_TOKEN }}
 """
 
         validate_worker_workflow_wrapper(contract, workflow_text, Path("featured-projects.yml"))
@@ -165,7 +165,7 @@ jobs:
       commit_scope: README.md assets/showcase-carousel.svg
       required_secrets: GITHUB_TOKEN
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      repo_token: ${{ secrets.GITHUB_TOKEN }}
 """
 
         with self.assertRaisesRegex(ValidationError, "不应在 workflow_call.secrets 中声明保留 secret"):

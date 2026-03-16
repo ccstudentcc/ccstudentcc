@@ -24,4 +24,4 @@ jobs:
       chmod_target: .github/scripts/update_featured_projects.sh
       required_secrets: GITHUB_TOKEN
     secrets:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+      repo_token: ${{ secrets.GITHUB_TOKEN }}
