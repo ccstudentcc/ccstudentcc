@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import os
+import tempfile
+import traceback
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -21,6 +23,7 @@ EVENT_LOG_PATH = ROOT / ".github/manager/state/event-log.json"
 METADATA_STORE_PATH = ROOT / ".github/manager/state/metadata-store.json"
 DAG_PATH = ROOT / ".github/manager/state/dag.json"
 SCHEDULER_PATH = ROOT / ".github/manager/state/scheduler.json"
+PERSISTENCE_METRICS_PATH = ROOT / ".github/manager/state/persistence-metrics.json"
 POLL_SECONDS = 2
 ASIA_SHANGHAI = timezone(timedelta(hours=8))
 TERMINAL_STATUSES = {"Success", "Failed", "Skipped", "Blocked"}
@@ -63,9 +66,42 @@ def load_json(path: Path, default: Any) -> Any:
 
 
 def save_json(path: Path, payload: object) -> None:
-    """Persist JSON payload with UTF-8 and stable indentation."""
+    """Persist JSON payload with UTF-8 and stable indentation using atomic replace.
+
+    Writes to a temporary file in the same directory and then uses ``os.replace``
+    to atomically move the file into place. Ensures data is flushed to disk
+    before replacement.
+    """
+    _atomic_write_text(path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+
+
+def _atomic_write_text(path: Path, text: str) -> None:
+    """Write text to `path` atomically using a temp file in same dir.
+
+    This helper is intentionally independent from `save_json` so callers
+    (e.g. metrics writer) can persist without relying on the public
+    `save_json` symbol which may be monkeypatched in tests.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp_fd = None
+    tmp_path = None
+    try:
+        tmp_fd, tmp_path = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=str(path.parent))
+        with os.fdopen(tmp_fd, "w", encoding="utf-8") as fh:
+            fh.write(text)
+            fh.flush()
+            try:
+                os.fsync(fh.fileno())
+            except Exception:
+                pass
+        os.replace(tmp_path, str(path))
+        tmp_path = None
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except Exception:
+                pass
 
 
 # Optional write-batching / debounce support
@@ -115,33 +151,65 @@ def flush_json_writes(force: bool = False) -> None:
         items = list(_WRITE_QUEUE.items())
         _WRITE_QUEUE.clear()
 
-    # best-effort write with retries and durable error logging
+    # best-effort write with retries, enhanced durable error logging and metrics
     PERSISTENCE_ERROR_LOG = ROOT / ".github" / "manager" / "state" / "persistence-errors.log"
     for path, payload in items:
         saved = False
         attempts = 0
         max_retries = 3
+        last_exc: Exception | None = None
         while not saved and attempts < max_retries:
             try:
                 save_json(path, payload)
                 saved = True
             except Exception as exc:
+                last_exc = exc
                 attempts += 1
                 # exponential backoff
                 time.sleep(0.05 * (2 ** (attempts - 1)))
 
-        if not saved:
+        # prepare metrics update
+        try:
+            metrics = load_json(PERSISTENCE_METRICS_PATH, {"total_writes": 0, "failed_writes": 0, "total_attempts": 0, "failed_attempts": 0, "last_error": None, "last_error_at": None, "last_failed_path": None, "last_error_traceback": None})
+        except Exception:
+            metrics = {"total_writes": 0, "failed_writes": 0, "total_attempts": 0, "failed_attempts": 0, "last_error": None, "last_error_at": None, "last_failed_path": None, "last_error_traceback": None}
+
+        attempts_per_item = attempts if not saved else attempts + 1
+        if saved:
+            metrics["total_writes"] = int(metrics.get("total_writes", 0)) + 1
+            metrics["total_attempts"] = int(metrics.get("total_attempts", 0)) + int(attempts_per_item)
+        else:
             # record failure to a log for later inspection and re-enqueue for next flush
             try:
                 PERSISTENCE_ERROR_LOG.parent.mkdir(parents=True, exist_ok=True)
                 with PERSISTENCE_ERROR_LOG.open("a", encoding="utf-8") as fh:
                     fh.write(f"[{iso_now()}] Failed to persist {relative_repo_path(path)} after {max_retries} attempts\n")
+                    if last_exc is not None:
+                        fh.write(f"    error: {type(last_exc).__name__}: {last_exc}\n")
+                        fh.write(traceback.format_exc())
             except Exception:
                 # best-effort only; avoid raising
                 pass
 
             with _WRITE_QUEUE_LOCK:
                 _WRITE_QUEUE[path] = payload
+
+            metrics["failed_writes"] = int(metrics.get("failed_writes", 0)) + 1
+            metrics["failed_attempts"] = int(metrics.get("failed_attempts", 0)) + int(attempts_per_item)
+            metrics["last_error"] = str(last_exc) if last_exc is not None else None
+            metrics["last_error_at"] = iso_now()
+            metrics["last_failed_path"] = relative_repo_path(path)
+            try:
+                metrics["last_error_traceback"] = traceback.format_exc()
+            except Exception:
+                metrics["last_error_traceback"] = None
+
+        # persist metrics best-effort using internal atomic writer (avoids calling save_json)
+        try:
+            _atomic_write_text(PERSISTENCE_METRICS_PATH, json.dumps(metrics, ensure_ascii=False, indent=2) + "\n")
+        except Exception:
+            # do not raise from metrics write
+            pass
 
 
 def relative_repo_path(path: Path) -> str:
