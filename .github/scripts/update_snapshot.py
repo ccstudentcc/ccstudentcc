@@ -11,6 +11,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from html import escape
 from pathlib import Path
+import time
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
@@ -72,9 +73,19 @@ def github_request(url: str) -> list[dict]:
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    request = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+    # Simple retry loop to improve resilience for transient network/GitHub errors
+    attempts = 3
+    backoff = 1
+    for attempt in range(1, attempts + 1):
+        try:
+            request = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(request, timeout=30) as response:
+                return json.load(response)
+        except Exception as exc:
+            if attempt == attempts:
+                raise
+            time.sleep(backoff)
+            backoff = min(10, backoff * 2)
 
 
 def format_repo_line(owner: str, repo: dict) -> str:

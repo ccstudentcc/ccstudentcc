@@ -15,6 +15,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from workflow_common import POLL_SECONDS, REGISTRY_PATH, WORKFLOW_PATH, iso_now, load_json
+import time
 from workflow_contract import worker_contracts_by_name
 from workflow_runtime import (
     collect_ready_tasks,
@@ -47,6 +48,9 @@ def main() -> int:
 
     persist_signature = persist(state, dead_letters, registry, previous_signature=persist_signature, force=True)
 
+    idle_sleep = POLL_SECONDS
+    idle_sleep_max = 10
+
     while True:
         ready_queue = collect_ready_tasks(task_specs, state)
         refresh_pool_state(state, workflow_spec, ready_queue, running)
@@ -69,6 +73,8 @@ def main() -> int:
             launched_any = True
 
         if launched_any:
+            # reset idle backoff when progress is made
+            idle_sleep = POLL_SECONDS
             refresh_pool_state(state, workflow_spec, ready_queue, running)
             refresh_scheduler_state(state, ready_queue, running)
 
@@ -78,24 +84,29 @@ def main() -> int:
             break
 
         if running:
-            import time
-
+            # while workers are active, poll frequently for responsiveness
             time.sleep(POLL_SECONDS)
             poll_running_tasks(state, registry_by_name, running, dead_letters)
             mark_unreachable_tasks(task_specs, state)
             persist_signature = persist(state, dead_letters, registry, previous_signature=persist_signature)
+            # reset idle backoff after active polling
+            idle_sleep = POLL_SECONDS
             continue
 
         if not ready_queue:
+            # apply an exponential backoff when idle to reduce CPU and IO
             future_deferred = any(task["status"] == "Deferred" for task in state["tasks"].values())
             if future_deferred:
-                import time
-
                 time.sleep(1)
+                idle_sleep = POLL_SECONDS
                 continue
             mark_unreachable_tasks(task_specs, state)
             if workflow_finished(state):
                 break
+
+            time.sleep(idle_sleep)
+            # gradually increase idle sleep up to a max to avoid busy loops
+            idle_sleep = min(idle_sleep_max, max(POLL_SECONDS, int(idle_sleep * 2)))
 
     state["workflow"]["status"] = "Completed"
     state["workflow"]["completed_at"] = iso_now()
