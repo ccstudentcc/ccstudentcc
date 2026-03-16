@@ -1,10 +1,11 @@
 {
-  "generated_at": "2026-03-16T15:07:36Z",
+  "generated_at": "2026-03-16T15:30:20Z",
   "backend": "json-files-in-repo",
   "transaction_model": "atomic-file-write",
   "manifest_version": 1,
-  "write_count": 393,
-  "last_persisted_at": "2026-03-16T15:07:36Z",
+  "write_count": 467,
+  "last_persisted_at": "2026-03-16T15:30:20Z",
+  "last_persist_signature": "{\"dead_letters\": [], \"event_bus\": {\"published_events\": 4, \"recent_events\": [{\"details\": \"Trigger=manual\", \"source\": \"profile-readme-automation\", \"type\": \"workflow.started\"}, {\"details\": \"Dispatched on pool metrics-pool attempt 1/2\", \"source\": \"wakatime\", \"type\": \"task.dispatched\"}, {\"details\": \"Updated WakaTime section\", \"source\": \"wakatime\", \"type\": \"task.succeeded\"}, {\"details\": \"All terminal task states reached\", \"source\": \"profile-readme-automation\", \"type\": \"workflow.completed\"}]}, \"managed_jobs\": [\"wakatime\", \"daily-quote\", \"snapshot\"], \"message_queue\": {\"current_depth\": 0, \"retry_entries\": 0, \"running_leases\": 0, \"total_completed\": 1, \"total_dispatched\": 1}, \"scheduler\": {\"completed_tasks\": 3, \"deferred_tasks\": 0, \"ready_queue\": [], \"running_tasks\": 0}, \"standalone_jobs\": [\"featured-projects\"], \"tasks\": {\"daily-quote\": {\"attempt\": 0, \"completed_at\": \"2026-03-16T15:30:11Z\", \"condition\": \"always\", \"depends_on\": [], \"max_attempts\": 2, \"message\": \"Worker daily-quote is disabled\", \"pool\": \"engagement-pool\", \"priority\": 30, \"scheduled_at\": \"2026-03-16T15:30:10Z\", \"status\": \"Skipped\", \"worker\": \"daily-quote\"}, \"snapshot\": {\"attempt\": 0, \"completed_at\": \"2026-03-16T15:30:11Z\", \"condition\": \"all_success\", \"depends_on\": [\"daily-quote\"], \"max_attempts\": 2, \"message\": \"Worker snapshot is disabled\", \"pool\": \"content-pool\", \"priority\": 60, \"scheduled_at\": \"2026-03-16T15:30:10Z\", \"status\": \"Skipped\", \"worker\": \"snapshot\"}, \"wakatime\": {\"attempt\": 1, \"completed_at\": \"2026-03-16T15:30:18Z\", \"condition\": \"env_exists(WAKATIME_API_KEY)\", \"depends_on\": [], \"max_attempts\": 2, \"message\": \"Updated WakaTime section\", \"pool\": \"metrics-pool\", \"priority\": 100, \"scheduled_at\": \"2026-03-16T15:30:10Z\", \"status\": \"Success\", \"worker\": \"wakatime\"}}, \"worker_pools\": {\"content-pool\": {\"active_workers\": 0, \"completed_tasks\": 1, \"desired_workers\": 1, \"last_scale_reason\": \"queue 0, active 0, target 1 per worker\", \"queued_tasks\": 0}, \"engagement-pool\": {\"active_workers\": 0, \"completed_tasks\": 1, \"desired_workers\": 1, \"last_scale_reason\": \"queue 0, active 0, target 2 per worker\", \"queued_tasks\": 0}, \"metrics-pool\": {\"active_workers\": 0, \"completed_tasks\": 1, \"desired_workers\": 1, \"last_scale_reason\": \"queue 0, active 0, target 1 per worker\", \"queued_tasks\": 0}}, \"workers\": {\"daily-quote\": {\"capabilities\": [\"readme-write\", \"content-generation\"], \"display_name\": \"Daily Quote\", \"enabled\": false, \"health\": \"Unknown\", \"last_error\": null, \"last_exit_code\": null, \"last_failure_at\": null, \"last_success_at\": null, \"managed_by_default\": true, \"pool\": \"engagement-pool\", \"worker_type\": \"engagement-sync\"}, \"featured-projects\": {\"capabilities\": [\"readme-write\", \"repo-discovery\"], \"display_name\": \"Featured Projects\", \"enabled\": true, \"health\": \"Unknown\", \"last_error\": null, \"last_exit_code\": null, \"last_failure_at\": null, \"last_success_at\": null, \"managed_by_default\": false, \"pool\": \"content-pool\", \"worker_type\": \"content-sync\"}, \"snapshot\": {\"capabilities\": [\"readme-write\", \"repo-discovery\"], \"display_name\": \"Snapshot\", \"enabled\": false, \"health\": \"Unknown\", \"last_error\": null, \"last_exit_code\": null, \"last_failure_at\": null, \"last_success_at\": null, \"managed_by_default\": true, \"pool\": \"content-pool\", \"worker_type\": \"content-sync\"}, \"wakatime\": {\"capabilities\": [\"readme-write\", \"external-api\"], \"display_name\": \"WakaTime\", \"enabled\": true, \"health\": \"Healthy\", \"last_error\": null, \"last_exit_code\": 0, \"last_failure_at\": null, \"last_success_at\": \"2026-03-16T15:30:18Z\", \"managed_by_default\": true, \"pool\": \"metrics-pool\", \"worker_type\": \"metrics-sync\"}}, \"workflow\": {\"dag_edges\": 1, \"dag_nodes\": 3, \"status\": \"Completed\"}}",
   "last_write_batch": [
     ".github/manager/state/state.json",
     ".github/manager/state/dag.json",
@@ -15,63 +16,63 @@
     ".github/manager/state/dead-letters.json"
   ],
   "consistency_status": "healthy",
-  "total_size_bytes": 64833,
+  "total_size_bytes": 73024,
   "documents": [
     {
       "name": "workflow_spec",
       "path": ".github/manager/workflow.json",
       "exists": true,
-      "size_bytes": 5253,
-      "updated_at": "2026-03-16T15:07:31Z"
+      "size_bytes": 5436,
+      "updated_at": "2026-03-16T09:37:05Z"
     },
     {
       "name": "runtime_state",
       "path": ".github/manager/state/state.json",
       "exists": true,
-      "size_bytes": 53169,
-      "updated_at": "2026-03-16T15:07:36Z"
+      "size_bytes": 57963,
+      "updated_at": "2026-03-16T15:30:20Z"
     },
     {
       "name": "dag_snapshot",
       "path": ".github/manager/state/dag.json",
       "exists": true,
-      "size_bytes": 775,
-      "updated_at": "2026-03-16T15:07:36Z"
+      "size_bytes": 816,
+      "updated_at": "2026-03-16T15:30:20Z"
     },
     {
       "name": "scheduler_snapshot",
       "path": ".github/manager/state/scheduler.json",
       "exists": true,
-      "size_bytes": 386,
-      "updated_at": "2026-03-16T15:07:36Z"
+      "size_bytes": 372,
+      "updated_at": "2026-03-16T15:30:20Z"
     },
     {
       "name": "queue_snapshot",
       "path": ".github/manager/state/queue.json",
       "exists": true,
-      "size_bytes": 1532,
-      "updated_at": "2026-03-16T15:07:36Z"
+      "size_bytes": 1281,
+      "updated_at": "2026-03-16T15:30:20Z"
     },
     {
       "name": "event_log",
       "path": ".github/manager/state/event-log.json",
       "exists": true,
-      "size_bytes": 1556,
-      "updated_at": "2026-03-16T15:07:36Z"
+      "size_bytes": 969,
+      "updated_at": "2026-03-16T15:30:20Z"
     },
     {
       "name": "dead_letters",
       "path": ".github/manager/state/dead-letters.json",
       "exists": true,
-      "size_bytes": 3,
-      "updated_at": "2026-03-16T15:07:36Z"
+      "size_bytes": 4,
+      "updated_at": "2026-03-16T15:30:20Z"
     },
     {
       "name": "metadata_manifest",
       "path": ".github/manager/state/metadata-store.json",
       "exists": true,
-      "size_bytes": 2159,
-      "updated_at": "2026-03-16T15:07:36Z"
+      "size_bytes": 6183,
+      "updated_at": "2026-03-16T15:30:20Z"
     }
   ],
   "missing_documents": []

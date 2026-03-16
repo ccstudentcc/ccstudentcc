@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-16T15:07:36Z",
+  "generated_at": "2026-03-16T15:30:19Z",
   "backend": "github-actions-internal-queue",
   "ordering": "priority-then-scheduled-at",
   "ready_queue": [],
@@ -8,36 +8,36 @@
   "running_leases": [],
   "terminal_tasks": [
     {
-      "task": "snapshot",
-      "status": "Success",
-      "priority": 60,
-      "pool": "content-pool",
-      "worker": "snapshot",
-      "scheduled_at": "2026-03-16T15:07:32Z",
-      "updated_at": "2026-03-16T15:07:36Z",
-      "attempt": 1,
-      "max_attempts": 2
-    },
-    {
       "task": "wakatime",
       "status": "Success",
       "priority": 100,
       "pool": "metrics-pool",
       "worker": "wakatime",
-      "scheduled_at": "2026-03-16T15:07:32Z",
-      "updated_at": "2026-03-16T15:07:34Z",
+      "scheduled_at": "2026-03-16T15:30:10Z",
+      "updated_at": "2026-03-16T15:30:18Z",
       "attempt": 1,
       "max_attempts": 2
     },
     {
+      "task": "snapshot",
+      "status": "Skipped",
+      "priority": 60,
+      "pool": "content-pool",
+      "worker": "snapshot",
+      "scheduled_at": "2026-03-16T15:30:10Z",
+      "updated_at": "2026-03-16T15:30:11Z",
+      "attempt": 0,
+      "max_attempts": 2
+    },
+    {
       "task": "daily-quote",
-      "status": "Success",
+      "status": "Skipped",
       "priority": 30,
       "pool": "engagement-pool",
       "worker": "daily-quote",
-      "scheduled_at": "2026-03-16T15:07:32Z",
-      "updated_at": "2026-03-16T15:07:34Z",
-      "attempt": 1,
+      "scheduled_at": "2026-03-16T15:30:10Z",
+      "updated_at": "2026-03-16T15:30:11Z",
+      "attempt": 0,
       "max_attempts": 2
     }
   ],
