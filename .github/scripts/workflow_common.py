@@ -8,6 +8,8 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+import time
+from threading import Lock
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / ".github/manager/registry.json"
@@ -64,6 +66,62 @@ def save_json(path: Path, payload: object) -> None:
     """Persist JSON payload with UTF-8 and stable indentation."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+# Optional write-batching / debounce support
+WRITE_BATCHING_ENABLED = os.getenv("WORKFLOW_WRITE_BATCHING", "false").lower() == "true"
+WRITE_DEBOUNCE_SECONDS = int(os.getenv("WORKFLOW_WRITE_DEBOUNCE_SECONDS", "2"))
+
+# Internal in-memory queue for pending writes: Path -> payload
+_WRITE_QUEUE: dict[Path, object] = {}
+_WRITE_QUEUE_LOCK = Lock()
+_LAST_ENQUEUE_AT = 0.0
+
+
+def enqueue_json(path: Path, payload: object) -> None:
+    """Enqueue a JSON payload for batched write or write immediately when batching disabled.
+
+    This function is safe to call from multiple places; callers should call
+    `flush_json_writes()` to ensure queued writes are persisted.
+    """
+    global _LAST_ENQUEUE_AT
+    if not WRITE_BATCHING_ENABLED:
+        save_json(path, payload)
+        return
+
+    with _WRITE_QUEUE_LOCK:
+        _WRITE_QUEUE[path] = payload
+        _LAST_ENQUEUE_AT = time.time()
+
+
+def flush_json_writes(force: bool = False) -> None:
+    """Flush any enqueued writes to disk.
+
+    If `force` is False, flush will be a no-op while recent enqueues exist within
+    the debounce period. When `force` is True, all queued writes are immediately
+    persisted.
+    """
+    global _LAST_ENQUEUE_AT
+    if not WRITE_BATCHING_ENABLED:
+        return
+
+    now = time.time()
+    with _WRITE_QUEUE_LOCK:
+        if not _WRITE_QUEUE:
+            return
+        if not force and (now - _LAST_ENQUEUE_AT) < WRITE_DEBOUNCE_SECONDS:
+            return
+
+        items = list(_WRITE_QUEUE.items())
+        _WRITE_QUEUE.clear()
+
+    for path, payload in items:
+        try:
+            save_json(path, payload)
+        except Exception:
+            # best-effort: re-enqueue on failure for next flush
+            with _WRITE_QUEUE_LOCK:
+                _WRITE_QUEUE[path] = payload
 
 
 def relative_repo_path(path: Path) -> str:

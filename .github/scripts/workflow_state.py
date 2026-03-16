@@ -28,6 +28,8 @@ from workflow_common import (
     relative_repo_path,
     save_json,
     TERMINAL_STATUSES,
+    enqueue_json,
+    flush_json_writes,
 )
 from workflow_contract import extract_contract_metadata, worker_contracts_by_name
 from workflow_renderer import render_readme as render_dashboard_readme
@@ -688,21 +690,21 @@ def persist_runtime_artifacts(state: dict[str, Any], dead_letters: list[dict[str
     state["message_queue"]["retry_entries"] = queue_snapshot["stats"]["retry"]
     state["message_queue"]["running_leases"] = queue_snapshot["stats"]["running"]
 
-    save_json(DAG_PATH, build_dag_snapshot(state))
-    save_json(SCHEDULER_PATH, build_scheduler_snapshot(state))
-    save_json(QUEUE_PATH, queue_snapshot)
+    enqueue_json(DAG_PATH, build_dag_snapshot(state))
+    enqueue_json(SCHEDULER_PATH, build_scheduler_snapshot(state))
+    enqueue_json(QUEUE_PATH, queue_snapshot)
 
 
 def persist_state_and_manifest(state: dict[str, Any]) -> None:
     """Persist state.json and metadata-store.json with refreshed inventory."""
     refresh_state_store_inventory(state)
-    save_json(STATE_PATH, state)
+    enqueue_json(STATE_PATH, state)
 
     refresh_state_store_inventory(state)
-    save_json(METADATA_STORE_PATH, build_metadata_store_payload(state))
+    enqueue_json(METADATA_STORE_PATH, build_metadata_store_payload(state))
 
     refresh_state_store_inventory(state)
-    save_json(STATE_PATH, state)
+    enqueue_json(STATE_PATH, state)
 
 
 def persist(
@@ -736,9 +738,15 @@ def persist(
     record_flow_stage(state, "DLQ", f"dead_letters={len(dead_letters)}")
     complete_flow_cycle(state)
     persist_state_and_manifest(state)
-    save_json(EVENT_LOG_PATH, build_event_log_payload(state))
-    save_json(DEAD_LETTERS_PATH, dead_letters[-20:])
+    enqueue_json(EVENT_LOG_PATH, build_event_log_payload(state))
+    enqueue_json(DEAD_LETTERS_PATH, dead_letters[-20:])
     render_dashboard_readme(state, dead_letters[-10:])
+    # Attempt a best-effort flush respecting debounce; when batching disabled this is immediate.
+    try:
+        flush_json_writes()
+    except Exception:
+        # never raise from persist
+        pass
     return build_persist_signature(state, dead_letters)
 
 
