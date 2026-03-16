@@ -69,7 +69,7 @@ def save_json(path: Path, payload: object) -> None:
 
 
 # Optional write-batching / debounce support
-WRITE_BATCHING_ENABLED = os.getenv("WORKFLOW_WRITE_BATCHING", "false").lower() == "true"
+WRITE_BATCHING_ENABLED = os.getenv("WORKFLOW_WRITE_BATCHING", "true").lower() == "true"
 WRITE_DEBOUNCE_SECONDS = int(os.getenv("WORKFLOW_WRITE_DEBOUNCE_SECONDS", "2"))
 
 # Internal in-memory queue for pending writes: Path -> payload
@@ -115,11 +115,31 @@ def flush_json_writes(force: bool = False) -> None:
         items = list(_WRITE_QUEUE.items())
         _WRITE_QUEUE.clear()
 
+    # best-effort write with retries and durable error logging
+    PERSISTENCE_ERROR_LOG = ROOT / ".github" / "manager" / "state" / "persistence-errors.log"
     for path, payload in items:
-        try:
-            save_json(path, payload)
-        except Exception:
-            # best-effort: re-enqueue on failure for next flush
+        saved = False
+        attempts = 0
+        max_retries = 3
+        while not saved and attempts < max_retries:
+            try:
+                save_json(path, payload)
+                saved = True
+            except Exception as exc:
+                attempts += 1
+                # exponential backoff
+                time.sleep(0.05 * (2 ** (attempts - 1)))
+
+        if not saved:
+            # record failure to a log for later inspection and re-enqueue for next flush
+            try:
+                PERSISTENCE_ERROR_LOG.parent.mkdir(parents=True, exist_ok=True)
+                with PERSISTENCE_ERROR_LOG.open("a", encoding="utf-8") as fh:
+                    fh.write(f"[{iso_now()}] Failed to persist {relative_repo_path(path)} after {max_retries} attempts\n")
+            except Exception:
+                # best-effort only; avoid raising
+                pass
+
             with _WRITE_QUEUE_LOCK:
                 _WRITE_QUEUE[path] = payload
 
