@@ -1,4 +1,6 @@
-name: Daily Quote
+name: README Worker - Daily Quote
+
+run-name: Daily Quote | ${{ github.event_name }}
 
 on:
   workflow_call:

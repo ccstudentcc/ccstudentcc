@@ -31,9 +31,6 @@ class WorkflowChainContractValidationTests(unittest.TestCase):
 
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
   workflow_dispatch:
 
 jobs:
@@ -66,9 +63,6 @@ jobs:
 
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
   workflow_dispatch:
 
 jobs:
@@ -140,6 +134,42 @@ jobs:
 
         with self.assertRaisesRegex(ValidationError, "WAKATIME_API_KEY"):
             validate_worker_workflow_wrapper(contract, workflow_text, Path("wakatime.yml"))
+
+    def test_validate_worker_workflow_wrapper_rejects_reserved_github_token_declaration(self) -> None:
+        contract = {
+            "name": "snapshot",
+            "command": ["python", ".github/scripts/update_snapshot.py"],
+            "execution_mode": "python",
+            "workflow": ".github/workflows/snapshot.yml",
+            "required_secrets": ["GITHUB_TOKEN"],
+            "commit_scope": ["README.md", "assets/showcase-carousel.svg"],
+            "optional_readme_markers": ["recent_repos"],
+            "summary_label": "Snapshot",
+        }
+        workflow_text = """name: Snapshot
+
+on:
+  workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+  workflow_dispatch:
+
+jobs:
+  update-snapshot:
+    uses: ./.github/workflows/_managed-readme-worker.yml
+    with:
+      execution_mode: python
+      command: python .github/scripts/update_snapshot.py
+      summary_label: Snapshot
+      commit_scope: README.md assets/showcase-carousel.svg
+      required_secrets: GITHUB_TOKEN
+    secrets:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+"""
+
+        with self.assertRaisesRegex(ValidationError, "不应在 workflow_call.secrets 中声明保留 secret"):
+            validate_worker_workflow_wrapper(contract, workflow_text, Path("snapshot.yml"))
 
     def test_validate_registry_worker_workflows_rejects_missing_workflow_file(self) -> None:
         registry = {

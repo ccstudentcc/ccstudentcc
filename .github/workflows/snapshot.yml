@@ -1,10 +1,9 @@
-name: Snapshot
+name: README Worker - Snapshot
+
+run-name: Snapshot | ${{ github.event_name }}
 
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
   workflow_dispatch:
 
 concurrency:

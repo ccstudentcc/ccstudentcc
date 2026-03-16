@@ -1,4 +1,6 @@
-name: Managed README Worker
+name: README Worker Core
+
+run-name: Core Worker | ${{ inputs.summary_label }}
 
 on:
   workflow_call:

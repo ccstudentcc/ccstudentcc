@@ -1,10 +1,9 @@
-name: Update Featured Projects
+name: README Worker - Featured Projects
+
+run-name: Featured Projects | ${{ github.event_name }}
 
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
   workflow_dispatch:
 
 concurrency:

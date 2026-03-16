@@ -14,6 +14,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
 from workflow_common import CANONICAL_FLOW_ORDER
 from workflow_contract import worker_contracts_by_name
 
@@ -144,10 +148,19 @@ def validate_worker_workflow_wrapper(contract: dict[str, Any], workflow_text: st
         return
 
     for secret_name in required_secrets:
-        ensure(
-            re.search(rf"^\s+{re.escape(secret_name)}:\s*$", workflow_text, re.MULTILINE) is not None,
-            f"Worker {worker_name} workflow_call 未声明 secret: {secret_name}",
-        )
+        secret_declared = re.search(rf"^\s+{re.escape(secret_name)}:\s*$", workflow_text, re.MULTILINE) is not None
+
+        if secret_name == "GITHUB_TOKEN":
+            ensure(
+                not secret_declared,
+                f"Worker {worker_name} 不应在 workflow_call.secrets 中声明保留 secret: {secret_name}",
+            )
+        else:
+            ensure(
+                secret_declared,
+                f"Worker {worker_name} workflow_call 未声明 secret: {secret_name}",
+            )
+
         ensure(
             f"${{{{ secrets.{secret_name} }}}}" in workflow_text,
             f"Worker {worker_name} wrapper 未引用 secret: {secret_name}",
