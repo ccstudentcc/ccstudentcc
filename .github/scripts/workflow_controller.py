@@ -52,14 +52,23 @@ def main() -> int:
         refresh_pool_state(state, workflow_spec, ready_queue, running)
         refresh_scheduler_state(state, ready_queue, running)
 
+        launched_any = False
+        available_slots = {
+            pool_name: max(0, pool_state["desired_workers"] - pool_state["active_workers"])
+            for pool_name, pool_state in state["worker_pools"].items()
+        }
+
         for task_name in ready_queue:
             if task_name in running:
                 continue
             pool_name = state["tasks"][task_name]["pool"]
-            pool_state = state["worker_pools"][pool_name]
-            if pool_state["active_workers"] >= pool_state["desired_workers"]:
+            if available_slots.get(pool_name, 0) <= 0:
                 continue
             launch_task(task_name, task_specs, state, registry_by_name, running)
+            available_slots[pool_name] -= 1
+            launched_any = True
+
+        if launched_any:
             refresh_pool_state(state, workflow_spec, ready_queue, running)
             refresh_scheduler_state(state, ready_queue, running)
 

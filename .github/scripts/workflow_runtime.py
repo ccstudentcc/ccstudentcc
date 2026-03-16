@@ -36,7 +36,10 @@ def compute_health(worker_state: dict[str, Any], grace_seconds: int) -> str:
     if not heartbeat:
         return "Unknown"
 
-    last_seen = datetime.fromisoformat(heartbeat.replace("Z", "+00:00"))
+    try:
+        last_seen = datetime.fromisoformat(str(heartbeat).replace("Z", "+00:00"))
+    except ValueError:
+        return "Unknown"
     delta = utc_now() - last_seen
     if delta.total_seconds() <= grace_seconds:
         return "Healthy"
@@ -99,7 +102,13 @@ def collect_ready_tasks(task_specs: dict[str, dict[str, Any]], state: dict[str, 
             task_state["message"] = f"Worker {worker_name} is disabled"
             continue
 
-        scheduled_at = datetime.fromisoformat(task_state["scheduled_at"].replace("Z", "+00:00"))
+        try:
+            scheduled_at = datetime.fromisoformat(str(task_state["scheduled_at"]).replace("Z", "+00:00"))
+        except ValueError:
+            task_state["scheduled_at"] = iso_now()
+            task_state["status"] = "Pending"
+            task_state["message"] = "Recovered from invalid schedule timestamp"
+            scheduled_at = now
         if scheduled_at > now:
             task_state["status"] = "Deferred"
             task_state["message"] = f"Waiting until {format_time(task_state['scheduled_at'])}"

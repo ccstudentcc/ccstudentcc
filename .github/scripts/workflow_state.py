@@ -234,10 +234,11 @@ def collect_store_documents(paths: dict[str, str]) -> list[dict[str, Any]]:
     for name, relative_path in paths.items():
         document_path = ROOT / relative_path
         exists = document_path.exists()
-        size_bytes = document_path.stat().st_size if exists else 0
+        stat_result = document_path.stat() if exists else None
+        size_bytes = stat_result.st_size if stat_result is not None else 0
         updated_at = None
-        if exists:
-            updated_at = datetime.fromtimestamp(document_path.stat().st_mtime, timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        if stat_result is not None:
+            updated_at = datetime.fromtimestamp(stat_result.st_mtime, timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
         documents.append(
             {
                 "name": name,
