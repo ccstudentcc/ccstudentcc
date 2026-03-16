@@ -232,6 +232,14 @@ def build_event_log_payload(state: dict[str, Any]) -> dict[str, Any]:
 
 def collect_store_documents(paths: dict[str, str]) -> list[dict[str, Any]]:
     """Collect document existence/size/mtime inventory for metadata manifest."""
+    # To determine whether a document was meaningfully modified we compute
+    # a content checksum (sha256). The manifest's `updated_at` should reflect
+    # the last time the *content* changed, not merely when the file was re-written
+    # as part of a write-batch. We compute checksum here; refresh_state_store_inventory
+    # will compare against the previous manifest and preserve `updated_at` when
+    # checksum is unchanged.
+    import hashlib
+
     documents: list[dict[str, Any]] = []
     for name, relative_path in paths.items():
         document_path = ROOT / relative_path
@@ -239,8 +247,21 @@ def collect_store_documents(paths: dict[str, str]) -> list[dict[str, Any]]:
         stat_result = document_path.stat() if exists else None
         size_bytes = stat_result.st_size if stat_result is not None else 0
         updated_at = None
+        checksum = None
+        if exists and document_path.is_file():
+            try:
+                # compute sha256 checksum of file contents
+                h = hashlib.sha256()
+                with document_path.open('rb') as fh:
+                    for chunk in iter(lambda: fh.read(8192), b''):
+                        h.update(chunk)
+                checksum = h.hexdigest()
+            except Exception:
+                checksum = None
+
         if stat_result is not None:
             updated_at = datetime.fromtimestamp(stat_result.st_mtime, timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
         documents.append(
             {
                 "name": name,
@@ -248,6 +269,7 @@ def collect_store_documents(paths: dict[str, str]) -> list[dict[str, Any]]:
                 "exists": exists,
                 "size_bytes": size_bytes,
                 "updated_at": updated_at,
+                "checksum": checksum,
             }
         )
     return documents
@@ -256,7 +278,20 @@ def collect_store_documents(paths: dict[str, str]) -> list[dict[str, Any]]:
 def refresh_state_store_inventory(state: dict[str, Any]) -> None:
     """Refresh state-store inventory and consistency fields in runtime state."""
     store = state["state_store"]
+    # Load prior metadata manifest (best-effort) so we can compare checksums
+    prior_manifest = load_json(METADATA_STORE_PATH, {}) if METADATA_STORE_PATH.exists() else {}
+    prior_docs = {d.get("path"): d for d in prior_manifest.get("documents", [])}
+
     documents = collect_store_documents(store["paths"])
+    # Preserve `updated_at` from prior manifest when checksum unchanged.
+    for doc in documents:
+        path = doc.get("path")
+        prior = prior_docs.get(path)
+        if prior and prior.get("checksum") and doc.get("checksum") == prior.get("checksum"):
+            # content identical — use prior updated_at (last content change),
+            # but still keep recorded mtime for diagnosis (we keep both fields).
+            doc["updated_at"] = prior.get("updated_at")
+        # if prior missing or checksum changed, doc["updated_at"] is current mtime
     missing = [document["name"] for document in documents if not document["exists"]]
     store["documents"] = documents
     store["document_count"] = len(documents)

@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-16T15:35:28Z",
+  "generated_at": "2026-03-16T15:57:00Z",
   "backend": "json-files-in-repo",
   "transaction_model": "atomic-file-write",
   "manifest_version": 1,
   "write_count": 481,
-  "last_persisted_at": "2026-03-16T15:35:28Z",
+  "last_persisted_at": "2026-03-16T15:57:00Z",
   "last_write_batch": [
     ".github/manager/state/state.json",
     ".github/manager/state/dag.json",
@@ -15,63 +15,71 @@
     ".github/manager/state/dead-letters.json"
   ],
   "consistency_status": "healthy",
-  "total_size_bytes": 64833,
+  "total_size_bytes": 67219,
   "documents": [
-    {
-      "name": "workflow_spec",
-      "path": ".github/manager/workflow.json",
-      "exists": true,
-      "size_bytes": 5253,
-      "updated_at": "2026-03-16T15:35:22Z"
-    },
-    {
-      "name": "runtime_state",
-      "path": ".github/manager/state/state.json",
-      "exists": true,
-      "size_bytes": 53169,
-      "updated_at": "2026-03-16T15:35:28Z"
-    },
     {
       "name": "dag_snapshot",
       "path": ".github/manager/state/dag.json",
       "exists": true,
-      "size_bytes": 775,
-      "updated_at": "2026-03-16T15:35:28Z"
-    },
-    {
-      "name": "scheduler_snapshot",
-      "path": ".github/manager/state/scheduler.json",
-      "exists": true,
-      "size_bytes": 386,
-      "updated_at": "2026-03-16T15:35:28Z"
-    },
-    {
-      "name": "queue_snapshot",
-      "path": ".github/manager/state/queue.json",
-      "exists": true,
-      "size_bytes": 1532,
-      "updated_at": "2026-03-16T15:35:28Z"
-    },
-    {
-      "name": "event_log",
-      "path": ".github/manager/state/event-log.json",
-      "exists": true,
-      "size_bytes": 1556,
-      "updated_at": "2026-03-16T15:35:28Z"
+      "size_bytes": 816,
+      "updated_at": "2026-03-16T15:40:34Z",
+      "checksum": "700cc5bb9787d3fa2568b1f71f476fe20acd3838260bdfcaf3828c1674a646c1"
     },
     {
       "name": "dead_letters",
       "path": ".github/manager/state/dead-letters.json",
       "exists": true,
-      "size_bytes": 3,
-      "updated_at": "2026-03-16T15:35:28Z"
+      "size_bytes": 4,
+      "updated_at": "2026-03-16T15:30:20Z",
+      "checksum": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f"
+    },
+    {
+      "name": "event_log",
+      "path": ".github/manager/state/event-log.json",
+      "exists": true,
+      "size_bytes": 1826,
+      "updated_at": "2026-03-16T15:40:34Z",
+      "checksum": "ba93d0f5d000a233338be6edda9f90f3f97665339d3edffdac515fc6bbc95831"
     },
     {
       "name": "metadata_manifest",
       "path": ".github/manager/state/metadata-store.json",
       "exists": true,
-      "size_bytes": 2159,
-      "updated_at": "2026-03-16T15:35:28Z"
+      "size_bytes": 2237,
+      "updated_at": "2026-03-16T15:40:34Z",
+      "checksum": "8a4bfd3fa98ab8cf161e5777cfe596bb25fcbc8cdfb7237e005b386ba3252b71"
+    },
+    {
+      "name": "queue_snapshot",
+      "path": ".github/manager/state/queue.json",
+      "exists": true,
+      "size_bytes": 1281,
+      "updated_at": "2026-03-16T15:40:34Z",
+      "checksum": "ec0878479dd664a05df88c053e80d9cca8449875cc707f543254b188e40aea4b"
+    },
+    {
+      "name": "scheduler_snapshot",
+      "path": ".github/manager/state/scheduler.json",
+      "exists": true,
+      "size_bytes": 383,
+      "updated_at": "2026-03-16T15:40:34Z",
+      "checksum": "c8087f5819c78c164878afe5d2131bf5e267d2b10a0e698c03bb83186d7f8ae6"
+    },
+    {
+      "name": "runtime_state",
+      "path": ".github/manager/state/state.json",
+      "exists": true,
+      "size_bytes": 55236,
+      "updated_at": "2026-03-16T15:40:34Z",
+      "checksum": "6fed664e585c6c1cdd937c8c580da16f5013ce42539ae340bbe54935eabc2289"
+    },
+    {
+      "name": "workflow_spec",
+      "path": ".github/manager/workflow.json",
+      "exists": true,
+      "size_bytes": 5436,
+      "updated_at": "2026-03-16T09:37:05Z",
+      "checksum": "171d6e7eac27c10c524594a3cc6914c73ab621c8b7a1bdc5934cc28a156ffce0"
     }
   ],
   "missing_documents": []
