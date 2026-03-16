@@ -69,6 +69,12 @@ Before opening a PR, confirm:
 - Default debounce: `WORKFLOW_WRITE_DEBOUNCE_SECONDS` (2 seconds). For graceful shutdowns or long pauses, code that may trigger writes should call `flush_json_writes(force=True)` to flush pending batched writes.
 - Persistence fallback: failed writes are retried up to 3 times with exponential backoff; exhausted failures are logged to `.github/manager/state/persistence-errors.log` for later inspection.
 
+Developer tips:
+
+- If you add code that performs frequent state updates (e.g., heartbeat updates), keep `flush_json_writes(force=True)` available during shutdown sequences to avoid losing in-memory batched updates.
+- To temporarily disable batching during debugging, set `WORKFLOW_WRITE_BATCHING=false` in your environment.
+- The `WORKFLOW_WRITE_DEBOUNCE_SECONDS` value controls how long writes are coalesced — larger values reduce IO but increase amortized write latency.
+
 ## Reporting Issues
 
 Please use GitHub Issues with:

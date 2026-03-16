@@ -18,11 +18,31 @@ Orchestration modules:
 - `.github/scripts/workflow_runtime.py` (scheduler loop and worker process execution)
 - `.github/scripts/workflow_state.py` (state bootstrap, snapshots, persistence, step summary)
 
-### Write batching, debounce, and persistence fallback
+### Write batching and persistence
 
-- The state writer now enables write-batching by default to coalesce frequent state updates. This behavior can be toggled via the `WORKFLOW_WRITE_BATCHING` environment variable.
-- Default debounce window: `WORKFLOW_WRITE_DEBOUNCE_SECONDS` (default: 2). The controller batches writes for this interval; on shutdown or before long pauses callers should call `flush_json_writes(force=True)` to ensure any pending state is persisted.
-- Persistence fallback: when a batched write fails, the runtime will retry up to 3 times with exponential backoff. Exhausted retries are recorded to `.github/manager/state/persistence-errors.log` for post-mortem analysis.
+The state writer coalesces frequent state updates by default to reduce IO. Key operational points:
+
+- Environment control
+
+```
+WORKFLOW_WRITE_BATCHING=true                # 'true' or 'false' (default: true)
+WORKFLOW_WRITE_DEBOUNCE_SECONDS=2           # debounce window in seconds (default: 2)
+```
+
+- Flush behavior
+
+Call `flush_json_writes(force=True)` before exits or long pauses to ensure batched updates are written immediately.
+
+- Failure and metrics
+
+Failed persistence attempts are retried (exponential backoff). When retries are exhausted, failure details are appended to:
+
+```
+.github/manager/state/persistence-errors.log
+.github/manager/state/persistence-metrics.json
+```
+
+The metrics file contains counters such as `total_writes`, `failed_writes`, `total_attempts`, and `failed_attempts` plus last error traceback; it is updated best-effort by the persistence code to aid debugging.
 
 Managed worker shell:
 - `.github/workflows/_managed-readme-worker.yml` (shared reusable workflow used by standalone worker wrappers)
