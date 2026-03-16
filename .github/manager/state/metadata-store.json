@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-16T11:50:52Z",
+  "generated_at": "2026-03-16T11:59:31Z",
   "backend": "json-files-in-repo",
   "transaction_model": "atomic-file-write",
   "manifest_version": 1,
-  "write_count": 144,
-  "last_persisted_at": "2026-03-16T11:50:52Z",
+  "write_count": 151,
+  "last_persisted_at": "2026-03-16T11:59:31Z",
   "last_write_batch": [
     ".github/manager/state/state.json",
     ".github/manager/state/dag.json",
@@ -15,63 +15,63 @@
     ".github/manager/state/dead-letters.json"
   ],
   "consistency_status": "healthy",
-  "total_size_bytes": 66040,
+  "total_size_bytes": 64734,
   "documents": [
     {
       "name": "workflow_spec",
       "path": ".github/manager/workflow.json",
       "exists": true,
-      "size_bytes": 5436,
-      "updated_at": "2026-03-16T09:37:05Z"
+      "size_bytes": 5253,
+      "updated_at": "2026-03-16T11:59:26Z"
     },
     {
       "name": "runtime_state",
       "path": ".github/manager/state/state.json",
       "exists": true,
-      "size_bytes": 54680,
-      "updated_at": "2026-03-16T11:50:52Z"
+      "size_bytes": 53391,
+      "updated_at": "2026-03-16T11:59:31Z"
     },
     {
       "name": "dag_snapshot",
       "path": ".github/manager/state/dag.json",
       "exists": true,
-      "size_bytes": 816,
-      "updated_at": "2026-03-16T11:50:52Z"
+      "size_bytes": 775,
+      "updated_at": "2026-03-16T11:59:31Z"
     },
     {
       "name": "scheduler_snapshot",
       "path": ".github/manager/state/scheduler.json",
       "exists": true,
-      "size_bytes": 372,
-      "updated_at": "2026-03-16T11:50:52Z"
+      "size_bytes": 368,
+      "updated_at": "2026-03-16T11:59:31Z"
     },
     {
       "name": "queue_snapshot",
       "path": ".github/manager/state/queue.json",
       "exists": true,
-      "size_bytes": 1281,
-      "updated_at": "2026-03-16T11:50:52Z"
+      "size_bytes": 1229,
+      "updated_at": "2026-03-16T11:59:31Z"
     },
     {
       "name": "event_log",
       "path": ".github/manager/state/event-log.json",
       "exists": true,
-      "size_bytes": 1214,
-      "updated_at": "2026-03-16T11:50:51Z"
+      "size_bytes": 1556,
+      "updated_at": "2026-03-16T11:59:31Z"
     },
     {
       "name": "dead_letters",
       "path": ".github/manager/state/dead-letters.json",
       "exists": true,
-      "size_bytes": 4,
-      "updated_at": "2026-03-16T11:50:51Z"
+      "size_bytes": 3,
+      "updated_at": "2026-03-16T11:59:31Z"
     },
     {
       "name": "metadata_manifest",
       "path": ".github/manager/state/metadata-store.json",
       "exists": true,
-      "size_bytes": 2237,
-      "updated_at": "2026-03-16T11:50:51Z"
+      "size_bytes": 2159,
+      "updated_at": "2026-03-16T11:59:31Z"
     }
   ],
   "missing_documents": []
