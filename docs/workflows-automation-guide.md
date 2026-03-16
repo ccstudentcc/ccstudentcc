@@ -54,6 +54,14 @@ Runtime enforcement note:
 - `wakatime.yml`: Thin wrapper for WakaTime refresh.
 - `daily-quote.yml`: Thin wrapper for daily quote refresh.
 
+Current display names in GitHub Actions:
+- `README Workflow Manager`
+- `README Worker Core`
+- `README Worker - Snapshot`
+- `README Worker - Featured Projects`
+- `README Worker - WakaTime`
+- `README Worker - Daily Quote`
+
 All standalone worker workflows support:
 - `workflow_call`
 - `workflow_dispatch`
@@ -62,7 +70,8 @@ All standalone worker workflows support:
 Wrapper alignment rules:
 - Each worker wrapper must call `./.github/workflows/_managed-readme-worker.yml`.
 - Wrapper `execution_mode`, `command`, `summary_label`, `commit_scope`, and `required_secrets` must stay aligned with `.github/manager/registry.json`.
-- Worker-specific secret contracts must be declared explicitly in `workflow_call.secrets` when the registry contract lists required secrets.
+- For required secret wiring, keep registry and wrapper mappings aligned, but do not declare reserved `GITHUB_TOKEN` under `workflow_call.secrets`.
+- In the shared worker shell, use non-reserved names for reusable-workflow secrets (for example `repo_token`), then map them to runtime environment variables.
 
 ## 3) Worker Contract / Required Inputs / Secrets
 
@@ -81,6 +90,11 @@ Every managed worker contract now declares:
 Used by orchestrator and worker scripts:
 - `GITHUB_TOKEN` (provided by GitHub Actions runtime)
 - `WAKATIME_API_KEY` (required for WakaTime update path)
+
+Reusable workflow secret mapping rule:
+- In `_managed-readme-worker.yml`, reusable secret names must avoid reserved-system collisions.
+- Use `repo_token` as the reusable input secret and map it to runtime `GITHUB_TOKEN` in the worker command environment.
+- Keep `wakatime_api_key` for WakaTime and map it to runtime `WAKATIME_API_KEY`.
 
 Behavior notes:
 - Missing `WAKATIME_API_KEY` does not break whole orchestration; the related task can be skipped by condition.
@@ -116,7 +130,7 @@ Quick meaning:
 
 ### A. Run in GitHub (recommended)
 
-1. Open Actions -> `Workflow Manager`.
+1. Open Actions -> `README Workflow Manager`.
 2. Click `Run workflow` (workflow_dispatch).
 3. Wait for job `orchestrate` to finish.
 4. Verify commit with updated files:
@@ -202,7 +216,7 @@ Checks:
 2. If the dead letter still appears after a run where the task shows `status: Success`, ensure local state files are in sync with the latest commit (`git pull`).
 3. Trigger the workflow once more; the DLQ section should be empty when all current-run tasks succeed.
 
-### Symptom: running Workflow Manager does not refresh WakaTime, but running `Waka Readme` directly does
+### Symptom: running Workflow Manager does not refresh WakaTime, but running `README Worker - WakaTime` directly does
 
 Checks:
 1. Confirm the WakaTime task is not merely skipped by inspecting `.github/manager/state/state.json` for `tasks.wakatime.status`.
