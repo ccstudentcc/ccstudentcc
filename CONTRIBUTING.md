@@ -65,6 +65,10 @@ Before opening a PR, confirm:
 - Keep worker contract data in .github/manager/registry.json aligned with wrapper workflow inputs.
 - If a worker updates README sections, keep marker pairs intact.
 
+- Note: the controller now enables write-batching by default. To override or opt out, set `WORKFLOW_WRITE_BATCHING` in your environment.
+- Default debounce: `WORKFLOW_WRITE_DEBOUNCE_SECONDS` (2 seconds). For graceful shutdowns or long pauses, code that may trigger writes should call `flush_json_writes(force=True)` to flush pending batched writes.
+- Persistence fallback: failed writes are retried up to 3 times with exponential backoff; exhausted failures are logged to `.github/manager/state/persistence-errors.log` for later inspection.
+
 ## Reporting Issues
 
 Please use GitHub Issues with:

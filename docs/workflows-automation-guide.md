@@ -18,6 +18,12 @@ Orchestration modules:
 - `.github/scripts/workflow_runtime.py` (scheduler loop and worker process execution)
 - `.github/scripts/workflow_state.py` (state bootstrap, snapshots, persistence, step summary)
 
+### Write batching, debounce, and persistence fallback
+
+- The state writer now enables write-batching by default to coalesce frequent state updates. This behavior can be toggled via the `WORKFLOW_WRITE_BATCHING` environment variable.
+- Default debounce window: `WORKFLOW_WRITE_DEBOUNCE_SECONDS` (default: 2). The controller batches writes for this interval; on shutdown or before long pauses callers should call `flush_json_writes(force=True)` to ensure any pending state is persisted.
+- Persistence fallback: when a batched write fails, the runtime will retry up to 3 times with exponential backoff. Exhausted retries are recorded to `.github/manager/state/persistence-errors.log` for post-mortem analysis.
+
 Managed worker shell:
 - `.github/workflows/_managed-readme-worker.yml` (shared reusable workflow used by standalone worker wrappers)
 
