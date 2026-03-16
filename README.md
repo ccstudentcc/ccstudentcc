@@ -134,7 +134,7 @@ Main narrative: shipping around <a href="https://github.com/ccstudentcc/symkan-e
 </p>
 
 <!--START_SECTION:realtime_panel-->
-<sub>- Live sync: 2026-03-16 16:07 CST</sub>
+<sub>- Live sync: 2026-03-16 19:16 CST</sub>
 <sub>- Data source: GitHub REST API + workflow-manager snapshot worker</sub>
 <sub>- Showcase source: top 3 recently updated public repositories</sub>
 <sub>- Current top repository: <a href="https://github.com/ccstudentcc/symkan-experiments">symkan-experiments</a></sub>
@@ -259,31 +259,31 @@ All visual components below support both dark mode and light mode automatically.
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=2%20hrs%2014%20mins&color=334155&style=for-the-badge&logo=wakatime" />
-  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=2%20hrs%2014%20mins&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Code%20Time&message=4%20hrs%2028%20mins&color=334155&style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/static/v1?label=Code%20Time&message=4%20hrs%2028%20mins&color=2563eb&style=for-the-badge&logo=wakatime" alt="code time" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Daily%20Average&message=2%20hrs%2021%20mins&color=475569&style=for-the-badge" />
-  <img src="https://img.shields.io/static/v1?label=Daily%20Average&message=2%20hrs%2021%20mins&color=0f172a&style=for-the-badge" alt="daily average" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Daily%20Average&message=4%20hrs%2048%20mins&color=475569&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Daily%20Average&message=4%20hrs%2048%20mins&color=0f172a&style=for-the-badge" alt="daily average" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-16%2016%3A07%20CST&color=1e293b&style=for-the-badge" />
-  <img src="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-16%2016%3A07%20CST&color=1d4ed8&style=for-the-badge" alt="last sync" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-16%2019%3A16%20CST&color=1e293b&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Last%20Sync&message=2026-03-16%2019%3A16%20CST&color=1d4ed8&style=for-the-badge" alt="last sync" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Top%20Language&message=YAML&color=0f766e&style=for-the-badge" />
-  <img src="https://img.shields.io/static/v1?label=Top%20Language&message=YAML&color=0d9488&style=for-the-badge" alt="top language" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Top%20Language&message=Python&color=0f766e&style=for-the-badge" />
+  <img src="https://img.shields.io/static/v1?label=Top%20Language&message=Python&color=0d9488&style=for-the-badge" alt="top language" />
 </picture>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=Top%20Project&message=ccstudentcc&color=4c1d95&style=for-the-badge" />
   <img src="https://img.shields.io/static/v1?label=Top%20Project&message=ccstudentcc&color=6d28d9&style=for-the-badge" alt="top project" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=All%20Time&message=10%20hrs%2047%20mins&color=475569&style=for-the-badge&logo=wakatime" />
-  <img src="https://img.shields.io/static/v1?label=All%20Time&message=10%20hrs%2047%20mins&color=334155&style=for-the-badge&logo=wakatime" alt="all time code time" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/static/v1?label=All%20Time&message=13%20hrs%2014%20mins&color=475569&style=for-the-badge&logo=wakatime" />
+  <img src="https://img.shields.io/static/v1?label=All%20Time&message=13%20hrs%2014%20mins&color=334155&style=for-the-badge&logo=wakatime" alt="all time code time" />
 </picture>
 
-<sub>Focus: YAML (43 mins, 30.8%) | Project: ccstudentcc (2 hrs 21 mins, 100.0%) | Editor: VS Code</sub>
+<sub>Focus: Python (1 hr 29 mins, 31.0%) | Project: ccstudentcc (4 hrs 41 mins, 97.5%) | Editor: VS Code</sub>
 <sub>Code Time badge scope: Today (fallback: Last 7 Days)</sub>
 
 </div>
@@ -293,27 +293,28 @@ All visual components below support both dark mode and light mode automatically.
 
 ```text
 Timezone: Asia/Shanghai (UTC+8)
-Updated At (CST): 2026-03-16 16:07 CST
-Window: This Week | Total: 2 hrs 21 mins
+Updated At (CST): 2026-03-16 19:16 CST
+Window: This Week | Total: 4 hrs 48 mins
 
 Languages:
-  YAML        43 mins       [########------------------]  30.8%
-  Python      41 mins       [########------------------]  29.0%
-  Markdown    24 mins       [####----------------------]  16.9%
-  Git Config  18 mins       [###-----------------------]  13.1%
-  JSON        13 mins       [##------------------------]   9.6%
+  Python      1 hr 29 mins  [########------------------]  31.0%
+  Markdown    1 hr 21 mins  [#######-------------------]  28.2%
+  YAML        1 hr 5 mins   [######--------------------]  22.6%
+  JSON        32 mins       [###-----------------------]  11.2%
+  Git Config  19 mins       [##------------------------]   6.8%
 
 Editors:
-  VS Code  2 hrs 21 mins  [##########################] 100.0%
+  VS Code  4 hrs 48 mins  [##########################] 100.0%
 
 Projects:
-  ccstudentcc  2 hrs 21 mins  [##########################] 100.0%
+  ccstudentcc      4 hrs 41 mins  [#########################-]  97.5%
+  Unknown Project  7 mins        [#-------------------------]   2.5%
 
 Operating Systems:
-  Windows  2 hrs 21 mins  [##########################] 100.0%
+  Windows  4 hrs 48 mins  [##########################] 100.0%
 
 Machines:
-  Peng  2 hrs 21 mins  [##########################] 100.0%
+  Peng  4 hrs 48 mins  [##########################] 100.0%
 
 Generated by workflow-manager
 ```
@@ -497,24 +498,25 @@ Generated by workflow-manager
 <!--START_SECTION:automation_status-->
 <div align="center">
 <img src="https://img.shields.io/static/v1?label=Workflow&message=Completed&color=16a34a&style=for-the-badge&logo=githubactions" alt="Workflow: Completed" />
-<img src="https://img.shields.io/static/v1?label=Trigger&message=manual&color=2563eb&style=for-the-badge" alt="Trigger: manual" />
+<img src="https://img.shields.io/static/v1?label=Trigger&message=workflow_dispatch&color=2563eb&style=for-the-badge" alt="Trigger: workflow_dispatch" />
 <img src="https://img.shields.io/static/v1?label=Cron&message=0%204%2C16%20%2A%20%2A%20%2A&color=0f766e&style=for-the-badge" alt="Cron: 0 4,16 * * *" />
 </div>
 
-- **Last automation update:** 2026-03-16 18:07 CST
+- **Last automation update:** 2026-03-16 19:16 CST
 - **Timezone:** Asia/Shanghai (UTC+8)
 - **Orchestrator:** profile-readme-automation (DAG nodes 3, edges 1)
-- **Scheduler:** trigger `manual` | cron `0 4,16 * * *` | policy `higher-first`
+- **Scheduler:** trigger `workflow_dispatch` | cron `0 4,16 * * *` | policy `higher-first`
 - **Worker pool model:** logical worker pools inside a single GitHub Actions run
 - **Managed jobs:** wakatime, daily-quote, snapshot
 - **Standalone workers:** featured-projects
 - **Render policy:** meaningful state changes only | optional markers skip safely | duplicate markers fail fast
 - **Failure policy:** continue-on-error + retry + timeout cancel + dead-letter on exhaust
 - **Runtime artifacts:** `.github/manager/state/dag.json`, `.github/manager/state/scheduler.json`, `.github/manager/state/queue.json`, `.github/manager/state/event-log.json`, `.github/manager/state/metadata-store.json`
-- **State persistence:** write #107 | docs 8/8 | healthy
+- **State persistence:** write #114 | docs 8/8 | healthy
 - **Queue snapshot:** ready 0 | deferred 0 | retry 0 | running 0
-- **Flow realization:** cycle #100 | in-order `True` | complete `True`
+- **Flow realization:** cycle #107 | in-order `True` | complete `True`
 - **Latest realized sequence:** Orchestrator -> DAG -> Scheduler -> Queue -> State Store -> Event Bus -> Worker Pools -> Registry -> Health -> Tasks -> DLQ
+- **Run URL:** [Open latest run](https://github.com/ccstudentcc/ccstudentcc/actions/runs/23140963162)
 <!--END_SECTION:automation_status-->
 
 <hr/>
@@ -553,7 +555,7 @@ Generated by workflow-manager
 <!--START_SECTION:scheduler_state-->
 <div align="left">
 <p>
-<img src="https://img.shields.io/static/v1?label=Trigger&message=manual&color=2563eb&style=for-the-badge" alt="Trigger: manual" />
+<img src="https://img.shields.io/static/v1?label=Trigger&message=workflow_dispatch&color=2563eb&style=for-the-badge" alt="Trigger: workflow_dispatch" />
 <img src="https://img.shields.io/static/v1?label=Cron&message=0%204%2C16%20%2A%20%2A%20%2A&color=0f766e&style=for-the-badge" alt="Cron: 0 4,16 * * *" />
 <img src="https://img.shields.io/static/v1?label=Running&message=0&color=64748b&style=for-the-badge" alt="Running: 0" />
 <img src="https://img.shields.io/static/v1?label=Completed&message=3&color=16a34a&style=for-the-badge" alt="Completed: 3" />
@@ -583,14 +585,14 @@ Generated by workflow-manager
 <img src="https://img.shields.io/static/v1?label=Ordering&message=priority-then-scheduled-at&color=334155&style=for-the-badge" alt="Ordering: priority-then-scheduled-at" />
 </p>
 <details>
-<summary><b><code>queue-runtime</code></b> <img src="https://img.shields.io/static/v1?label=depth&message=0&color=64748b&style=flat-square" alt="depth: 0" /> <img src="https://img.shields.io/static/v1?label=deferred&message=0&color=64748b&style=flat-square" alt="deferred: 0" /> <img src="https://img.shields.io/static/v1?label=retry&message=0&color=b45309&style=flat-square" alt="retry: 0" /> <img src="https://img.shields.io/static/v1?label=running&message=0&color=0284c7&style=flat-square" alt="running: 0" /> <img src="https://img.shields.io/static/v1?label=max-depth&message=1&color=b45309&style=flat-square" alt="max-depth: 1" /> <img src="https://img.shields.io/static/v1?label=completed&message=1&color=16a34a&style=flat-square" alt="completed: 1" /></summary>
+<summary><b><code>queue-runtime</code></b> <img src="https://img.shields.io/static/v1?label=depth&message=0&color=64748b&style=flat-square" alt="depth: 0" /> <img src="https://img.shields.io/static/v1?label=deferred&message=0&color=64748b&style=flat-square" alt="deferred: 0" /> <img src="https://img.shields.io/static/v1?label=retry&message=0&color=b45309&style=flat-square" alt="retry: 0" /> <img src="https://img.shields.io/static/v1?label=running&message=0&color=0284c7&style=flat-square" alt="running: 0" /> <img src="https://img.shields.io/static/v1?label=max-depth&message=2&color=b45309&style=flat-square" alt="max-depth: 2" /> <img src="https://img.shields.io/static/v1?label=completed&message=3&color=16a34a&style=flat-square" alt="completed: 3" /></summary>
 
 <sub>persistence: <code>queue-json + state-json + dead-letter-json</code> | dead-letter enabled: <code>True</code></sub>
 </details>
 <details>
 <summary><b><code>queue-snapshot</code></b> <img src="https://img.shields.io/static/v1?label=ready&message=0&color=64748b&style=flat-square" alt="ready: 0" /> <img src="https://img.shields.io/static/v1?label=dispatched&message=3&color=0284c7&style=flat-square" alt="dispatched: 3" /></summary>
 
-<sub>file: <code>.github/manager/state/queue.json</code> | updated: <code>2026-03-16 18:07 CST</code></sub>
+<sub>file: <code>.github/manager/state/queue.json</code> | updated: <code>2026-03-16 19:16 CST</code></sub>
 </details>
 <details>
 <summary><b><code>queue-operations</code></b> <img src="https://img.shields.io/static/v1?label=count&message=5&color=334155&style=flat-square" alt="count: 5" /></summary>
@@ -628,11 +630,11 @@ Generated by workflow-manager
 <sub>- <code>dag-snapshot-json</code>: The resolved dependency graph is persisted to .github/manager/state/dag.json.<br/>- <code>scheduler-snapshot-json</code>: Scheduler policy, ready queue, and queue depth are persisted to .github/manager/state/scheduler.json.<br/>- <code>runtime-state-json</code>: The orchestrator persists workflow, worker, and task state to .github/manager/state/state.json.<br/>- <code>queue-snapshot-json</code>: Ready, deferred, retry, running, and terminal queue views are persisted to .github/manager/state/queue.json.<br/>- <code>event-log-json</code>: Published workflow events are persisted to .github/manager/state/event-log.json.<br/>- <code>dead-letter-json</code>: Exhausted task failures are preserved in .github/manager/state/dead-letters.json.<br/>- <code>metadata-manifest-json</code>: Document inventory, write batches, and store consistency are tracked in .github/manager/state/metadata-store.json.</sub>
 </details>
 <details>
-<summary><b><code>managed-documents</code></b> <img src="https://img.shields.io/static/v1?label=tracked&message=8&color=334155&style=flat-square" alt="tracked: 8" /> <img src="https://img.shields.io/static/v1?label=available&message=8&color=16a34a&style=flat-square" alt="available: 8" /> <img src="https://img.shields.io/static/v1?label=size&message=67.4%20KB&color=0284c7&style=flat-square" alt="size: 67.4 KB" /></summary>
+<summary><b><code>managed-documents</code></b> <img src="https://img.shields.io/static/v1?label=tracked&message=8&color=334155&style=flat-square" alt="tracked: 8" /> <img src="https://img.shields.io/static/v1?label=available&message=8&color=16a34a&style=flat-square" alt="available: 8" /> <img src="https://img.shields.io/static/v1?label=size&message=63.2%20KB&color=0284c7&style=flat-square" alt="size: 63.2 KB" /></summary>
 
-<sub>- <code>workflow_spec</code>: <code>.github/manager/workflow.json</code> | present | 5.3 KB | 2026-03-16 17:37 CST<br/>- <code>runtime_state</code>: <code>.github/manager/state/state.json</code> | present | 54.9 KB | 2026-03-16 18:07 CST<br/>- <code>dag_snapshot</code>: <code>.github/manager/state/dag.json</code> | present | 815 B | 2026-03-16 18:07 CST<br/>- <code>scheduler_snapshot</code>: <code>.github/manager/state/scheduler.json</code> | present | 372 B | 2026-03-16 18:07 CST<br/>- <code>queue_snapshot</code>: <code>.github/manager/state/queue.json</code> | present | 1.2 KB | 2026-03-16 18:07 CST<br/>- <code>event_log</code>: <code>.github/manager/state/event-log.json</code> | present | 1.9 KB | 2026-03-16 18:07 CST<br/>- <code>dead_letters</code>: <code>.github/manager/state/dead-letters.json</code> | present | 685 B | 2026-03-16 18:07 CST<br/>- <code>metadata_manifest</code>: <code>.github/manager/state/metadata-store.json</code> | present | 2.2 KB | 2026-03-16 18:07 CST</sub>
+<sub>- <code>workflow_spec</code>: <code>.github/manager/workflow.json</code> | present | 5.1 KB | 2026-03-16 19:16 CST<br/>- <code>runtime_state</code>: <code>.github/manager/state/state.json</code> | present | 52.1 KB | 2026-03-16 19:16 CST<br/>- <code>dag_snapshot</code>: <code>.github/manager/state/dag.json</code> | present | 775 B | 2026-03-16 19:16 CST<br/>- <code>scheduler_snapshot</code>: <code>.github/manager/state/scheduler.json</code> | present | 368 B | 2026-03-16 19:16 CST<br/>- <code>queue_snapshot</code>: <code>.github/manager/state/queue.json</code> | present | 1.2 KB | 2026-03-16 19:16 CST<br/>- <code>event_log</code>: <code>.github/manager/state/event-log.json</code> | present | 1.5 KB | 2026-03-16 19:16 CST<br/>- <code>dead_letters</code>: <code>.github/manager/state/dead-letters.json</code> | present | 3 B | 2026-03-16 19:16 CST<br/>- <code>metadata_manifest</code>: <code>.github/manager/state/metadata-store.json</code> | present | 2.1 KB | 2026-03-16 19:16 CST</sub>
 </details>
-<sub>last persisted: 2026-03-16 18:07 CST</sub>
+<sub>last persisted: 2026-03-16 19:16 CST</sub>
 </div>
 <!--END_SECTION:state_store-->
 
@@ -650,7 +652,7 @@ Generated by workflow-manager
 <details>
 <summary><b><code>trigger-and-subscribers</code></b> <img src="https://img.shields.io/static/v1?label=mode&message=event-driven&color=334155&style=flat-square" alt="mode: event-driven" /></summary>
 
-<sub>subscribers: <code>scheduler, task-dependency-gate, readme-renderer</code> | last event: <code>2026-03-16 18:07 CST</code> | log: <code>.github/manager/state/event-log.json</code></sub>
+<sub>subscribers: <code>scheduler, task-dependency-gate, readme-renderer</code> | last event: <code>2026-03-16 19:16 CST</code> | log: <code>.github/manager/state/event-log.json</code></sub>
 </details>
 <details>
 <summary><b><code>implemented-integrations</code></b> <img src="https://img.shields.io/static/v1?label=count&message=3&color=334155&style=flat-square" alt="count: 3" /></summary>
@@ -660,13 +662,7 @@ Generated by workflow-manager
 <details>
 <summary><b><code>recent-events</code></b> <img src="https://img.shields.io/static/v1?label=window&message=5&color=334155&style=flat-square" alt="window: 5" /></summary>
 
-<sub>- <code>2026-03-16 18:07 CST</code> | <b>workflow.completed</b> | <code>profile-readme-automation</code> | All terminal task states reached<br/>- <code>2026-03-16 18:07 CST</code> | <b>task.failed</b> | <code>snapshot</code> | Traceback (most recent call last):
-  File &quot;D:\chenpeng\Documents\Projects_VSCode\github\ccstudentcc\.github\scripts\update_snapshot.py&quot;, line 377, in &lt;module&gt;
-    main()
-  File &quot;D:\chenpeng\Documents\Projects_VSCode\github\ccstudentcc\.gith<br/>- <code>2026-03-16 18:07 CST</code> | <b>task.dispatched</b> | <code>snapshot</code> | Dispatched on pool content-pool attempt 2/2<br/>- <code>2026-03-16 18:06 CST</code> | <b>task.retry</b> | <code>snapshot</code> | Retry scheduled: Traceback (most recent call last):
-  File &quot;D:\chenpeng\Documents\Projects_VSCode\github\ccstudentcc\.github\scripts\update_snapshot.py&quot;, line 377, in &lt;module&gt;
-    main()
-  File &quot;D:\chenpeng\Documents\<br/>- <code>2026-03-16 18:06 CST</code> | <b>task.dispatched</b> | <code>snapshot</code> | Dispatched on pool content-pool attempt 1/2</sub>
+<sub>- <code>2026-03-16 19:16 CST</code> | <b>workflow.completed</b> | <code>profile-readme-automation</code> | All terminal task states reached<br/>- <code>2026-03-16 19:16 CST</code> | <b>task.succeeded</b> | <code>snapshot</code> | Updated recent repository snapshot with 5 entries and refreshed showcase assets<br/>- <code>2026-03-16 19:16 CST</code> | <b>task.dispatched</b> | <code>snapshot</code> | Dispatched on pool content-pool attempt 1/2<br/>- <code>2026-03-16 19:16 CST</code> | <b>task.succeeded</b> | <code>daily-quote</code> | Updated daily quote: Anonymous<br/>- <code>2026-03-16 19:16 CST</code> | <b>task.succeeded</b> | <code>wakatime</code> | Updated WakaTime section</sub>
 </details>
 </div>
 <!--END_SECTION:event_bus-->
@@ -736,19 +732,19 @@ Generated by workflow-manager
 <sub>heartbeat: n/a | last success: n/a</sub>
 </details>
 <details>
-<summary><b><code>wakatime</code></b> <img src="https://img.shields.io/static/v1?label=health&message=Unknown&color=64748b&style=flat-square" alt="health: Unknown" /></summary>
+<summary><b><code>wakatime</code></b> <img src="https://img.shields.io/static/v1?label=health&message=Healthy&color=16a34a&style=flat-square" alt="health: Healthy" /></summary>
 
-<sub>heartbeat: n/a | last success: n/a</sub>
+<sub>heartbeat: 2026-03-16 19:16 CST | last success: 2026-03-16 19:16 CST</sub>
 </details>
 <details>
 <summary><b><code>daily-quote</code></b> <img src="https://img.shields.io/static/v1?label=health&message=Healthy&color=16a34a&style=flat-square" alt="health: Healthy" /></summary>
 
-<sub>heartbeat: 2026-03-16 18:06 CST | last success: 2026-03-16 18:06 CST</sub>
+<sub>heartbeat: 2026-03-16 19:16 CST | last success: 2026-03-16 19:16 CST</sub>
 </details>
 <details>
 <summary><b><code>snapshot</code></b> <img src="https://img.shields.io/static/v1?label=health&message=Healthy&color=16a34a&style=flat-square" alt="health: Healthy" /></summary>
 
-<sub>heartbeat: 2026-03-16 18:07 CST | last success: n/a</sub>
+<sub>heartbeat: 2026-03-16 19:16 CST | last success: 2026-03-16 19:16 CST</sub>
 </details>
 </div>
 <!--END_SECTION:worker_health-->
@@ -760,22 +756,19 @@ Generated by workflow-manager
 <!--START_SECTION:task_state-->
 <div align="left">
 <details>
-<summary><b><code>wakatime</code></b> <img src="https://img.shields.io/static/v1?label=status&message=Skipped&color=64748b&style=flat-square" alt="status: Skipped" /> <img src="https://img.shields.io/static/v1?label=priority&message=100&color=2563eb&style=flat-square" alt="priority: 100" /> <img src="https://img.shields.io/static/v1?label=attempt&message=0%2F2&color=334155&style=flat-square" alt="attempt: 0/2" /> <img src="https://img.shields.io/static/v1?label=pool&message=metrics-pool&color=0f766e&style=flat-square" alt="pool: metrics-pool" /></summary>
+<summary><b><code>wakatime</code></b> <img src="https://img.shields.io/static/v1?label=status&message=Success&color=16a34a&style=flat-square" alt="status: Success" /> <img src="https://img.shields.io/static/v1?label=priority&message=100&color=2563eb&style=flat-square" alt="priority: 100" /> <img src="https://img.shields.io/static/v1?label=attempt&message=1%2F2&color=334155&style=flat-square" alt="attempt: 1/2" /> <img src="https://img.shields.io/static/v1?label=pool&message=metrics-pool&color=0f766e&style=flat-square" alt="pool: metrics-pool" /></summary>
 
-<sub>updated: 2026-03-16 18:06 CST | Condition not met: environment variable WAKATIME_API_KEY must exist</sub>
+<sub>updated: 2026-03-16 19:16 CST | Updated WakaTime section</sub>
 </details>
 <details>
 <summary><b><code>daily-quote</code></b> <img src="https://img.shields.io/static/v1?label=status&message=Success&color=16a34a&style=flat-square" alt="status: Success" /> <img src="https://img.shields.io/static/v1?label=priority&message=30&color=2563eb&style=flat-square" alt="priority: 30" /> <img src="https://img.shields.io/static/v1?label=attempt&message=1%2F2&color=334155&style=flat-square" alt="attempt: 1/2" /> <img src="https://img.shields.io/static/v1?label=pool&message=engagement-pool&color=0f766e&style=flat-square" alt="pool: engagement-pool" /></summary>
 
-<sub>updated: 2026-03-16 18:06 CST | Updated daily quote: Anonymous</sub>
+<sub>updated: 2026-03-16 19:16 CST | Updated daily quote: Anonymous</sub>
 </details>
 <details>
-<summary><b><code>snapshot</code></b> <img src="https://img.shields.io/static/v1?label=status&message=Failed&color=dc2626&style=flat-square" alt="status: Failed" /> <img src="https://img.shields.io/static/v1?label=priority&message=60&color=2563eb&style=flat-square" alt="priority: 60" /> <img src="https://img.shields.io/static/v1?label=attempt&message=2%2F2&color=334155&style=flat-square" alt="attempt: 2/2" /> <img src="https://img.shields.io/static/v1?label=pool&message=content-pool&color=0f766e&style=flat-square" alt="pool: content-pool" /></summary>
+<summary><b><code>snapshot</code></b> <img src="https://img.shields.io/static/v1?label=status&message=Success&color=16a34a&style=flat-square" alt="status: Success" /> <img src="https://img.shields.io/static/v1?label=priority&message=60&color=2563eb&style=flat-square" alt="priority: 60" /> <img src="https://img.shields.io/static/v1?label=attempt&message=1%2F2&color=334155&style=flat-square" alt="attempt: 1/2" /> <img src="https://img.shields.io/static/v1?label=pool&message=content-pool&color=0f766e&style=flat-square" alt="pool: content-pool" /></summary>
 
-<sub>updated: 2026-03-16 18:07 CST | Traceback (most recent call last):
-  File &quot;D:\chenpeng\Documents\Projects_VSCode\github\ccstudentcc\.github\scripts\update_snapshot.py&quot;, line 377, in &lt;module&gt;
-    main()
-  File &quot;D:\chenpeng\Documents\Projects_VSCode\github\ccstudentcc\.gith</sub>
+<sub>updated: 2026-03-16 19:16 CST | Updated recent repository snapshot with 5 entries and refreshed showcase assets</sub>
 </details>
 </div>
 <!--END_SECTION:task_state-->
@@ -785,20 +778,7 @@ Generated by workflow-manager
 ### Dead Letter Queue
 
 <!--START_SECTION:dead_letters-->
-<div align="left">
-<details>
-<summary><b><code>snapshot</code></b> <img src="https://img.shields.io/static/v1?label=attempts&message=2&color=b45309&style=flat-square" alt="attempts: 2" /> <img src="https://img.shields.io/static/v1?label=failed&message=yes&color=dc2626&style=flat-square" alt="failed: yes" /></summary>
-
-<sub>at: 2026-03-16 18:07 CST | reason: Traceback (most recent call last):
-  File &quot;D:\chenpeng\Documents\Projects_VSCode\github\ccstudentcc\.github\scripts\update_snapshot.py&quot;, line 377, in &lt;module&gt;
-    main()
-  File &quot;D:\chenpeng\Documents\Projects_VSCode\github\ccstudentcc\.github\scripts\update_snapshot.py&quot;, line 318, in main
-    repos = github_request(url)
-            ^^^^^^^^^^^^^^^^^^^
-  File &quot;D:\chenpeng\Documents\Projects_VSCode\github\ccstudentcc\.github\scripts\update_snapshot.py&quot;, line 68, in github_request
-    with urllib.r</sub>
-</details>
-</div>
+<div align="left"><sub>No dead letters.</sub></div>
 <!--END_SECTION:dead_letters-->
 
 </details>
