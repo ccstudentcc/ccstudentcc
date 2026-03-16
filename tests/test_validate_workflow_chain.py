@@ -10,6 +10,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from validate_workflow_chain import (  # type: ignore[import-not-found]
     ValidationError,
+    validate_readme_and_docs,
     validate_registry_worker_workflows,
     validate_worker_workflow_wrapper,
 )
@@ -189,6 +190,28 @@ jobs:
 
         with self.assertRaisesRegex(ValidationError, "missing.yml"):
             validate_registry_worker_workflows(registry, Path(__file__).resolve().parents[1])
+    def test_validate_readme_and_docs_rejects_duplicate_markers(self) -> None:
+        readme_text = (
+            "Orchestrator • DAG • Scheduler • Queue • State Store • Event Bus • Worker Pools • Registry • Health • Tasks • DLQ\n"
+            "<!--START_SECTION:automation_status-->\n"
+            "<!--END_SECTION:automation_status-->\n"
+            "<!--START_SECTION:automation_status-->\n"
+            "<!--END_SECTION:automation_status-->\n"
+            "<!--START_SECTION:workflow_dag-->\n<!--END_SECTION:workflow_dag-->\n"
+            "<!--START_SECTION:scheduler_state-->\n<!--END_SECTION:scheduler_state-->\n"
+            "<!--START_SECTION:message_queue-->\n<!--END_SECTION:message_queue-->\n"
+            "<!--START_SECTION:state_store-->\n<!--END_SECTION:state_store-->\n"
+            "<!--START_SECTION:event_bus-->\n<!--END_SECTION:event_bus-->\n"
+            "<!--START_SECTION:worker_pools-->\n<!--END_SECTION:worker_pools-->\n"
+            "<!--START_SECTION:worker_registry-->\n<!--END_SECTION:worker_registry-->\n"
+            "<!--START_SECTION:worker_health-->\n<!--END_SECTION:worker_health-->\n"
+            "<!--START_SECTION:task_state-->\n<!--END_SECTION:task_state-->\n"
+            "<!--START_SECTION:dead_letters-->\n<!--END_SECTION:dead_letters-->\n"
+        )
+        doc_text = "Orchestrator DAG Scheduler Queue State Store Event Bus Worker Pools Registry Health Tasks DLQ"
+
+        with self.assertRaisesRegex(ValidationError, "marker 必须唯一"):
+            validate_readme_and_docs(readme_text, doc_text)
 
 
 if __name__ == "__main__":

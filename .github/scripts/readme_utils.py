@@ -15,6 +15,24 @@ LOCK_POLL_INTERVAL_SECONDS = 0.1
 STALE_LOCK_SECONDS = 600.0
 
 
+class MissingMarkerError(ValueError):
+    """Raised when a managed README marker pair is absent."""
+
+
+class MarkerConflictError(ValueError):
+    """Raised when a managed README marker pair is ambiguous or malformed."""
+
+
+def _find_unique_marker(content: str, marker: str) -> int:
+    """Return the unique marker index or raise a precise marker error."""
+    count = content.count(marker)
+    if count == 0:
+        raise MissingMarkerError(f"Unable to find marker: {marker}")
+    if count > 1:
+        raise MarkerConflictError(f"Managed marker appears multiple times: {marker}")
+    return content.find(marker)
+
+
 def replace_section(content: str, start_marker: str, end_marker: str, new_block: str) -> str:
     """Replace content between marker pair with a normalized block.
 
@@ -28,13 +46,14 @@ def replace_section(content: str, start_marker: str, end_marker: str, new_block:
         Updated markdown content.
 
     Raises:
-        ValueError: If marker pair cannot be located in proper order.
+        MissingMarkerError: If one marker in the pair is absent.
+        MarkerConflictError: If markers are duplicated or out of order.
     """
-    start_index = content.find(start_marker)
-    end_index = content.find(end_marker)
+    start_index = _find_unique_marker(content, start_marker)
+    end_index = _find_unique_marker(content, end_marker)
 
-    if start_index == -1 or end_index == -1 or end_index < start_index:
-        raise ValueError(f"Unable to find marker pair: {start_marker} / {end_marker}")
+    if end_index < start_index:
+        raise MarkerConflictError(f"Managed marker pair is out of order: {start_marker} / {end_marker}")
 
     start_index += len(start_marker)
     block = f"\n{new_block.rstrip()}\n"
@@ -112,7 +131,7 @@ def try_update_readme_section(readme_path: Path, start_marker: str, end_marker: 
     """Try to update a README block and return False when markers are absent."""
     try:
         update_readme_section(readme_path, start_marker, end_marker, new_block)
-    except ValueError:
+    except MissingMarkerError:
         return False
     return True
 

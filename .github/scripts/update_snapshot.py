@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 from html import escape
 from pathlib import Path
 
-from readme_utils import update_readme_section
+from readme_utils import MissingMarkerError, update_readme_section
 
 ASIA_SHANGHAI = timezone(timedelta(hours=8))
 
@@ -43,7 +43,7 @@ def try_update_readme_section(readme_path: Path, start_marker: str, end_marker: 
     try:
         update_readme_section(readme_path, start_marker, end_marker, new_block)
         return True
-    except ValueError:
+    except MissingMarkerError:
         return False
 
 

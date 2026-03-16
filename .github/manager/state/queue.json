@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-16T08:07:31Z",
+  "generated_at": "2026-03-16T10:07:04Z",
   "backend": "github-actions-internal-queue",
   "ordering": "priority-then-scheduled-at",
   "ready_queue": [],
@@ -9,35 +9,13 @@
   "terminal_tasks": [
     {
       "task": "snapshot",
-      "status": "Success",
+      "status": "Failed",
       "priority": 60,
       "pool": "content-pool",
       "worker": "snapshot",
-      "scheduled_at": "2026-03-16T08:07:27Z",
-      "updated_at": "2026-03-16T08:07:31Z",
-      "attempt": 1,
-      "max_attempts": 2
-    },
-    {
-      "task": "wakatime",
-      "status": "Success",
-      "priority": 100,
-      "pool": "metrics-pool",
-      "worker": "wakatime",
-      "scheduled_at": "2026-03-16T08:07:27Z",
-      "updated_at": "2026-03-16T08:07:29Z",
-      "attempt": 1,
-      "max_attempts": 2
-    },
-    {
-      "task": "featured-projects",
-      "status": "Success",
-      "priority": 90,
-      "pool": "content-pool",
-      "worker": "featured-projects",
-      "scheduled_at": "2026-03-16T08:07:27Z",
-      "updated_at": "2026-03-16T08:07:29Z",
-      "attempt": 1,
+      "scheduled_at": "2026-03-16T10:07:00Z",
+      "updated_at": "2026-03-16T10:07:02Z",
+      "attempt": 2,
       "max_attempts": 2
     },
     {
@@ -46,9 +24,20 @@
       "priority": 30,
       "pool": "engagement-pool",
       "worker": "daily-quote",
-      "scheduled_at": "2026-03-16T08:07:27Z",
-      "updated_at": "2026-03-16T08:07:29Z",
+      "scheduled_at": "2026-03-16T10:06:49Z",
+      "updated_at": "2026-03-16T10:06:52Z",
       "attempt": 1,
+      "max_attempts": 2
+    },
+    {
+      "task": "wakatime",
+      "status": "Skipped",
+      "priority": 100,
+      "pool": "metrics-pool",
+      "worker": "wakatime",
+      "scheduled_at": "2026-03-16T10:06:49Z",
+      "updated_at": "2026-03-16T10:06:49Z",
+      "attempt": 0,
       "max_attempts": 2
     }
   ],
@@ -57,7 +46,7 @@
     "deferred": 0,
     "retry": 0,
     "running": 0,
-    "terminal": 4,
-    "dead_letters": 0
+    "terminal": 3,
+    "dead_letters": 1
   }
 }

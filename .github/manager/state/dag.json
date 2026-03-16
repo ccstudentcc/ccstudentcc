@@ -1,10 +1,9 @@
 {
-  "generated_at": "2026-03-16T08:07:31Z",
-  "node_count": 4,
-  "edge_count": 2,
+  "generated_at": "2026-03-16T10:07:04Z",
+  "node_count": 3,
+  "edge_count": 1,
   "roots": [
     "daily-quote",
-    "featured-projects",
     "wakatime"
   ],
   "leaves": [
@@ -13,20 +12,12 @@
   ],
   "nodes": [
     {
-      "task": "featured-projects",
-      "depends_on": [],
-      "condition": "always",
-      "priority": 90,
-      "pool": "content-pool",
-      "status": "Success"
-    },
-    {
       "task": "wakatime",
       "depends_on": [],
       "condition": "env_exists(WAKATIME_API_KEY)",
       "priority": 100,
       "pool": "metrics-pool",
-      "status": "Success"
+      "status": "Skipped"
     },
     {
       "task": "daily-quote",
@@ -39,13 +30,12 @@
     {
       "task": "snapshot",
       "depends_on": [
-        "featured-projects",
         "daily-quote"
       ],
       "condition": "all_success",
       "priority": 60,
       "pool": "content-pool",
-      "status": "Success"
+      "status": "Failed"
     }
   ]
 }

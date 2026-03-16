@@ -2,6 +2,7 @@ from __future__ import annotations
 
 """State initialization and persistence routines for workflow controller."""
 
+import json
 import os
 from collections import deque
 from datetime import datetime, timezone
@@ -367,6 +368,7 @@ def initial_worker_state(worker: dict[str, Any]) -> dict[str, Any]:
     return {
         "display_name": worker["display_name"],
         "enabled": worker["enabled"],
+        "managed_by_default": worker.get("managed_by_default", True),
         "worker_type": worker["worker_type"],
         "pool": worker["pool"],
         "capabilities": worker.get("capabilities", []),
@@ -527,6 +529,11 @@ def initialize_state(registry: dict[str, Any], workflow_spec: dict[str, Any]) ->
         "flow_order": initial_flow_order_state(cast(dict[str, Any], existing_state.get("flow_order", {}))),
         "worker_pools": {},
         "managed_jobs": [task["name"] for task in task_specs],
+        "standalone_jobs": [
+            worker_name
+            for worker_name, worker in sorted(workers_by_name.items())
+            if not worker.get("managed_by_default", True)
+        ],
         "workers": existing_state.get("workers", {}),
         "tasks": {},
     }
@@ -549,6 +556,111 @@ def initialize_state(registry: dict[str, Any], workflow_spec: dict[str, Any]) ->
         state["tasks"][task["name"]] = initial_task_state(task, worker)
 
     return state, dead_letters, task_specs
+
+
+def build_persist_signature(state: dict[str, Any], dead_letters: list[dict[str, Any]]) -> str:
+    """Build a stable signature for meaningful persistence-visible state."""
+
+    def normalize_task(task: dict[str, Any]) -> dict[str, Any]:
+        message = str(task.get("message", ""))
+        status = task.get("status")
+        if status == "Running" and message.startswith("Heartbeat OK on pool "):
+            message = "heartbeat"
+
+        return {
+            "status": status,
+            "attempt": task.get("attempt"),
+            "max_attempts": task.get("max_attempts"),
+            "priority": task.get("priority"),
+            "pool": task.get("pool"),
+            "worker": task.get("worker"),
+            "depends_on": task.get("depends_on", []),
+            "condition": task.get("condition"),
+            "scheduled_at": task.get("scheduled_at"),
+            "completed_at": task.get("completed_at"),
+            "message": message,
+        }
+
+    def normalize_worker(worker: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "enabled": worker.get("enabled"),
+            "managed_by_default": worker.get("managed_by_default", True),
+            "health": worker.get("health"),
+            "worker_type": worker.get("worker_type"),
+            "pool": worker.get("pool"),
+            "display_name": worker.get("display_name"),
+            "capabilities": worker.get("capabilities", []),
+            "last_exit_code": worker.get("last_exit_code"),
+            "last_error": worker.get("last_error"),
+            "last_success_at": worker.get("last_success_at"),
+            "last_failure_at": worker.get("last_failure_at"),
+        }
+
+    def normalize_pool(pool: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "desired_workers": pool.get("desired_workers"),
+            "active_workers": pool.get("active_workers"),
+            "queued_tasks": pool.get("queued_tasks"),
+            "completed_tasks": pool.get("completed_tasks"),
+            "last_scale_reason": pool.get("last_scale_reason"),
+        }
+
+    recent_events = cast(list[dict[str, Any]], state.get("event_bus", {}).get("recent_events", []))
+    normalized = {
+        "workflow": {
+            "status": state.get("workflow", {}).get("status"),
+            "dag_nodes": state.get("workflow", {}).get("dag_nodes"),
+            "dag_edges": state.get("workflow", {}).get("dag_edges"),
+        },
+        "managed_jobs": state.get("managed_jobs", []),
+        "standalone_jobs": state.get("standalone_jobs", []),
+        "scheduler": {
+            "ready_queue": state.get("scheduler", {}).get("ready_queue", []),
+            "deferred_tasks": state.get("scheduler", {}).get("deferred_tasks"),
+            "running_tasks": state.get("scheduler", {}).get("running_tasks"),
+            "completed_tasks": state.get("scheduler", {}).get("completed_tasks"),
+        },
+        "message_queue": {
+            "current_depth": state.get("message_queue", {}).get("current_depth"),
+            "total_dispatched": state.get("message_queue", {}).get("total_dispatched"),
+            "total_completed": state.get("message_queue", {}).get("total_completed"),
+            "retry_entries": state.get("message_queue", {}).get("retry_entries"),
+            "running_leases": state.get("message_queue", {}).get("running_leases"),
+        },
+        "event_bus": {
+            "published_events": state.get("event_bus", {}).get("published_events"),
+            "recent_events": [
+                {
+                    "type": event.get("type"),
+                    "source": event.get("source"),
+                    "details": event.get("details"),
+                }
+                for event in recent_events
+            ],
+        },
+        "worker_pools": {
+            name: normalize_pool(pool)
+            for name, pool in sorted(cast(dict[str, dict[str, Any]], state.get("worker_pools", {})).items())
+        },
+        "workers": {
+            name: normalize_worker(worker)
+            for name, worker in sorted(cast(dict[str, dict[str, Any]], state.get("workers", {})).items())
+        },
+        "tasks": {
+            name: normalize_task(task)
+            for name, task in sorted(cast(dict[str, dict[str, Any]], state.get("tasks", {})).items())
+        },
+        "dead_letters": [
+            {
+                "task": item.get("task"),
+                "worker": item.get("worker"),
+                "attempts": item.get("attempts"),
+                "reason": item.get("reason"),
+            }
+            for item in dead_letters
+        ],
+    }
+    return json.dumps(normalized, sort_keys=True, ensure_ascii=True)
 
 
 def prepare_state_store_batch(state: dict[str, Any]) -> None:
@@ -592,9 +704,19 @@ def persist_state_and_manifest(state: dict[str, Any]) -> None:
     save_json(STATE_PATH, state)
 
 
-def persist(state: dict[str, Any], dead_letters: list[dict[str, Any]], registry: dict[str, Any]) -> None:
-    """Persist all workflow artifacts and re-render README dashboard."""
+def persist(
+    state: dict[str, Any],
+    dead_letters: list[dict[str, Any]],
+    registry: dict[str, Any],
+    previous_signature: str | None = None,
+    force: bool = False,
+) -> str:
+    """Persist all workflow artifacts and re-render README dashboard when needed."""
     refresh_worker_health(state, registry)
+    signature = build_persist_signature(state, dead_letters)
+    if not force and previous_signature == signature:
+        return signature
+
     begin_flow_cycle(state, "persist")
     record_flow_stage(state, "Orchestrator", f"workflow={state['workflow']['name']} status={state['workflow']['status']}")
     record_flow_stage(state, "DAG", f"nodes={state['workflow']['dag_nodes']} edges={state['workflow']['dag_edges']}")
@@ -616,6 +738,7 @@ def persist(state: dict[str, Any], dead_letters: list[dict[str, Any]], registry:
     save_json(EVENT_LOG_PATH, build_event_log_payload(state))
     save_json(DEAD_LETTERS_PATH, dead_letters[-20:])
     render_dashboard_readme(state, dead_letters[-10:])
+    return build_persist_signature(state, dead_letters)
 
 
 def write_step_summary(state: dict[str, Any], dead_letters: list[dict[str, Any]]) -> None:

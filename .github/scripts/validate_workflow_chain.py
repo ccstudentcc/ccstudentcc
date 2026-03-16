@@ -245,7 +245,8 @@ def validate_readme_and_docs(readme_text: str, doc_text: str) -> None:
     for key in EXPECTED_MARKER_KEYS:
         start = f"<!--START_SECTION:{key}-->"
         end = f"<!--END_SECTION:{key}-->"
-        ensure(start in readme_text and end in readme_text, f"README 缺少区块 marker: {key}")
+        ensure(readme_text.count(start) == 1, f"README 区块 start marker 必须唯一: {key}")
+        ensure(readme_text.count(end) == 1, f"README 区块 end marker 必须唯一: {key}")
 
     for item in EXPECTED_FLOW:
         ensure(item in doc_text, f"文档缺少链路项: {item}")

@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, cast
 from urllib.parse import quote
 
-from readme_utils import update_readme_section
+from readme_utils import MarkerConflictError, update_readme_section
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -104,6 +104,24 @@ def render_card(title: str, pills: list[str], body: str) -> str:
     ])
 
 
+TRACEBACK_HEADER = "Traceback (most recent call last):"
+OPTIONAL_MARKER_TEXT = "markers were not found:"
+
+
+def summarize_runtime_message(message: str) -> str:
+    """Collapse noisy runtime details into concise README-safe summaries."""
+    text = message.strip()
+    if not text:
+        return "no details"
+    if OPTIONAL_MARKER_TEXT in text:
+        return "Optional README marker missing; standalone worker completed without updating this section"
+    if "Retry scheduled:" in text and TRACEBACK_HEADER in text:
+        return "Retry scheduled after worker failure; inspect event log or workflow run for the full traceback"
+    if TRACEBACK_HEADER in text:
+        return "Worker failed; inspect event log or workflow run for the full traceback"
+    return text
+
+
 def normalize_named_items(items: list[Any]) -> list[dict[str, str]]:
     """Normalize free-form items into name/summary objects."""
     normalized: list[dict[str, str]] = []
@@ -162,6 +180,8 @@ def try_update_readme_section(start_marker: str, end_marker: str, new_block: str
     try:
         update_readme_section(README_PATH, start_marker, end_marker, new_block)
         return True
+    except MarkerConflictError:
+        raise
     except ValueError:
         return False
 
@@ -195,6 +215,8 @@ def render_automation_status(state: dict[str, Any]) -> str:
         f"- **Scheduler:** trigger `{scheduler['trigger']}` | cron `{scheduler['cron']}` | policy `{scheduler['priority_policy']}`",
         "- **Worker pool model:** logical worker pools inside a single GitHub Actions run",
         f"- **Managed jobs:** {', '.join(state['managed_jobs']) or 'none'}",
+        f"- **Standalone workers:** {', '.join(state.get('standalone_jobs', [])) or 'none'}",
+        "- **Render policy:** meaningful state changes only | optional markers skip safely | duplicate markers fail fast",
         f"- **Failure policy:** {state['failure_policy']}",
         f"- **Runtime artifacts:** `{store['paths']['dag_snapshot']}`, `{store['paths']['scheduler_snapshot']}`, `{queue['snapshot_path']}`, `{state['event_bus']['event_log_path']}`, `{store['paths']['metadata_manifest']}`",
         f"- **State persistence:** write #{store.get('write_count', 0)} | docs {store.get('available_documents', 0)}/{store.get('document_count', 0)} | {store.get('consistency_status', 'unknown')}",
@@ -428,7 +450,7 @@ def render_event_bus(state: dict[str, Any]) -> str:
                     f"<code>{escape(format_time(item.get('at')))}</code>",
                     f"<b>{escape(str(item.get('type', 'unknown')))}</b>",
                     f"<code>{escape(str(item.get('source', 'unknown')))}</code>",
-                    escape(str(item.get('details', '')) or 'no details')
+                    escape(summarize_runtime_message(str(item.get('details', ''))))
                 ])
             )
         lines.append(
@@ -470,8 +492,11 @@ def render_worker_registry(state: dict[str, Any]) -> str:
         enabled = "enabled" if worker.get("enabled") else "disabled"
         enabled_color = "16a34a" if worker.get("enabled") else "dc2626"
         capabilities = ", ".join(worker.get("capabilities", [])) or "none"
+        mode = "managed" if worker.get("managed_by_default", True) else "manual-only"
+        mode_color = "0284c7" if worker.get("managed_by_default", True) else "b45309"
         pills = [
             render_pill("state", enabled, enabled_color),
+            render_pill("mode", mode, mode_color),
             render_pill("type", str(worker["worker_type"]), "334155"),
             render_pill("pool", str(worker["pool"]), "0f766e")
         ]
@@ -513,13 +538,14 @@ def render_task_state(state: dict[str, Any]) -> str:
             "Deferred": "475569"
         }.get(status, "64748b")
         attempt_ratio = f"{task['attempt']}/{task['max_attempts']}"
+        message = summarize_runtime_message(str(task.get("message", "")))
         pills = [
             render_pill("status", status, status_color),
             render_pill("priority", str(task["priority"]), "2563eb"),
             render_pill("attempt", attempt_ratio, "334155"),
             render_pill("pool", str(task["pool"]), "0f766e")
         ]
-        body = f"updated: {escape(format_time(task.get('updated_at')))} | {escape(str(task['message']))}"
+        body = f"updated: {escape(format_time(task.get('updated_at')))} | {escape(message)}"
         lines.append(render_card(name, pills, body))
     lines.append("</div>")
     return "\n".join(lines) if state["tasks"] else "- No tasks tracked."
@@ -536,7 +562,8 @@ def render_dead_letters(dead_letters: list[dict[str, Any]]) -> str:
             render_pill("attempts", str(item["attempts"]), "b45309"),
             render_pill("failed", "yes", "dc2626")
         ]
-        body = f"at: {escape(format_time(item['failed_at']))} | reason: {escape(str(item['reason']))}"
+        reason = summarize_runtime_message(str(item.get("reason", "")))
+        body = f"at: {escape(format_time(item['failed_at']))} | reason: {escape(reason)}"
         lines.append(render_card(str(item["task"]), pills, body))
     lines.append("</div>")
     return "\n".join(lines)

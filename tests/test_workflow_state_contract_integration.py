@@ -80,6 +80,7 @@ class WorkflowStateContractIntegrationTests(unittest.TestCase):
                     "name": "snapshot",
                     "display_name": "Snapshot",
                     "enabled": True,
+                    "managed_by_default": True,
                     "worker_type": "content-sync",
                     "pool": "content-pool",
                     "capabilities": ["readme-write", "repo-discovery"],
@@ -141,6 +142,9 @@ class WorkflowStateContractIntegrationTests(unittest.TestCase):
 
         self.assertEqual(dead_letters, [])
         self.assertEqual([task["name"] for task in task_specs], ["snapshot"])
+        self.assertEqual(state["managed_jobs"], ["snapshot"])
+        self.assertEqual(state["standalone_jobs"], [])
+        self.assertTrue(state["workers"]["snapshot"]["managed_by_default"])
         self.assertEqual(
             state["workers"]["snapshot"]["contract"],
             {

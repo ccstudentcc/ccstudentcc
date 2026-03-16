@@ -99,7 +99,9 @@ Reusable workflow secret mapping rule:
 Behavior notes:
 - Missing `WAKATIME_API_KEY` does not break whole orchestration; the related task can be skipped by condition.
 - Missing optional README markers should not hard-fail the controller; unavailable sections are skipped with warnings.
+- Duplicate README markers are treated as a configuration error and must fail fast so managed updates never target an ambiguous block.
 - `workflow-manager` launches independent workers in parallel, but all README marker updates are serialized through `.github/scripts/readme_utils.py` so one worker cannot overwrite another worker's section.
+- `featured-projects` remains available as a standalone/manual worker, but it is not part of the default manager DAG; `snapshot` is the default repository showcase path.
 - `featured-projects` worker calls `readme_utils.py --allow-missing-markers` so a missing `<!--START_SECTION:featured-->` block does not fail the task; the README update is silently skipped while the repo-discovery step still runs.
 - Standalone worker wrappers expose the same secret requirements declared in the registry contract, so drift must be fixed in both places together.
 
@@ -116,6 +118,8 @@ The orchestrator persists concrete runtime artifacts here:
 
 Quick meaning:
 - `state.json`: top-level workflow, worker, and task states.
+- `state.json.managed_jobs`: task names included in the default manager DAG.
+- `state.json.standalone_jobs`: registered workers kept available for standalone/manual runs but excluded from the default manager DAG.
 - `state.json.workers.<name>.contract`: persisted contract metadata for each worker (`execution_mode`, `workflow`, `required_secrets`, `commit_scope`, `optional_readme_markers`, `summary_label`).
 - `state.json.tasks.<name>.contract`: task-level copy of the assigned worker contract metadata for easier debugging and rendering.
 - `state.json.flow_order`: latest realized canonical stage cycle for runtime verification.
@@ -142,16 +146,16 @@ Quick meaning:
 
 From repository root:
 
-```bash
-set PYTHONPATH=.github/scripts
+```powershell
+$env:PYTHONPATH = ".github/scripts"
 python .github/scripts/validate_workflow_chain.py
 python .github/scripts/workflow_controller.py
 ```
 
 Optional env for local parity:
 
-```bash
-set WAKATIME_API_KEY=your_key_here
+```powershell
+$env:WAKATIME_API_KEY = "your_key_here"
 ```
 
 Expected outcomes:
@@ -169,6 +173,8 @@ Manager / wrapper boundary:
 - The manager does not call the standalone worker workflows via `workflow_call`; it runs worker scripts directly inside one orchestrated job.
 - Standalone workflows such as `wakatime.yml` remain useful for isolated manual retries and for keeping each worker's Actions contract explicit.
 - The controller/runtime path now loads registry workers through `.github/scripts/workflow_contract.py`, validates contracts up front, and still preserves the raw `command` list for local process spawning.
+- The default manager DAG persists only meaningful state transitions; heartbeat-only noise does not trigger a full state-store write or README dashboard re-render.
+- The README automation dashboard summarizes retry traces, dead-letter reasons, and optional-marker skips into concise status text; inspect the event log or workflow run for full traceback details.
 - Because the manager runs multiple README writers concurrently, all section replacements must go through the shared locked updater in `.github/scripts/readme_utils.py`.
 - Workers whose README blocks are optional should use the locked updater's tolerant mode instead of failing the entire manager run on missing markers.
 
@@ -179,6 +185,7 @@ Manager / wrapper boundary:
 - Keep README marker pairs intact for all managed sections:
   - `<!--START_SECTION:...-->`
   - `<!--END_SECTION:...-->`
+- Every managed marker pair must appear exactly once; duplicates are treated as invalid configuration and must be fixed before rerunning automation.
 - WakaTime section scope:
    - Primary `Code Time` badge prefers WakaTime `status_bar/today` and falls back to `stats/last_7_days` when today payload is empty or stale.
    - Optional `All Time` badge may be rendered separately when `all_time_since_today` is available.

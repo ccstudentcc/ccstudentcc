@@ -21,7 +21,7 @@ from workflow_runtime import (
     refresh_scheduler_state,
     workflow_finished,
 )
-from workflow_state import initialize_state, log_run_summary, persist, write_step_summary
+from workflow_state import build_persist_signature, initialize_state, log_run_summary, persist, write_step_summary
 
 
 def main() -> int:
@@ -34,12 +34,13 @@ def main() -> int:
     registry = cast(dict[str, Any], load_json(REGISTRY_PATH, {"workers": []}))
     workflow_spec = cast(dict[str, Any], load_json(WORKFLOW_PATH, {"workflow": {}, "scheduler": {}, "worker_pools": [], "tasks": []}))
     state, dead_letters, task_specs_list = initialize_state(registry, workflow_spec)
+    persist_signature = build_persist_signature(state, dead_letters)
     registry_by_name = worker_contracts_by_name(registry)
     task_specs = {task["name"]: task for task in task_specs_list}
     running: dict[str, dict[str, Any]] = {}
     publish_event(state, "workflow.started", state["workflow"]["name"], f"Trigger={state['scheduler']['trigger']}")
 
-    persist(state, dead_letters, registry)
+    persist_signature = persist(state, dead_letters, registry, previous_signature=persist_signature, force=True)
 
     while True:
         ready_queue = collect_ready_tasks(task_specs, state)
@@ -57,7 +58,7 @@ def main() -> int:
             refresh_pool_state(state, workflow_spec, ready_queue, running)
             refresh_scheduler_state(state, ready_queue, running)
 
-        persist(state, dead_letters, registry)
+        persist_signature = persist(state, dead_letters, registry, previous_signature=persist_signature)
 
         if workflow_finished(state) and not running:
             break
@@ -68,7 +69,7 @@ def main() -> int:
             time.sleep(POLL_SECONDS)
             poll_running_tasks(state, registry_by_name, running, dead_letters)
             mark_unreachable_tasks(task_specs, state)
-            persist(state, dead_letters, registry)
+            persist_signature = persist(state, dead_letters, registry, previous_signature=persist_signature)
             continue
 
         if not ready_queue:
@@ -86,7 +87,7 @@ def main() -> int:
     state["workflow"]["completed_at"] = iso_now()
     publish_event(state, "workflow.completed", state["workflow"]["name"], "All terminal task states reached")
     refresh_scheduler_state(state, [], running)
-    persist(state, dead_letters, registry)
+    persist_signature = persist(state, dead_letters, registry, previous_signature=persist_signature, force=True)
     write_step_summary(state, dead_letters)
     log_run_summary(state, dead_letters)
 
