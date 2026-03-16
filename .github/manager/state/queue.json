@@ -1,52 +1,18 @@
 {
-  "generated_at": "2026-03-16T12:19:29Z",
+  "generated_at": "2026-03-16T13:26:18Z",
   "backend": "github-actions-internal-queue",
   "ordering": "priority-then-scheduled-at",
   "ready_queue": [],
   "deferred_queue": [],
   "retry_queue": [],
   "running_leases": [],
-  "terminal_tasks": [
-    {
-      "task": "snapshot",
-      "status": "Success",
-      "priority": 60,
-      "pool": "content-pool",
-      "worker": "snapshot",
-      "scheduled_at": "2026-03-16T12:19:24Z",
-      "updated_at": "2026-03-16T12:19:29Z",
-      "attempt": 1,
-      "max_attempts": 2
-    },
-    {
-      "task": "wakatime",
-      "status": "Success",
-      "priority": 100,
-      "pool": "metrics-pool",
-      "worker": "wakatime",
-      "scheduled_at": "2026-03-16T12:19:24Z",
-      "updated_at": "2026-03-16T12:19:26Z",
-      "attempt": 1,
-      "max_attempts": 2
-    },
-    {
-      "task": "daily-quote",
-      "status": "Success",
-      "priority": 30,
-      "pool": "engagement-pool",
-      "worker": "daily-quote",
-      "scheduled_at": "2026-03-16T12:19:24Z",
-      "updated_at": "2026-03-16T12:19:26Z",
-      "attempt": 1,
-      "max_attempts": 2
-    }
-  ],
+  "terminal_tasks": [],
   "stats": {
     "ready": 0,
     "deferred": 0,
     "retry": 0,
     "running": 0,
-    "terminal": 3,
+    "terminal": 0,
     "dead_letters": 0
   }
 }
