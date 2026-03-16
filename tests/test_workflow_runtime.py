@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+"""Unit tests for workflow runtime scheduling and health computation.
+
+Covers health computation, ready task collection, and recovery paths.
+"""
+
 import sys
 import unittest
 from pathlib import Path
@@ -12,12 +17,15 @@ from workflow_runtime import collect_ready_tasks, compute_health  # type: ignore
 
 
 class WorkflowRuntimeTests(unittest.TestCase):
+    """Test health computation and scheduler ready-task recovery."""
     def test_compute_health_returns_unknown_for_invalid_heartbeat(self) -> None:
+        """Return Unknown health when heartbeat timestamps are invalid."""
         worker_state = {"last_heartbeat_at": "not-a-valid-timestamp"}
 
         self.assertEqual(compute_health(worker_state, grace_seconds=120), "Unknown")
 
     def test_collect_ready_tasks_recovers_invalid_scheduled_at(self) -> None:
+        """Recover invalid scheduled_at values while collecting ready tasks."""
         task_specs = {
             "snapshot": {
                 "name": "snapshot",

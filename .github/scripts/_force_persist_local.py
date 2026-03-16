@@ -1,3 +1,8 @@
+"""Local helper to enqueue a test payload and flush persistence writes.
+
+Useful for manual testing of the persistence queue and metrics output.
+"""
+
 from pathlib import Path
 import sys
 import datetime

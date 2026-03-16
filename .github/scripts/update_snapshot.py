@@ -89,6 +89,15 @@ def github_request(url: str) -> list[dict]:
 
 
 def format_repo_line(owner: str, repo: dict) -> str:
+    """Format one repository row for README recent updates section.
+
+    Args:
+        owner: GitHub owner or organization name.
+        repo: Repository payload from GitHub API.
+
+    Returns:
+        Markdown bullet line with repo link and localized update time.
+    """
     pushed_at_raw = repo['pushed_at']
     try:
         dt_utc = datetime.fromisoformat(pushed_at_raw.replace("Z", "+00:00"))
@@ -223,9 +232,25 @@ def build_showcase_svg(repos: list[dict]) -> str:
     cards = (repos[:3] + defaults)[:3]
 
     def line1(item: dict) -> str:
+        """Build the first display line for a showcase card.
+
+        Args:
+            item: Repository dictionary.
+
+        Returns:
+            Clipped repository name for SVG label text.
+        """
         return short_text(item.get("name"), "Repository", 28)
 
     def line2(item: dict) -> str:
+        """Build the second display line for a showcase card.
+
+        Args:
+            item: Repository dictionary.
+
+        Returns:
+            Clipped repository description for SVG body text.
+        """
         return short_text(item.get("description"), "No description yet", 44)
 
     c1, c2, c3 = cards

@@ -22,6 +22,11 @@ from workflow_state import initialize_state, persist  # type: ignore
 
 
 def main() -> int:
+    """Run persist benchmark iterations and report JSON write counts.
+    
+    Returns:
+        Process exit code.
+    """
     iterations = int(os.environ.get("BENCH_ITERATIONS", "50"))
     sleep_between = float(os.environ.get("BENCH_SLEEP_BETWEEN", "0.1"))
 
@@ -31,6 +36,15 @@ def main() -> int:
     counter = {"writes": 0}
 
     def counting_save(path, payload):
+        """Count save operations while delegating to the original saver.
+        
+        Args:
+            path: Target JSON path.
+            payload: JSON-serializable payload.
+        
+        Returns:
+            Result returned by the original save function.
+        """
         counter["writes"] += 1
         return original_save(path, payload)
 

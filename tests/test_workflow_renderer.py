@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+"""Tests for README automation renderer functions.
+
+Validates rendering of task/worker summaries and dead-letter redaction.
+"""
+
 import sys
 import unittest
 from pathlib import Path
@@ -12,7 +17,9 @@ from workflow_renderer import render_dead_letters, render_task_state, render_wor
 
 
 class WorkflowRendererTests(unittest.TestCase):
+    """Test task, worker, and dead-letter rendering behavior."""
     def test_render_task_state_summarizes_optional_marker_skip_message(self) -> None:
+        """Summarize optional-marker skip messages without leaking marker text."""
         state = {
             "tasks": {
                 "featured-projects": {
@@ -34,6 +41,7 @@ class WorkflowRendererTests(unittest.TestCase):
         self.assertNotIn("<!--START_SECTION:featured-->", rendered)
 
     def test_render_worker_registry_marks_manual_only_workers(self) -> None:
+        """Mark workers as managed or manual-only in registry rendering."""
         state = {
             "workers": {
                 "snapshot": {
@@ -60,6 +68,7 @@ class WorkflowRendererTests(unittest.TestCase):
         self.assertIn("managed", rendered)
         self.assertIn("manual-only", rendered)
     def test_render_dead_letters_summarizes_traceback_reason(self) -> None:
+        """Summarize traceback-based dead-letter reasons for display safety."""
         dead_letters = [
             {
                 "task": "snapshot",

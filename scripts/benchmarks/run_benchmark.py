@@ -13,6 +13,14 @@ worker = ROOT / "scripts" / "benchmarks" / "_benchmark_worker.py"
 
 
 def run(mode: str) -> dict:
+    """Execute the benchmark worker once for a batching mode.
+    
+    Args:
+        mode: Value for WORKFLOW_WRITE_BATCHING.
+    
+    Returns:
+        Parsed benchmark report or an error payload.
+    """
     env = os.environ.copy()
     env["WORKFLOW_WRITE_BATCHING"] = mode
     env["BENCH_ITERATIONS"] = env.get("BENCH_ITERATIONS", "50")
@@ -27,6 +35,11 @@ def run(mode: str) -> dict:
 
 
 def main() -> int:
+    """Run benchmark worker with batching disabled and enabled.
+    
+    Returns:
+        Process exit code.
+    """
     print("Running benchmark with batching=disabled")
     res_false = run("false")
     print(json.dumps(res_false, indent=2, ensure_ascii=False))

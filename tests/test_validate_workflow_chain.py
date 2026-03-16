@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+"""End-to-end validation tests for workflow chain consistency.
+
+Checks that manager config, workflows, README markers and docs align
+with the canonical flow order.
+"""
+
 import sys
 import unittest
 from pathlib import Path
@@ -17,7 +23,9 @@ from validate_workflow_chain import (  # type: ignore[import-not-found]
 
 
 class WorkflowChainContractValidationTests(unittest.TestCase):
+    """Test worker workflow wrapper and chain consistency validation."""
     def test_validate_worker_workflow_wrapper_accepts_python_worker_contract(self) -> None:
+        """Accept a Python worker wrapper that matches its contract fields."""
         contract = {
             "name": "snapshot",
             "command": ["python", ".github/scripts/update_snapshot.py"],
@@ -50,6 +58,7 @@ jobs:
         validate_worker_workflow_wrapper(contract, workflow_text, Path("snapshot.yml"))
 
     def test_validate_worker_workflow_wrapper_accepts_bash_worker_shell_command(self) -> None:
+        """Accept a bash worker wrapper with shell-style command configuration."""
         contract = {
             "name": "featured-projects",
             "command": ["bash", ".github/scripts/update_featured_projects.sh"],
@@ -82,6 +91,7 @@ jobs:
         validate_worker_workflow_wrapper(contract, workflow_text, Path("featured-projects.yml"))
 
     def test_validate_worker_workflow_wrapper_rejects_execution_mode_drift(self) -> None:
+        """Reject wrappers whose execution mode drifts from contract values."""
         contract = {
             "name": "daily-quote",
             "command": ["python", ".github/scripts/update_daily_quote.py"],
@@ -107,6 +117,7 @@ jobs:
             validate_worker_workflow_wrapper(contract, workflow_text, Path("daily-quote.yml"))
 
     def test_validate_worker_workflow_wrapper_rejects_missing_secret_reference(self) -> None:
+        """Reject wrappers that omit required secret references."""
         contract = {
             "name": "wakatime",
             "command": ["python", ".github/scripts/update_wakatime.py"],
@@ -137,6 +148,7 @@ jobs:
             validate_worker_workflow_wrapper(contract, workflow_text, Path("wakatime.yml"))
 
     def test_validate_worker_workflow_wrapper_rejects_reserved_github_token_declaration(self) -> None:
+        """Reject wrappers that redeclare reserved GITHUB_TOKEN inputs."""
         contract = {
             "name": "snapshot",
             "command": ["python", ".github/scripts/update_snapshot.py"],
@@ -173,6 +185,7 @@ jobs:
             validate_worker_workflow_wrapper(contract, workflow_text, Path("snapshot.yml"))
 
     def test_validate_registry_worker_workflows_rejects_missing_workflow_file(self) -> None:
+        """Reject registry entries that reference missing workflow files."""
         registry = {
             "workers": [
                 {
@@ -191,6 +204,7 @@ jobs:
         with self.assertRaisesRegex(ValidationError, "missing.yml"):
             validate_registry_worker_workflows(registry, Path(__file__).resolve().parents[1])
     def test_validate_readme_and_docs_rejects_duplicate_markers(self) -> None:
+        """Reject README/doc content when required markers are duplicated."""
         readme_text = (
             "Orchestrator • DAG • Scheduler • Queue • State Store • Event Bus • Worker Pools • Registry • Health • Tasks • DLQ\n"
             "<!--START_SECTION:automation_status-->\n"

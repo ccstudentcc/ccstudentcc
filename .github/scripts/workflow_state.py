@@ -600,6 +600,14 @@ def build_persist_signature(state: dict[str, Any], dead_letters: list[dict[str, 
     """Build a stable signature for meaningful persistence-visible state."""
 
     def normalize_task(task: dict[str, Any]) -> dict[str, Any]:
+        """Normalize task fields for persistence signature computation.
+        
+        Args:
+            task: Raw task state payload.
+        
+        Returns:
+            A normalized task subset used for signature hashing.
+        """
         message = str(task.get("message", ""))
         status = task.get("status")
         if status == "Running" and message.startswith("Heartbeat OK on pool "):
@@ -620,6 +628,14 @@ def build_persist_signature(state: dict[str, Any], dead_letters: list[dict[str, 
         }
 
     def normalize_worker(worker: dict[str, Any]) -> dict[str, Any]:
+        """Normalize worker fields for persistence signature computation.
+        
+        Args:
+            worker: Raw worker state payload.
+        
+        Returns:
+            A normalized worker subset used for signature hashing.
+        """
         return {
             "enabled": worker.get("enabled"),
             "managed_by_default": worker.get("managed_by_default", True),
@@ -635,6 +651,14 @@ def build_persist_signature(state: dict[str, Any], dead_letters: list[dict[str, 
         }
 
     def normalize_pool(pool: dict[str, Any]) -> dict[str, Any]:
+        """Normalize worker pool fields for persistence signature computation.
+        
+        Args:
+            pool: Raw pool state payload.
+        
+        Returns:
+            A normalized pool subset used for signature hashing.
+        """
         return {
             "desired_workers": pool.get("desired_workers"),
             "active_workers": pool.get("active_workers"),

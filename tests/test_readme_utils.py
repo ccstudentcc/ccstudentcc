@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+"""Unit tests for README utility helpers.
+
+Tests marker replacement and marker conflict detection used by the
+renderer module.
+"""
+
 import sys
 import tempfile
 import unittest
@@ -17,7 +23,9 @@ from readme_utils import (  # type: ignore[import-not-found]
 
 
 class ReadmeUtilsTests(unittest.TestCase):
+    """Test README marker replacement and conflict handling helpers."""
     def test_replace_section_replaces_unique_marker_pair(self) -> None:
+        """Replace content when a marker pair appears exactly once."""
         content = "before\n<!--START_SECTION:test-->\nold\n<!--END_SECTION:test-->\nafter\n"
 
         updated = replace_section(content, "<!--START_SECTION:test-->", "<!--END_SECTION:test-->", "new")
@@ -26,6 +34,7 @@ class ReadmeUtilsTests(unittest.TestCase):
         self.assertNotIn("old", updated)
 
     def test_replace_section_rejects_duplicate_marker_pairs(self) -> None:
+        """Reject replacement when duplicate marker pairs are present."""
         content = (
             "<!--START_SECTION:test-->\nold\n<!--END_SECTION:test-->\n"
             "<!--START_SECTION:test-->\nother\n<!--END_SECTION:test-->\n"
@@ -35,6 +44,7 @@ class ReadmeUtilsTests(unittest.TestCase):
             replace_section(content, "<!--START_SECTION:test-->", "<!--END_SECTION:test-->", "new")
 
     def test_try_update_readme_section_returns_false_for_missing_markers(self) -> None:
+        """Return False when target markers are absent from README content."""
         with tempfile.TemporaryDirectory() as temp_dir:
             readme_path = Path(temp_dir) / "README.md"
             readme_path.write_text("plain text\n", encoding="utf-8")
@@ -50,6 +60,7 @@ class ReadmeUtilsTests(unittest.TestCase):
             self.assertEqual(readme_path.read_text(encoding="utf-8"), "plain text\n")
 
     def test_try_update_readme_section_raises_for_duplicate_markers(self) -> None:
+        """Raise marker conflict when duplicate marker pairs exist."""
         with tempfile.TemporaryDirectory() as temp_dir:
             readme_path = Path(temp_dir) / "README.md"
             readme_path.write_text(

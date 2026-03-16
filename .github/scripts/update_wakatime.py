@@ -150,6 +150,14 @@ def _get_all_time_text(all_time_payload: dict | None) -> str | None:
 
 
 def _get_total_text(payload: dict) -> str:
+    """Extract cumulative coding total text from summaries payload.
+
+    Args:
+        payload: Summaries API response payload.
+
+    Returns:
+        Human-readable total time text, or fallback zero text.
+    """
     cumulative_total = payload.get("cumulative_total", {}) if isinstance(payload, dict) else {}
     return (
         cumulative_total.get("text")
@@ -159,6 +167,14 @@ def _get_total_text(payload: dict) -> str:
 
 
 def _get_average_text(payload: dict) -> str:
+    """Extract daily average coding text from summaries payload.
+
+    Args:
+        payload: Summaries API response payload.
+
+    Returns:
+        Human-readable average time text, or fallback zero text.
+    """
     daily_average = payload.get("daily_average", {}) if isinstance(payload, dict) else {}
     return (
         daily_average.get("text_including_other_language")

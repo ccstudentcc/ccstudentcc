@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+"""Unit tests for worker contract normalization and validation helpers.
+
+Ensures contract fields are normalized and validation rejects malformed
+contracts.
+"""
+
 import sys
 import unittest
 from pathlib import Path
@@ -16,7 +22,9 @@ from workflow_contract import (  # type: ignore[import-not-found]
 
 
 class WorkflowContractTests(unittest.TestCase):
+    """Test worker contract normalization and validation behavior."""
     def test_normalize_worker_contract_populates_defaults(self) -> None:
+        """Populate default fields when normalizing worker contracts."""
         worker = {
             "name": "daily-quote",
             "command": ["python", ".github/scripts/update_daily_quote.py"],
@@ -38,6 +46,7 @@ class WorkflowContractTests(unittest.TestCase):
         self.assertEqual(normalized["summary_label"], "Daily Quote")
 
     def test_validate_worker_contract_rejects_missing_required_field(self) -> None:
+        """Reject contracts missing required top-level fields."""
         worker = {
             "name": "wakatime",
             "command": ["python", ".github/scripts/update_wakatime.py"],
@@ -52,6 +61,7 @@ class WorkflowContractTests(unittest.TestCase):
             validate_worker_contract(worker)
 
     def test_validate_worker_contract_rejects_missing_required_secrets_field(self) -> None:
+        """Reject contracts missing the required_secrets field."""
         worker = {
             "name": "daily-quote",
             "command": ["python", ".github/scripts/update_daily_quote.py"],
@@ -66,6 +76,7 @@ class WorkflowContractTests(unittest.TestCase):
             validate_worker_contract(worker)
 
     def test_validate_worker_contract_rejects_string_commit_scope(self) -> None:
+        """Reject contracts where commit_scope is not a list."""
         worker = {
             "name": "snapshot",
             "command": ["python", ".github/scripts/update_snapshot.py"],
@@ -81,6 +92,7 @@ class WorkflowContractTests(unittest.TestCase):
             validate_worker_contract(worker)
 
     def test_worker_contracts_by_name_normalizes_each_registry_worker(self) -> None:
+        """Normalize each registry worker when indexing contracts by name."""
         registry = {
             "workers": [
                 {

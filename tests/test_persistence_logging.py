@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+"""Integration test for persistence logging and metrics behavior.
+
+Simulates persistence failures and asserts that error logs and metrics
+are recorded as expected.
+"""
+
 import sys
 import json
 from pathlib import Path
@@ -12,6 +18,7 @@ import workflow_common as wc  # type: ignore
 
 
 def test_persistence_logging_and_metrics(tmp_path, monkeypatch):
+    """Validate persistence failures are logged and counted."""
     ROOT = wc.ROOT
     err_log = ROOT / ".github" / "manager" / "state" / "persistence-errors.log"
     metrics = ROOT / ".github" / "manager" / "state" / "persistence-metrics.json"
@@ -27,6 +34,7 @@ def test_persistence_logging_and_metrics(tmp_path, monkeypatch):
 
     # make save_json fail to exercise error path
     def fail_save(p, payload):
+        """Raise a deterministic failure for persistence error-path testing."""
         raise RuntimeError("boom")
 
     monkeypatch.setattr(wc, "save_json", fail_save)

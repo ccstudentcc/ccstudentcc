@@ -1,5 +1,16 @@
 from __future__ import annotations
 
+"""Update metadata manifest for tracked repository documents.
+
+This module updates `.github/manager/state/metadata-store.json` by
+recomputing checksums, sizes, and modification timestamps for each
+tracked document. When a file's checksum is unchanged compared to the
+prior manifest, the previous `updated_at` timestamp is preserved.
+
+The module exposes a small CLI via `main()` which writes the updated
+manifest back to disk.
+"""
+
 import hashlib
 import json
 from datetime import datetime, timezone
@@ -12,10 +23,26 @@ MANIFEST_PATH = ROOT / ".github/manager/state/metadata-store.json"
 
 
 def iso_from_mtime(mtime: float) -> str:
+    """Convert POSIX mtime to UTC ISO-8601 timestamp without microseconds.
+
+    Args:
+        mtime: File modification time in seconds since epoch.
+
+    Returns:
+        Timestamp string in UTC with trailing ``Z``.
+    """
     return datetime.fromtimestamp(mtime, timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def checksum_of(path: Path) -> str | None:
+    """Compute SHA-256 checksum for a regular file.
+
+    Args:
+        path: Target file path.
+
+    Returns:
+        Hex digest when file exists; otherwise ``None``.
+    """
     if not path.exists() or not path.is_file():
         return None
     h = hashlib.sha256()
@@ -26,6 +53,11 @@ def checksum_of(path: Path) -> str | None:
 
 
 def main() -> int:
+    """Refresh manifest metadata fields and write results to disk.
+
+    Returns:
+        Process exit code. Returns 0 on success and 1 when manifest is missing.
+    """
     if not MANIFEST_PATH.exists():
         print("manifest not found:", MANIFEST_PATH)
         return 1

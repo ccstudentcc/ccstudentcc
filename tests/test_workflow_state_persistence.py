@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+"""Unit tests for build_persist_signature behavior.
+
+Tests that persistence signatures ignore heartbeat noise and detect
+meaningful state changes.
+"""
+
 import copy
 import sys
 import unittest
@@ -13,7 +19,9 @@ from workflow_state import build_persist_signature  # type: ignore[import-not-fo
 
 
 class WorkflowStatePersistenceTests(unittest.TestCase):
+    """Test persistence signature stability and change detection."""
     def test_build_persist_signature_ignores_running_heartbeat_noise(self) -> None:
+        """Ignore heartbeat noise when computing persistence signatures."""
         state = {
             "workflow": {"status": "Running"},
             "managed_jobs": ["snapshot"],
@@ -75,6 +83,7 @@ class WorkflowStatePersistenceTests(unittest.TestCase):
         self.assertEqual(build_persist_signature(state, []), build_persist_signature(noisy_state, []))
 
     def test_build_persist_signature_changes_when_task_status_changes(self) -> None:
+        """Change persistence signatures when task state meaningfully changes."""
         state = {
             "workflow": {"status": "Running"},
             "managed_jobs": ["snapshot"],

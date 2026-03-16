@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+"""Integration tests for state initialization and worker contract handling.
+
+Verifies registry/workflow contract validation and persistence of contract
+metadata into initialized state.
+"""
+
 import sys
 import unittest
 from pathlib import Path
@@ -12,7 +18,9 @@ from workflow_state import initialize_state  # type: ignore[import-not-found]
 
 
 class WorkflowStateContractIntegrationTests(unittest.TestCase):
+    """Test state initialization with contract validation integration."""
     def test_initialize_state_rejects_worker_with_invalid_contract(self) -> None:
+        """Reject state initialization when worker contracts are invalid."""
         registry = {
             "workers": [
                 {
@@ -74,6 +82,7 @@ class WorkflowStateContractIntegrationTests(unittest.TestCase):
             initialize_state(registry, workflow_spec)
 
     def test_initialize_state_persists_contract_metadata_for_worker_and_task(self) -> None:
+        """Persist normalized contract metadata into worker and task state."""
         registry = {
             "workers": [
                 {
