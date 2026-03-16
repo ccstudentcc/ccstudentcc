@@ -285,36 +285,7 @@ All visual components below support both dark mode and light mode automatically.
 </div>
 
 <details>
-<sub>state.json, metadata-store.json, queue.json, dag.json, scheduler.json, event-log.json, dead-letters.json</sub>
-</details>
-
-<details>
-<summary><b>守护进程持久化建议</b></summary>
-
-<sub>长期运行的 controller/daemon 在运行期间应定期将内存中待写入队列落盘，并在主循环结束或进程退出前强制一次最终落盘，推荐做法：</sub>
-
-- **周期性 flush**：在主循环或调度点周期性调用 `flush_json_writes(force=True)`，以确保批量写入不会长时间停留在内存中。
-- **退出时强制 flush**：在退出流程中（`atexit` 回调或 `SIGINT`/`SIGTERM` 处理器）调用 `flush_json_writes(force=True)`，确保最后的队列被写入磁盘。
-- **配置注意**：当环境变量 `WORKFLOW_WRITE_BATCHING` 为 `true` 时写入会被去抖（debounce），可通过 `WORKFLOW_WRITE_DEBOUNCE_SECONDS` 调整去抖窗口；在需要即时持久化的路径上使用 `force=True`。
-
-示例（伪代码）：
-
-```python
-from .workflow_common import flush_json_writes
-import atexit, signal
-
-def on_exit(*_):
-  flush_json_writes(force=True)
-
-atexit.register(on_exit)
-signal.signal(signal.SIGINT, on_exit)
-signal.signal(signal.SIGTERM, on_exit)
-
-# 主循环中在合适频率也可以调用
-flush_json_writes(force=True)
-```
-
-</details>
+<summary><b>Weekly Breakdown | 本周明细</b></summary>
 
 ```text
 Timezone: Asia/Shanghai (UTC+8)
