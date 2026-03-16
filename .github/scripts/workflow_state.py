@@ -753,6 +753,32 @@ def persist(
     except Exception:
         # never raise from persist
         pass
+    # Ensure metadata manifest's `last_persisted_at` reflects the actual
+    # filesystem mtimes of the persisted artifacts. When writes succeeded
+    # above the per-file mtimes will reflect the real write times; update
+    # the metadata manifest to match the most recent file mtime so the
+    # dashboard/README shows a consistent `last persisted` timestamp.
+    try:
+        # Refresh inventory to pick up updated_at entries for each document
+        refresh_state_store_inventory(state)
+        docs = state.get("state_store", {}).get("documents", [])
+        # Collect ISO timestamps from documents that exist
+        times = [d.get("updated_at") for d in docs if d.get("updated_at")]
+        if times:
+            # choose the latest
+            latest = max(times)
+            # Only update if different to avoid unnecessary writes
+            if state.get("state_store", {}).get("last_persisted_at") != latest:
+                state["state_store"]["last_persisted_at"] = latest
+                # rebuild metadata manifest and persist it immediately
+                enqueue_json(METADATA_STORE_PATH, build_metadata_store_payload(state))
+                try:
+                    flush_json_writes(force=True)
+                except Exception:
+                    pass
+    except Exception:
+        # best-effort only; do not raise
+        pass
     return build_persist_signature(state, dead_letters)
 
 

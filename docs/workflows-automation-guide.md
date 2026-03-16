@@ -226,6 +226,44 @@ Checks:
 2. Ensure `label` and `message` are URL-encoded.
 3. Ensure color values are valid hex-like strings expected by shields.
 
+## Troubleshooting: common automation errors
+
+This section lists common issues observed when running the local manager or CI automation and practical steps to diagnose and fix them.
+
+- Missing secrets (e.g. `WAKATIME_API_KEY`)
+   - Symptom: Tasks with `env_exists(...)` conditions are skipped and show `Condition not met: environment variable ... must exist` in the task state.
+   - Cause: Required secret or environment variable is not set in the running environment.
+   - Fix: Provide the secret in the runtime environment. In CI add the secret to repository secrets (e.g. `secrets.WAKATIME_API_KEY`) and map it in the workflow. Locally, create a `.env` (ignored by git) or export the variable before running the manager.
+
+- Persistence metadata/date mismatch (dashboard shows `last persisted` newer than file mtimes, or vice versa)
+   - Symptom: Dashboard or README shows a `last persisted` timestamp that does not match the filesystem `mtime` of the state files.
+   - Cause: Write-batching and debounce logic can delay actual filesystem writes; metadata manifest may be updated at a different point than the physical file mtime unless the controller flushes and refreshes inventory.
+   - Fix: For debugging, disable batching by setting `WORKFLOW_WRITE_BATCHING=false` or call `flush_json_writes(force=True)` to force writes. The controller has been updated to refresh state-store inventory after flush and reconcile `last_persisted_at` to the latest file mtime; ensure you are running a controller version that contains this fix.
+
+- Persistence write failures recorded in metrics or errors log
+   - Symptom: `persistence-metrics.json` shows `last_error` and `.github/manager/state/persistence-errors.log` contains entries like `Failed to persist ... after 3 attempts`.
+   - Cause: Atomic write or filesystem errors during save; retries were exhausted for that path.
+   - Fix: Inspect `persistence-errors.log` and `persistence-metrics.json` for the failing path and traceback. If failures are transient, re-running the manager will re-enqueue writes; if persistent, inspect permissions, file locks, or other processes modifying the repository files.
+
+- Dead letters and failed tasks
+   - Symptom: Tasks end up in the dead-letter queue or `snapshot`/`update` tasks fail repeatedly.
+   - Cause: Worker script runtime errors, missing runtime dependencies, or unexpected input.
+   - Fix: Check `.github/manager/state/dead-letters.json` and `.github/manager/state/event-log.json` for task-level error details and tracebacks. Reproduce failing worker commands locally (scripts under `.github/scripts/`) to get more verbose errors.
+
+- Spurious repeated writes of identical state
+   - Symptom: Frequent commits or state file mutations even when no meaningful runtime change occurred.
+   - Cause: Older implementations enqueued a manifest write when `persist(force=True)` was called regardless of whether the persist signature changed.
+   - Fix: Upgrade to the controller that compares persist signatures and only enqueues writes when the signature changes; `force=True` will now only flush already enqueued writes instead of enqueuing duplicate writes.
+
+If you still cannot determine root cause, capture the controller console output and the following files and open an issue with them:
+
+- `.github/manager/state/persistence-metrics.json`
+- `.github/manager/state/persistence-errors.log`
+- `.github/manager/state/event-log.json`
+- `.github/manager/state/metadata-store.json`
+
+These artifacts help diagnose whether writes failed, were debounced, or were intentionally skipped.
+
 ### Symptom: section not updated in README
 
 Checks:
