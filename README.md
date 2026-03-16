@@ -91,12 +91,6 @@ Main narrative: shipping around <a href="https://github.com/ccstudentcc/symkan-e
 - Avoid table-based layout for badge sections; keep mobile and desktop visually consistent.
 - 徽章展示区避免表格结构，保证网页端与移动端一致性。
 
-<p align="center">
-  <a href="https://github.com/ccstudentcc?tab=repositories"><img src="https://img.shields.io/static/v1?label=Enter&message=Project%20Gallery&color=1d4ed8&style=for-the-badge&logo=github" alt="enter project gallery" /></a>
-  <a href="https://github.com/ccstudentcc/ccstudentcc/discussions/new/choose"><img src="https://img.shields.io/static/v1?label=Join&message=Live%20Discussion&color=0f766e&style=for-the-badge&logo=github" alt="join live discussion" /></a>
-  <a href="#automation-heartbeat"><img src="https://img.shields.io/static/v1?label=Open&message=Automation%20Console&color=0284c7&style=for-the-badge&logo=githubactions" alt="open automation console" /></a>
-</p>
-
 <a id="visitor-paths"></a>
 ## Visitor Paths | 访客入口卡
 
