@@ -3,10 +3,10 @@
     "name": "profile-readme-automation",
     "description": "DAG orchestrated README automation for profile content",
     "status": "Completed",
-    "started_at": "2026-03-31T16:45:30Z",
-    "completed_at": "2026-03-31T16:45:35Z",
-    "run_id": "23808924413",
-    "run_url": "https://github.com/ccstudentcc/ccstudentcc/actions/runs/23808924413",
+    "started_at": "2026-04-01T05:49:38Z",
+    "completed_at": "2026-04-01T05:49:42Z",
+    "run_id": "23834078108",
+    "run_url": "https://github.com/ccstudentcc/ccstudentcc/actions/runs/23834078108",
     "dag_nodes": 3,
     "dag_edges": 1
   },
@@ -51,7 +51,7 @@
       }
     ],
     "snapshot_path": ".github/manager/state/queue.json",
-    "snapshot_updated_at": "2026-03-31T16:45:35Z",
+    "snapshot_updated_at": "2026-04-01T05:49:42Z",
     "current_depth": 0,
     "max_depth_seen": 2,
     "total_dispatched": 3,
@@ -129,41 +129,41 @@
         "name": "runtime_state",
         "path": ".github/manager/state/state.json",
         "exists": true,
-        "size_bytes": 53871,
-        "updated_at": "2026-03-31T16:45:34Z",
-        "checksum": "4718538d07936580348e553ae08ef44ac7b8ffeaeae60d49d7cac456d6b98502"
+        "size_bytes": 53855,
+        "updated_at": "2026-04-01T05:49:42Z",
+        "checksum": "85e8b387ad8de0bc51440f1f93cd4829c83a64f66114aea52892a2303dea7948"
       },
       {
         "name": "dag_snapshot",
         "path": ".github/manager/state/dag.json",
         "exists": true,
         "size_bytes": 775,
-        "updated_at": "2026-03-31T16:45:34Z",
-        "checksum": "47204a31b469c1475244a6a1c07963fd3239d3ed7e6be987a1083f1f5058df14"
+        "updated_at": "2026-04-01T05:49:42Z",
+        "checksum": "9da2e6226dd5a187cda9e5ff392710c92bf1bf89951458085597c3a1d653aaaf"
       },
       {
         "name": "scheduler_snapshot",
         "path": ".github/manager/state/scheduler.json",
         "exists": true,
         "size_bytes": 377,
-        "updated_at": "2026-03-31T16:45:34Z",
-        "checksum": "07eda371e81021c3d7fb9befda9f7b4caaa63b010dab486e2e808c7bae16dce9"
+        "updated_at": "2026-04-01T05:49:42Z",
+        "checksum": "017f34740cb58482f0fb24d7d0a582bce466cea6acac29ca14991bc13475d5b2"
       },
       {
         "name": "queue_snapshot",
         "path": ".github/manager/state/queue.json",
         "exists": true,
         "size_bytes": 1532,
-        "updated_at": "2026-03-31T16:45:34Z",
-        "checksum": "bba93f455d7cf03048841b079a39548533d25d2c4cd93b5fd8fcb072793bfee7"
+        "updated_at": "2026-04-01T05:49:42Z",
+        "checksum": "2736c73dd029e68a04c90917f8a5d7dc2742464d9534ebd877860fc971cf7796"
       },
       {
         "name": "event_log",
         "path": ".github/manager/state/event-log.json",
         "exists": true,
-        "size_bytes": 1555,
-        "updated_at": "2026-03-31T16:45:34Z",
-        "checksum": "53eba1097a77c06ff4bd616c943e82849301db8d6e53a2c0e34e1c174b9478f7"
+        "size_bytes": 1547,
+        "updated_at": "2026-04-01T05:49:42Z",
+        "checksum": "4aa56e1ec811a50147c14de6cde9673f0fc063e126953a56308251fe8a2fddd6"
       },
       {
         "name": "dead_letters",
@@ -178,15 +178,15 @@
         "path": ".github/manager/state/metadata-store.json",
         "exists": true,
         "size_bytes": 2847,
-        "updated_at": "2026-03-31T16:45:34Z",
-        "checksum": "349557300ce46fd037776b3d843b38f040881858a7946c4dd382554f31c9994a"
+        "updated_at": "2026-04-01T05:49:42Z",
+        "checksum": "af2a27cb4640be14f5851817807e9acb3ca18e726bd9d48ef5c69f4575ee756d"
       }
     ],
     "document_count": 8,
     "available_documents": 8,
-    "total_size_bytes": 66213,
+    "total_size_bytes": 66189,
     "missing_documents": [],
-    "write_count": 730,
+    "write_count": 737,
     "last_write_batch": [
       ".github/manager/state/state.json",
       ".github/manager/state/dag.json",
@@ -197,7 +197,7 @@
       ".github/manager/state/dead-letters.json"
     ],
     "consistency_status": "healthy",
-    "last_persisted_at": "2026-03-31T16:45:35Z"
+    "last_persisted_at": "2026-04-01T05:49:42Z"
   },
   "event_bus": {
     "backend": "internal-event-log",
@@ -224,60 +224,60 @@
     ],
     "event_log_path": ".github/manager/state/event-log.json",
     "published_events": 8,
-    "last_event_at": "2026-03-31T16:45:35Z",
+    "last_event_at": "2026-04-01T05:49:42Z",
     "recent_events": [
       {
         "id": "evt-0001",
-        "at": "2026-03-31T16:45:30Z",
+        "at": "2026-04-01T05:49:38Z",
         "type": "workflow.started",
         "source": "profile-readme-automation",
         "details": "Trigger=schedule"
       },
       {
         "id": "evt-0002",
-        "at": "2026-03-31T16:45:30Z",
+        "at": "2026-04-01T05:49:38Z",
         "type": "task.dispatched",
         "source": "wakatime",
         "details": "Dispatched on pool metrics-pool attempt 1/2"
       },
       {
         "id": "evt-0003",
-        "at": "2026-03-31T16:45:30Z",
+        "at": "2026-04-01T05:49:38Z",
         "type": "task.dispatched",
         "source": "daily-quote",
         "details": "Dispatched on pool engagement-pool attempt 1/2"
       },
       {
         "id": "evt-0004",
-        "at": "2026-03-31T16:45:32Z",
+        "at": "2026-04-01T05:49:40Z",
         "type": "task.succeeded",
         "source": "wakatime",
         "details": "Updated WakaTime section"
       },
       {
         "id": "evt-0005",
-        "at": "2026-03-31T16:45:32Z",
+        "at": "2026-04-01T05:49:40Z",
         "type": "task.succeeded",
         "source": "daily-quote",
-        "details": "Updated daily quote: Benjamin Franklin"
+        "details": "Updated daily quote: Aristotle"
       },
       {
         "id": "evt-0006",
-        "at": "2026-03-31T16:45:32Z",
+        "at": "2026-04-01T05:49:40Z",
         "type": "task.dispatched",
         "source": "snapshot",
         "details": "Dispatched on pool content-pool attempt 1/2"
       },
       {
         "id": "evt-0007",
-        "at": "2026-03-31T16:45:34Z",
+        "at": "2026-04-01T05:49:42Z",
         "type": "task.succeeded",
         "source": "snapshot",
         "details": "Updated recent repository snapshot with 5 entries and refreshed showcase assets"
       },
       {
         "id": "evt-0008",
-        "at": "2026-03-31T16:45:35Z",
+        "at": "2026-04-01T05:49:42Z",
         "type": "workflow.completed",
         "source": "profile-readme-automation",
         "details": "All terminal task states reached"
@@ -298,13 +298,13 @@
       "Tasks",
       "DLQ"
     ],
-    "cycles_started": 723,
-    "cycles_completed": 723,
+    "cycles_started": 730,
+    "cycles_completed": 730,
     "active_cycle": null,
     "latest_completed_cycle": {
-      "id": 723,
+      "id": 730,
       "reason": "persist",
-      "started_at": "2026-03-31T16:45:35Z",
+      "started_at": "2026-04-01T05:49:42Z",
       "expected_sequence": [
         "Orchestrator",
         "DAG",
@@ -334,77 +334,77 @@
       "stages": [
         {
           "stage": "Orchestrator",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "workflow=profile-readme-automation status=Completed",
           "expected_stage": "Orchestrator",
           "matches_expected": true
         },
         {
           "stage": "DAG",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "nodes=3 edges=1",
           "expected_stage": "DAG",
           "matches_expected": true
         },
         {
           "stage": "Scheduler",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "ready=0 running=0",
           "expected_stage": "Scheduler",
           "matches_expected": true
         },
         {
           "stage": "Queue",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "depth=0 dispatched=3",
           "expected_stage": "Queue",
           "matches_expected": true
         },
         {
           "stage": "State Store",
-          "at": "2026-03-31T16:45:35Z",
-          "details": "write=730 batch=7",
+          "at": "2026-04-01T05:49:42Z",
+          "details": "write=737 batch=7",
           "expected_stage": "State Store",
           "matches_expected": true
         },
         {
           "stage": "Event Bus",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "published=8",
           "expected_stage": "Event Bus",
           "matches_expected": true
         },
         {
           "stage": "Worker Pools",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "pools=3",
           "expected_stage": "Worker Pools",
           "matches_expected": true
         },
         {
           "stage": "Registry",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "workers=4",
           "expected_stage": "Registry",
           "matches_expected": true
         },
         {
           "stage": "Health",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "healthy=3/4",
           "expected_stage": "Health",
           "matches_expected": true
         },
         {
           "stage": "Tasks",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "terminal=3/3",
           "expected_stage": "Tasks",
           "matches_expected": true
         },
         {
           "stage": "DLQ",
-          "at": "2026-03-31T16:45:35Z",
+          "at": "2026-04-01T05:49:42Z",
           "details": "dead_letters=0",
           "expected_stage": "DLQ",
           "matches_expected": true
@@ -412,800 +412,9 @@
       ],
       "is_in_order": true,
       "is_complete": true,
-      "completed_at": "2026-03-31T16:45:35Z"
+      "completed_at": "2026-04-01T05:49:42Z"
     },
     "recent_cycles": [
-      {
-        "id": 714,
-        "reason": "persist",
-        "started_at": "2026-03-31T05:30:25Z",
-        "expected_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "completed_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "stages": [
-          {
-            "stage": "Orchestrator",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "workflow=profile-readme-automation status=Running",
-            "expected_stage": "Orchestrator",
-            "matches_expected": true
-          },
-          {
-            "stage": "DAG",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "nodes=3 edges=1",
-            "expected_stage": "DAG",
-            "matches_expected": true
-          },
-          {
-            "stage": "Scheduler",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "ready=1 running=1",
-            "expected_stage": "Scheduler",
-            "matches_expected": true
-          },
-          {
-            "stage": "Queue",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "depth=1 dispatched=3",
-            "expected_stage": "Queue",
-            "matches_expected": true
-          },
-          {
-            "stage": "State Store",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "write=721 batch=7",
-            "expected_stage": "State Store",
-            "matches_expected": true
-          },
-          {
-            "stage": "Event Bus",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "published=7",
-            "expected_stage": "Event Bus",
-            "matches_expected": true
-          },
-          {
-            "stage": "Worker Pools",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "pools=3",
-            "expected_stage": "Worker Pools",
-            "matches_expected": true
-          },
-          {
-            "stage": "Registry",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "workers=4",
-            "expected_stage": "Registry",
-            "matches_expected": true
-          },
-          {
-            "stage": "Health",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "healthy=3/4",
-            "expected_stage": "Health",
-            "matches_expected": true
-          },
-          {
-            "stage": "Tasks",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "terminal=3/3",
-            "expected_stage": "Tasks",
-            "matches_expected": true
-          },
-          {
-            "stage": "DLQ",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "dead_letters=0",
-            "expected_stage": "DLQ",
-            "matches_expected": true
-          }
-        ],
-        "is_in_order": true,
-        "is_complete": true,
-        "completed_at": "2026-03-31T05:30:25Z"
-      },
-      {
-        "id": 715,
-        "reason": "persist",
-        "started_at": "2026-03-31T05:30:25Z",
-        "expected_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "completed_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "stages": [
-          {
-            "stage": "Orchestrator",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "workflow=profile-readme-automation status=Running",
-            "expected_stage": "Orchestrator",
-            "matches_expected": true
-          },
-          {
-            "stage": "DAG",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "nodes=3 edges=1",
-            "expected_stage": "DAG",
-            "matches_expected": true
-          },
-          {
-            "stage": "Scheduler",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "ready=0 running=0",
-            "expected_stage": "Scheduler",
-            "matches_expected": true
-          },
-          {
-            "stage": "Queue",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "depth=0 dispatched=3",
-            "expected_stage": "Queue",
-            "matches_expected": true
-          },
-          {
-            "stage": "State Store",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "write=722 batch=7",
-            "expected_stage": "State Store",
-            "matches_expected": true
-          },
-          {
-            "stage": "Event Bus",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "published=7",
-            "expected_stage": "Event Bus",
-            "matches_expected": true
-          },
-          {
-            "stage": "Worker Pools",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "pools=3",
-            "expected_stage": "Worker Pools",
-            "matches_expected": true
-          },
-          {
-            "stage": "Registry",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "workers=4",
-            "expected_stage": "Registry",
-            "matches_expected": true
-          },
-          {
-            "stage": "Health",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "healthy=3/4",
-            "expected_stage": "Health",
-            "matches_expected": true
-          },
-          {
-            "stage": "Tasks",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "terminal=3/3",
-            "expected_stage": "Tasks",
-            "matches_expected": true
-          },
-          {
-            "stage": "DLQ",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "dead_letters=0",
-            "expected_stage": "DLQ",
-            "matches_expected": true
-          }
-        ],
-        "is_in_order": true,
-        "is_complete": true,
-        "completed_at": "2026-03-31T05:30:25Z"
-      },
-      {
-        "id": 716,
-        "reason": "persist",
-        "started_at": "2026-03-31T05:30:25Z",
-        "expected_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "completed_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "stages": [
-          {
-            "stage": "Orchestrator",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "workflow=profile-readme-automation status=Completed",
-            "expected_stage": "Orchestrator",
-            "matches_expected": true
-          },
-          {
-            "stage": "DAG",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "nodes=3 edges=1",
-            "expected_stage": "DAG",
-            "matches_expected": true
-          },
-          {
-            "stage": "Scheduler",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "ready=0 running=0",
-            "expected_stage": "Scheduler",
-            "matches_expected": true
-          },
-          {
-            "stage": "Queue",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "depth=0 dispatched=3",
-            "expected_stage": "Queue",
-            "matches_expected": true
-          },
-          {
-            "stage": "State Store",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "write=723 batch=7",
-            "expected_stage": "State Store",
-            "matches_expected": true
-          },
-          {
-            "stage": "Event Bus",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "published=8",
-            "expected_stage": "Event Bus",
-            "matches_expected": true
-          },
-          {
-            "stage": "Worker Pools",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "pools=3",
-            "expected_stage": "Worker Pools",
-            "matches_expected": true
-          },
-          {
-            "stage": "Registry",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "workers=4",
-            "expected_stage": "Registry",
-            "matches_expected": true
-          },
-          {
-            "stage": "Health",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "healthy=3/4",
-            "expected_stage": "Health",
-            "matches_expected": true
-          },
-          {
-            "stage": "Tasks",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "terminal=3/3",
-            "expected_stage": "Tasks",
-            "matches_expected": true
-          },
-          {
-            "stage": "DLQ",
-            "at": "2026-03-31T05:30:25Z",
-            "details": "dead_letters=0",
-            "expected_stage": "DLQ",
-            "matches_expected": true
-          }
-        ],
-        "is_in_order": true,
-        "is_complete": true,
-        "completed_at": "2026-03-31T05:30:25Z"
-      },
-      {
-        "id": 717,
-        "reason": "persist",
-        "started_at": "2026-03-31T16:45:30Z",
-        "expected_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "completed_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "stages": [
-          {
-            "stage": "Orchestrator",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "workflow=profile-readme-automation status=Running",
-            "expected_stage": "Orchestrator",
-            "matches_expected": true
-          },
-          {
-            "stage": "DAG",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "nodes=3 edges=1",
-            "expected_stage": "DAG",
-            "matches_expected": true
-          },
-          {
-            "stage": "Scheduler",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "ready=0 running=0",
-            "expected_stage": "Scheduler",
-            "matches_expected": true
-          },
-          {
-            "stage": "Queue",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "depth=0 dispatched=0",
-            "expected_stage": "Queue",
-            "matches_expected": true
-          },
-          {
-            "stage": "State Store",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "write=724 batch=7",
-            "expected_stage": "State Store",
-            "matches_expected": true
-          },
-          {
-            "stage": "Event Bus",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "published=1",
-            "expected_stage": "Event Bus",
-            "matches_expected": true
-          },
-          {
-            "stage": "Worker Pools",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "pools=3",
-            "expected_stage": "Worker Pools",
-            "matches_expected": true
-          },
-          {
-            "stage": "Registry",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "workers=4",
-            "expected_stage": "Registry",
-            "matches_expected": true
-          },
-          {
-            "stage": "Health",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "healthy=0/4",
-            "expected_stage": "Health",
-            "matches_expected": true
-          },
-          {
-            "stage": "Tasks",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "terminal=0/3",
-            "expected_stage": "Tasks",
-            "matches_expected": true
-          },
-          {
-            "stage": "DLQ",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "dead_letters=0",
-            "expected_stage": "DLQ",
-            "matches_expected": true
-          }
-        ],
-        "is_in_order": true,
-        "is_complete": true,
-        "completed_at": "2026-03-31T16:45:30Z"
-      },
-      {
-        "id": 718,
-        "reason": "persist",
-        "started_at": "2026-03-31T16:45:30Z",
-        "expected_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "completed_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "stages": [
-          {
-            "stage": "Orchestrator",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "workflow=profile-readme-automation status=Running",
-            "expected_stage": "Orchestrator",
-            "matches_expected": true
-          },
-          {
-            "stage": "DAG",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "nodes=3 edges=1",
-            "expected_stage": "DAG",
-            "matches_expected": true
-          },
-          {
-            "stage": "Scheduler",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "ready=2 running=2",
-            "expected_stage": "Scheduler",
-            "matches_expected": true
-          },
-          {
-            "stage": "Queue",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "depth=2 dispatched=2",
-            "expected_stage": "Queue",
-            "matches_expected": true
-          },
-          {
-            "stage": "State Store",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "write=725 batch=7",
-            "expected_stage": "State Store",
-            "matches_expected": true
-          },
-          {
-            "stage": "Event Bus",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "published=3",
-            "expected_stage": "Event Bus",
-            "matches_expected": true
-          },
-          {
-            "stage": "Worker Pools",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "pools=3",
-            "expected_stage": "Worker Pools",
-            "matches_expected": true
-          },
-          {
-            "stage": "Registry",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "workers=4",
-            "expected_stage": "Registry",
-            "matches_expected": true
-          },
-          {
-            "stage": "Health",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "healthy=2/4",
-            "expected_stage": "Health",
-            "matches_expected": true
-          },
-          {
-            "stage": "Tasks",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "terminal=0/3",
-            "expected_stage": "Tasks",
-            "matches_expected": true
-          },
-          {
-            "stage": "DLQ",
-            "at": "2026-03-31T16:45:30Z",
-            "details": "dead_letters=0",
-            "expected_stage": "DLQ",
-            "matches_expected": true
-          }
-        ],
-        "is_in_order": true,
-        "is_complete": true,
-        "completed_at": "2026-03-31T16:45:30Z"
-      },
-      {
-        "id": 719,
-        "reason": "persist",
-        "started_at": "2026-03-31T16:45:32Z",
-        "expected_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "completed_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "stages": [
-          {
-            "stage": "Orchestrator",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "workflow=profile-readme-automation status=Running",
-            "expected_stage": "Orchestrator",
-            "matches_expected": true
-          },
-          {
-            "stage": "DAG",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "nodes=3 edges=1",
-            "expected_stage": "DAG",
-            "matches_expected": true
-          },
-          {
-            "stage": "Scheduler",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "ready=2 running=2",
-            "expected_stage": "Scheduler",
-            "matches_expected": true
-          },
-          {
-            "stage": "Queue",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "depth=2 dispatched=2",
-            "expected_stage": "Queue",
-            "matches_expected": true
-          },
-          {
-            "stage": "State Store",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "write=726 batch=7",
-            "expected_stage": "State Store",
-            "matches_expected": true
-          },
-          {
-            "stage": "Event Bus",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "published=5",
-            "expected_stage": "Event Bus",
-            "matches_expected": true
-          },
-          {
-            "stage": "Worker Pools",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "pools=3",
-            "expected_stage": "Worker Pools",
-            "matches_expected": true
-          },
-          {
-            "stage": "Registry",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "workers=4",
-            "expected_stage": "Registry",
-            "matches_expected": true
-          },
-          {
-            "stage": "Health",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "healthy=2/4",
-            "expected_stage": "Health",
-            "matches_expected": true
-          },
-          {
-            "stage": "Tasks",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "terminal=2/3",
-            "expected_stage": "Tasks",
-            "matches_expected": true
-          },
-          {
-            "stage": "DLQ",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "dead_letters=0",
-            "expected_stage": "DLQ",
-            "matches_expected": true
-          }
-        ],
-        "is_in_order": true,
-        "is_complete": true,
-        "completed_at": "2026-03-31T16:45:32Z"
-      },
-      {
-        "id": 720,
-        "reason": "persist",
-        "started_at": "2026-03-31T16:45:32Z",
-        "expected_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "completed_sequence": [
-          "Orchestrator",
-          "DAG",
-          "Scheduler",
-          "Queue",
-          "State Store",
-          "Event Bus",
-          "Worker Pools",
-          "Registry",
-          "Health",
-          "Tasks",
-          "DLQ"
-        ],
-        "stages": [
-          {
-            "stage": "Orchestrator",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "workflow=profile-readme-automation status=Running",
-            "expected_stage": "Orchestrator",
-            "matches_expected": true
-          },
-          {
-            "stage": "DAG",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "nodes=3 edges=1",
-            "expected_stage": "DAG",
-            "matches_expected": true
-          },
-          {
-            "stage": "Scheduler",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "ready=1 running=1",
-            "expected_stage": "Scheduler",
-            "matches_expected": true
-          },
-          {
-            "stage": "Queue",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "depth=1 dispatched=3",
-            "expected_stage": "Queue",
-            "matches_expected": true
-          },
-          {
-            "stage": "State Store",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "write=727 batch=7",
-            "expected_stage": "State Store",
-            "matches_expected": true
-          },
-          {
-            "stage": "Event Bus",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "published=6",
-            "expected_stage": "Event Bus",
-            "matches_expected": true
-          },
-          {
-            "stage": "Worker Pools",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "pools=3",
-            "expected_stage": "Worker Pools",
-            "matches_expected": true
-          },
-          {
-            "stage": "Registry",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "workers=4",
-            "expected_stage": "Registry",
-            "matches_expected": true
-          },
-          {
-            "stage": "Health",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "healthy=3/4",
-            "expected_stage": "Health",
-            "matches_expected": true
-          },
-          {
-            "stage": "Tasks",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "terminal=2/3",
-            "expected_stage": "Tasks",
-            "matches_expected": true
-          },
-          {
-            "stage": "DLQ",
-            "at": "2026-03-31T16:45:32Z",
-            "details": "dead_letters=0",
-            "expected_stage": "DLQ",
-            "matches_expected": true
-          }
-        ],
-        "is_in_order": true,
-        "is_complete": true,
-        "completed_at": "2026-03-31T16:45:32Z"
-      },
       {
         "id": 721,
         "reason": "persist",
@@ -1544,9 +753,800 @@
         "is_in_order": true,
         "is_complete": true,
         "completed_at": "2026-03-31T16:45:35Z"
+      },
+      {
+        "id": 724,
+        "reason": "persist",
+        "started_at": "2026-04-01T05:49:38Z",
+        "expected_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "completed_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "stages": [
+          {
+            "stage": "Orchestrator",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "workflow=profile-readme-automation status=Running",
+            "expected_stage": "Orchestrator",
+            "matches_expected": true
+          },
+          {
+            "stage": "DAG",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "nodes=3 edges=1",
+            "expected_stage": "DAG",
+            "matches_expected": true
+          },
+          {
+            "stage": "Scheduler",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "ready=0 running=0",
+            "expected_stage": "Scheduler",
+            "matches_expected": true
+          },
+          {
+            "stage": "Queue",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "depth=0 dispatched=0",
+            "expected_stage": "Queue",
+            "matches_expected": true
+          },
+          {
+            "stage": "State Store",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "write=731 batch=7",
+            "expected_stage": "State Store",
+            "matches_expected": true
+          },
+          {
+            "stage": "Event Bus",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "published=1",
+            "expected_stage": "Event Bus",
+            "matches_expected": true
+          },
+          {
+            "stage": "Worker Pools",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "pools=3",
+            "expected_stage": "Worker Pools",
+            "matches_expected": true
+          },
+          {
+            "stage": "Registry",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "workers=4",
+            "expected_stage": "Registry",
+            "matches_expected": true
+          },
+          {
+            "stage": "Health",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "healthy=0/4",
+            "expected_stage": "Health",
+            "matches_expected": true
+          },
+          {
+            "stage": "Tasks",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "terminal=0/3",
+            "expected_stage": "Tasks",
+            "matches_expected": true
+          },
+          {
+            "stage": "DLQ",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "dead_letters=0",
+            "expected_stage": "DLQ",
+            "matches_expected": true
+          }
+        ],
+        "is_in_order": true,
+        "is_complete": true,
+        "completed_at": "2026-04-01T05:49:38Z"
+      },
+      {
+        "id": 725,
+        "reason": "persist",
+        "started_at": "2026-04-01T05:49:38Z",
+        "expected_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "completed_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "stages": [
+          {
+            "stage": "Orchestrator",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "workflow=profile-readme-automation status=Running",
+            "expected_stage": "Orchestrator",
+            "matches_expected": true
+          },
+          {
+            "stage": "DAG",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "nodes=3 edges=1",
+            "expected_stage": "DAG",
+            "matches_expected": true
+          },
+          {
+            "stage": "Scheduler",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "ready=2 running=2",
+            "expected_stage": "Scheduler",
+            "matches_expected": true
+          },
+          {
+            "stage": "Queue",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "depth=2 dispatched=2",
+            "expected_stage": "Queue",
+            "matches_expected": true
+          },
+          {
+            "stage": "State Store",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "write=732 batch=7",
+            "expected_stage": "State Store",
+            "matches_expected": true
+          },
+          {
+            "stage": "Event Bus",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "published=3",
+            "expected_stage": "Event Bus",
+            "matches_expected": true
+          },
+          {
+            "stage": "Worker Pools",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "pools=3",
+            "expected_stage": "Worker Pools",
+            "matches_expected": true
+          },
+          {
+            "stage": "Registry",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "workers=4",
+            "expected_stage": "Registry",
+            "matches_expected": true
+          },
+          {
+            "stage": "Health",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "healthy=2/4",
+            "expected_stage": "Health",
+            "matches_expected": true
+          },
+          {
+            "stage": "Tasks",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "terminal=0/3",
+            "expected_stage": "Tasks",
+            "matches_expected": true
+          },
+          {
+            "stage": "DLQ",
+            "at": "2026-04-01T05:49:38Z",
+            "details": "dead_letters=0",
+            "expected_stage": "DLQ",
+            "matches_expected": true
+          }
+        ],
+        "is_in_order": true,
+        "is_complete": true,
+        "completed_at": "2026-04-01T05:49:38Z"
+      },
+      {
+        "id": 726,
+        "reason": "persist",
+        "started_at": "2026-04-01T05:49:40Z",
+        "expected_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "completed_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "stages": [
+          {
+            "stage": "Orchestrator",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "workflow=profile-readme-automation status=Running",
+            "expected_stage": "Orchestrator",
+            "matches_expected": true
+          },
+          {
+            "stage": "DAG",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "nodes=3 edges=1",
+            "expected_stage": "DAG",
+            "matches_expected": true
+          },
+          {
+            "stage": "Scheduler",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "ready=2 running=2",
+            "expected_stage": "Scheduler",
+            "matches_expected": true
+          },
+          {
+            "stage": "Queue",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "depth=2 dispatched=2",
+            "expected_stage": "Queue",
+            "matches_expected": true
+          },
+          {
+            "stage": "State Store",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "write=733 batch=7",
+            "expected_stage": "State Store",
+            "matches_expected": true
+          },
+          {
+            "stage": "Event Bus",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "published=5",
+            "expected_stage": "Event Bus",
+            "matches_expected": true
+          },
+          {
+            "stage": "Worker Pools",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "pools=3",
+            "expected_stage": "Worker Pools",
+            "matches_expected": true
+          },
+          {
+            "stage": "Registry",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "workers=4",
+            "expected_stage": "Registry",
+            "matches_expected": true
+          },
+          {
+            "stage": "Health",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "healthy=2/4",
+            "expected_stage": "Health",
+            "matches_expected": true
+          },
+          {
+            "stage": "Tasks",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "terminal=2/3",
+            "expected_stage": "Tasks",
+            "matches_expected": true
+          },
+          {
+            "stage": "DLQ",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "dead_letters=0",
+            "expected_stage": "DLQ",
+            "matches_expected": true
+          }
+        ],
+        "is_in_order": true,
+        "is_complete": true,
+        "completed_at": "2026-04-01T05:49:40Z"
+      },
+      {
+        "id": 727,
+        "reason": "persist",
+        "started_at": "2026-04-01T05:49:40Z",
+        "expected_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "completed_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "stages": [
+          {
+            "stage": "Orchestrator",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "workflow=profile-readme-automation status=Running",
+            "expected_stage": "Orchestrator",
+            "matches_expected": true
+          },
+          {
+            "stage": "DAG",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "nodes=3 edges=1",
+            "expected_stage": "DAG",
+            "matches_expected": true
+          },
+          {
+            "stage": "Scheduler",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "ready=1 running=1",
+            "expected_stage": "Scheduler",
+            "matches_expected": true
+          },
+          {
+            "stage": "Queue",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "depth=1 dispatched=3",
+            "expected_stage": "Queue",
+            "matches_expected": true
+          },
+          {
+            "stage": "State Store",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "write=734 batch=7",
+            "expected_stage": "State Store",
+            "matches_expected": true
+          },
+          {
+            "stage": "Event Bus",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "published=6",
+            "expected_stage": "Event Bus",
+            "matches_expected": true
+          },
+          {
+            "stage": "Worker Pools",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "pools=3",
+            "expected_stage": "Worker Pools",
+            "matches_expected": true
+          },
+          {
+            "stage": "Registry",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "workers=4",
+            "expected_stage": "Registry",
+            "matches_expected": true
+          },
+          {
+            "stage": "Health",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "healthy=3/4",
+            "expected_stage": "Health",
+            "matches_expected": true
+          },
+          {
+            "stage": "Tasks",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "terminal=2/3",
+            "expected_stage": "Tasks",
+            "matches_expected": true
+          },
+          {
+            "stage": "DLQ",
+            "at": "2026-04-01T05:49:40Z",
+            "details": "dead_letters=0",
+            "expected_stage": "DLQ",
+            "matches_expected": true
+          }
+        ],
+        "is_in_order": true,
+        "is_complete": true,
+        "completed_at": "2026-04-01T05:49:40Z"
+      },
+      {
+        "id": 728,
+        "reason": "persist",
+        "started_at": "2026-04-01T05:49:42Z",
+        "expected_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "completed_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "stages": [
+          {
+            "stage": "Orchestrator",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "workflow=profile-readme-automation status=Running",
+            "expected_stage": "Orchestrator",
+            "matches_expected": true
+          },
+          {
+            "stage": "DAG",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "nodes=3 edges=1",
+            "expected_stage": "DAG",
+            "matches_expected": true
+          },
+          {
+            "stage": "Scheduler",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "ready=1 running=1",
+            "expected_stage": "Scheduler",
+            "matches_expected": true
+          },
+          {
+            "stage": "Queue",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "depth=1 dispatched=3",
+            "expected_stage": "Queue",
+            "matches_expected": true
+          },
+          {
+            "stage": "State Store",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "write=735 batch=7",
+            "expected_stage": "State Store",
+            "matches_expected": true
+          },
+          {
+            "stage": "Event Bus",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "published=7",
+            "expected_stage": "Event Bus",
+            "matches_expected": true
+          },
+          {
+            "stage": "Worker Pools",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "pools=3",
+            "expected_stage": "Worker Pools",
+            "matches_expected": true
+          },
+          {
+            "stage": "Registry",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "workers=4",
+            "expected_stage": "Registry",
+            "matches_expected": true
+          },
+          {
+            "stage": "Health",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "healthy=3/4",
+            "expected_stage": "Health",
+            "matches_expected": true
+          },
+          {
+            "stage": "Tasks",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "terminal=3/3",
+            "expected_stage": "Tasks",
+            "matches_expected": true
+          },
+          {
+            "stage": "DLQ",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "dead_letters=0",
+            "expected_stage": "DLQ",
+            "matches_expected": true
+          }
+        ],
+        "is_in_order": true,
+        "is_complete": true,
+        "completed_at": "2026-04-01T05:49:42Z"
+      },
+      {
+        "id": 729,
+        "reason": "persist",
+        "started_at": "2026-04-01T05:49:42Z",
+        "expected_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "completed_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "stages": [
+          {
+            "stage": "Orchestrator",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "workflow=profile-readme-automation status=Running",
+            "expected_stage": "Orchestrator",
+            "matches_expected": true
+          },
+          {
+            "stage": "DAG",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "nodes=3 edges=1",
+            "expected_stage": "DAG",
+            "matches_expected": true
+          },
+          {
+            "stage": "Scheduler",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "ready=0 running=0",
+            "expected_stage": "Scheduler",
+            "matches_expected": true
+          },
+          {
+            "stage": "Queue",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "depth=0 dispatched=3",
+            "expected_stage": "Queue",
+            "matches_expected": true
+          },
+          {
+            "stage": "State Store",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "write=736 batch=7",
+            "expected_stage": "State Store",
+            "matches_expected": true
+          },
+          {
+            "stage": "Event Bus",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "published=7",
+            "expected_stage": "Event Bus",
+            "matches_expected": true
+          },
+          {
+            "stage": "Worker Pools",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "pools=3",
+            "expected_stage": "Worker Pools",
+            "matches_expected": true
+          },
+          {
+            "stage": "Registry",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "workers=4",
+            "expected_stage": "Registry",
+            "matches_expected": true
+          },
+          {
+            "stage": "Health",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "healthy=3/4",
+            "expected_stage": "Health",
+            "matches_expected": true
+          },
+          {
+            "stage": "Tasks",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "terminal=3/3",
+            "expected_stage": "Tasks",
+            "matches_expected": true
+          },
+          {
+            "stage": "DLQ",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "dead_letters=0",
+            "expected_stage": "DLQ",
+            "matches_expected": true
+          }
+        ],
+        "is_in_order": true,
+        "is_complete": true,
+        "completed_at": "2026-04-01T05:49:42Z"
+      },
+      {
+        "id": 730,
+        "reason": "persist",
+        "started_at": "2026-04-01T05:49:42Z",
+        "expected_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "completed_sequence": [
+          "Orchestrator",
+          "DAG",
+          "Scheduler",
+          "Queue",
+          "State Store",
+          "Event Bus",
+          "Worker Pools",
+          "Registry",
+          "Health",
+          "Tasks",
+          "DLQ"
+        ],
+        "stages": [
+          {
+            "stage": "Orchestrator",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "workflow=profile-readme-automation status=Completed",
+            "expected_stage": "Orchestrator",
+            "matches_expected": true
+          },
+          {
+            "stage": "DAG",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "nodes=3 edges=1",
+            "expected_stage": "DAG",
+            "matches_expected": true
+          },
+          {
+            "stage": "Scheduler",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "ready=0 running=0",
+            "expected_stage": "Scheduler",
+            "matches_expected": true
+          },
+          {
+            "stage": "Queue",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "depth=0 dispatched=3",
+            "expected_stage": "Queue",
+            "matches_expected": true
+          },
+          {
+            "stage": "State Store",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "write=737 batch=7",
+            "expected_stage": "State Store",
+            "matches_expected": true
+          },
+          {
+            "stage": "Event Bus",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "published=8",
+            "expected_stage": "Event Bus",
+            "matches_expected": true
+          },
+          {
+            "stage": "Worker Pools",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "pools=3",
+            "expected_stage": "Worker Pools",
+            "matches_expected": true
+          },
+          {
+            "stage": "Registry",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "workers=4",
+            "expected_stage": "Registry",
+            "matches_expected": true
+          },
+          {
+            "stage": "Health",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "healthy=3/4",
+            "expected_stage": "Health",
+            "matches_expected": true
+          },
+          {
+            "stage": "Tasks",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "terminal=3/3",
+            "expected_stage": "Tasks",
+            "matches_expected": true
+          },
+          {
+            "stage": "DLQ",
+            "at": "2026-04-01T05:49:42Z",
+            "details": "dead_letters=0",
+            "expected_stage": "DLQ",
+            "matches_expected": true
+          }
+        ],
+        "is_in_order": true,
+        "is_complete": true,
+        "completed_at": "2026-04-01T05:49:42Z"
       }
     ],
-    "last_completed_at": "2026-03-31T16:45:35Z"
+    "last_completed_at": "2026-04-01T05:49:42Z"
   },
   "worker_pools": {
     "content-pool": {
@@ -1645,10 +1645,10 @@
       "enabled": true,
       "timeout_seconds": 180,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-31T16:45:32Z",
-      "last_started_at": "2026-03-31T16:45:30Z",
-      "last_completed_at": "2026-03-31T16:45:32Z",
-      "last_success_at": "2026-03-31T16:45:32Z",
+      "last_heartbeat_at": "2026-04-01T05:49:40Z",
+      "last_started_at": "2026-04-01T05:49:38Z",
+      "last_completed_at": "2026-04-01T05:49:40Z",
+      "last_success_at": "2026-04-01T05:49:40Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
@@ -1681,10 +1681,10 @@
       "enabled": true,
       "timeout_seconds": 60,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-31T16:45:32Z",
-      "last_started_at": "2026-03-31T16:45:30Z",
-      "last_completed_at": "2026-03-31T16:45:32Z",
-      "last_success_at": "2026-03-31T16:45:32Z",
+      "last_heartbeat_at": "2026-04-01T05:49:40Z",
+      "last_started_at": "2026-04-01T05:49:38Z",
+      "last_completed_at": "2026-04-01T05:49:40Z",
+      "last_success_at": "2026-04-01T05:49:40Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
@@ -1715,10 +1715,10 @@
       "enabled": true,
       "timeout_seconds": 180,
       "max_retries": 1,
-      "last_heartbeat_at": "2026-03-31T16:45:34Z",
-      "last_started_at": "2026-03-31T16:45:32Z",
-      "last_completed_at": "2026-03-31T16:45:34Z",
-      "last_success_at": "2026-03-31T16:45:34Z",
+      "last_heartbeat_at": "2026-04-01T05:49:42Z",
+      "last_started_at": "2026-04-01T05:49:40Z",
+      "last_completed_at": "2026-04-01T05:49:42Z",
+      "last_success_at": "2026-04-01T05:49:42Z",
       "last_failure_at": null,
       "last_exit_code": 0,
       "last_error": null,
@@ -1777,10 +1777,10 @@
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "scheduled_at": "2026-03-31T16:45:30Z",
-      "started_at": "2026-03-31T16:45:30Z",
-      "completed_at": "2026-03-31T16:45:32Z",
-      "updated_at": "2026-03-31T16:45:32Z",
+      "scheduled_at": "2026-04-01T05:49:38Z",
+      "started_at": "2026-04-01T05:49:38Z",
+      "completed_at": "2026-04-01T05:49:40Z",
+      "updated_at": "2026-04-01T05:49:40Z",
       "message": "Updated WakaTime section"
     },
     "daily-quote": {
@@ -1806,11 +1806,11 @@
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "scheduled_at": "2026-03-31T16:45:30Z",
-      "started_at": "2026-03-31T16:45:30Z",
-      "completed_at": "2026-03-31T16:45:32Z",
-      "updated_at": "2026-03-31T16:45:32Z",
-      "message": "Updated daily quote: Benjamin Franklin"
+      "scheduled_at": "2026-04-01T05:49:38Z",
+      "started_at": "2026-04-01T05:49:38Z",
+      "completed_at": "2026-04-01T05:49:40Z",
+      "updated_at": "2026-04-01T05:49:40Z",
+      "message": "Updated daily quote: Aristotle"
     },
     "snapshot": {
       "display_name": "Snapshot",
@@ -1843,10 +1843,10 @@
       "status": "Success",
       "attempt": 1,
       "max_attempts": 2,
-      "scheduled_at": "2026-03-31T16:45:30Z",
-      "started_at": "2026-03-31T16:45:32Z",
-      "completed_at": "2026-03-31T16:45:34Z",
-      "updated_at": "2026-03-31T16:45:34Z",
+      "scheduled_at": "2026-04-01T05:49:38Z",
+      "started_at": "2026-04-01T05:49:40Z",
+      "completed_at": "2026-04-01T05:49:42Z",
+      "updated_at": "2026-04-01T05:49:42Z",
       "message": "Updated recent repository snapshot with 5 entries and refreshed showcase assets"
     }
   }
