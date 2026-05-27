@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-26T18:14:37Z",
+  "generated_at": "2026-05-27T07:54:24Z",
   "backend": "json-files-in-repo",
   "transaction_model": "atomic-file-write",
   "manifest_version": 1,
-  "write_count": 1516,
-  "last_persisted_at": "2026-05-26T18:14:37Z",
+  "write_count": 1523,
+  "last_persisted_at": "2026-05-27T07:54:24Z",
   "last_write_batch": [
     ".github/manager/state/state.json",
     ".github/manager/state/dag.json",
@@ -15,7 +15,7 @@
     ".github/manager/state/dead-letters.json"
   ],
   "consistency_status": "healthy",
-  "total_size_bytes": 66215,
+  "total_size_bytes": 66233,
   "documents": [
     {
       "name": "workflow_spec",
@@ -29,41 +29,41 @@
       "name": "runtime_state",
       "path": ".github/manager/state/state.json",
       "exists": true,
-      "size_bytes": 53880,
-      "updated_at": "2026-05-26T18:14:37Z",
-      "checksum": "a26a895a6c40793370e3baa574eacc00368e8b8bf427ea7e9ee1a9b458feef1f"
+      "size_bytes": 53892,
+      "updated_at": "2026-05-27T07:54:24Z",
+      "checksum": "61a43cd0c186bc684fffbb3a876eed1c6541517af65eb723d0676105e6ae7b8b"
     },
     {
       "name": "dag_snapshot",
       "path": ".github/manager/state/dag.json",
       "exists": true,
       "size_bytes": 775,
-      "updated_at": "2026-05-26T18:14:37Z",
-      "checksum": "fcf4ff32fd42b34903f0ef0a875cc172646a9c06acf78568ff3de71f8a52b629"
+      "updated_at": "2026-05-27T07:54:24Z",
+      "checksum": "1126331c188ba8d32667e33c70faaa1a0477505ce6dddd4f5854e252223a1d16"
     },
     {
       "name": "scheduler_snapshot",
       "path": ".github/manager/state/scheduler.json",
       "exists": true,
       "size_bytes": 377,
-      "updated_at": "2026-05-26T18:14:37Z",
-      "checksum": "f28f53c63370d50dd6dbe6814fd856a80568202de894236c31e9854d5eac800e"
+      "updated_at": "2026-05-27T07:54:24Z",
+      "checksum": "f45f9b6120b9539dbe59801f5812eeb1e8c4017d4cce43fcef9e18f96ac3b346"
     },
     {
       "name": "queue_snapshot",
       "path": ".github/manager/state/queue.json",
       "exists": true,
       "size_bytes": 1532,
-      "updated_at": "2026-05-26T18:14:37Z",
-      "checksum": "976df3e48b75e9099d0bacd29e67ca75a7aa2209de3320aa014c299c8b0d7417"
+      "updated_at": "2026-05-27T07:54:24Z",
+      "checksum": "9cba9593b19d273f9c1eaee97fe5ee5e38539eb6506697dc9693b9b9effd2656"
     },
     {
       "name": "event_log",
       "path": ".github/manager/state/event-log.json",
       "exists": true,
-      "size_bytes": 1547,
-      "updated_at": "2026-05-26T18:14:37Z",
-      "checksum": "5e164887988dede70a0f7989e4ce1f3020ad44062e02e88ad8e2b0bbae10c0a1"
+      "size_bytes": 1553,
+      "updated_at": "2026-05-27T07:54:24Z",
+      "checksum": "a09bd47e6ddef09428cea2c1bcb0a0e690deeac5650aeb5f0dbb368973ee4509"
     },
     {
       "name": "dead_letters",
@@ -78,8 +78,8 @@
       "path": ".github/manager/state/metadata-store.json",
       "exists": true,
       "size_bytes": 2848,
-      "updated_at": "2026-05-26T18:14:37Z",
-      "checksum": "70db6e9396f5e41f91f5de2b4367c15ed3187f57624febc4c0f594a79007d873"
+      "updated_at": "2026-05-27T07:54:24Z",
+      "checksum": "3529aabd889468750e510a84d06f266002e54629064d72fae8b1757954ffdbf1"
     }
   ],
   "missing_documents": []
