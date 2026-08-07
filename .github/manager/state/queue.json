@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-06T06:19:56Z",
+  "generated_at": "2026-08-07T05:26:10Z",
   "backend": "github-actions-internal-queue",
   "ordering": "priority-then-scheduled-at",
   "ready_queue": [],
@@ -8,24 +8,24 @@
   "running_leases": [],
   "terminal_tasks": [
     {
-      "task": "snapshot",
-      "status": "Success",
-      "priority": 60,
-      "pool": "content-pool",
-      "worker": "snapshot",
-      "scheduled_at": "2026-08-06T06:19:52Z",
-      "updated_at": "2026-08-06T06:19:56Z",
-      "attempt": 1,
-      "max_attempts": 2
-    },
-    {
       "task": "wakatime",
       "status": "Success",
       "priority": 100,
       "pool": "metrics-pool",
       "worker": "wakatime",
-      "scheduled_at": "2026-08-06T06:19:52Z",
-      "updated_at": "2026-08-06T06:19:54Z",
+      "scheduled_at": "2026-08-07T05:26:06Z",
+      "updated_at": "2026-08-07T05:26:10Z",
+      "attempt": 1,
+      "max_attempts": 2
+    },
+    {
+      "task": "snapshot",
+      "status": "Success",
+      "priority": 60,
+      "pool": "content-pool",
+      "worker": "snapshot",
+      "scheduled_at": "2026-08-07T05:26:06Z",
+      "updated_at": "2026-08-07T05:26:10Z",
       "attempt": 1,
       "max_attempts": 2
     },
@@ -35,8 +35,8 @@
       "priority": 30,
       "pool": "engagement-pool",
       "worker": "daily-quote",
-      "scheduled_at": "2026-08-06T06:19:52Z",
-      "updated_at": "2026-08-06T06:19:54Z",
+      "scheduled_at": "2026-08-07T05:26:06Z",
+      "updated_at": "2026-08-07T05:26:08Z",
       "attempt": 1,
       "max_attempts": 2
     }
